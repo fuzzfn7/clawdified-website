@@ -601,7 +601,13 @@ nav.scrolled{border-bottom-color:var(--line);background:rgba(15,14,10,.88);}
   font-size:22px;font-weight:400;vertical-align:top;
   color:var(--muted);margin:0;align-self:flex-start;margin-top:4px;
 }
-.pc-period{font-size:12px;color:var(--faint);margin-bottom:28px;}
+.pc-starting{
+  font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:0.04em;
+  text-transform:uppercase;color:var(--faint);
+  display:block;margin-bottom:8px;
+}
+.pc-price-talk{font-size:42px;letter-spacing:-.02em;line-height:1;}
+.pc-period{font-size:12px;color:var(--faint);margin-bottom:28px;line-height:1.5;}
 .pc-divider{height:1px;background:var(--line);margin-bottom:20px;}
 .pc-list{
   list-style:none;display:flex;flex-direction:column;
@@ -2017,71 +2023,66 @@ sel(AG[0].id);
 <!-- PRICING -->
 <section class="sec pricing-sec" id="pricing">
   <div class="si">
-    <h2 class="sec-h centered r">Real results.<br>Flat monthly rate.</h2>
+    <h2 class="sec-h centered r" style="margin-bottom:20px;">Custom AI agents,<br>flat monthly pricing.</h2>
+    <p class="sec-sub centered r" style="text-align:center;margin:0 auto 56px;">Every build is scoped on a free call. Prices start at the numbers below and scale with the complexity of your build.</p>
 
     <div class="p-cards r">
 
       <div class="pc">
-        <span class="pc-tag">Start Here</span>
-        <div class="pc-name">Per Agent</div>
-        <p class="pc-desc">Start with one agent. Add more as you see results. No commitment beyond what you need.</p>
+        <div class="pc-name">One Agent</div>
+        <p class="pc-desc">A single dedicated agent built for your business. Final price depends on the complexity of the agent — from focused single-workflow builds to more advanced multi-system agents.</p>
+        <span class="pc-starting">Starting at</span>
         <div class="pc-price"><sup>$</sup>600<span style="font-size:16px;color:var(--faint);font-weight:300">/mo</span></div>
-        <div class="pc-period">+ $300 one-time setup · cancel anytime</div>
+        <div class="pc-period">+ starting at $300 one-time setup · cancel anytime</div>
         <div class="pc-divider"></div>
         <ul class="pc-list">
-          <li class="hi-item">First agent live in 7 days or first month refunded</li>
-          <li>1 dedicated agent built for your business</li>
-          <li>+$500/mo per additional agent</li>
-          <li>Unlimited tokens — best model available</li>
-          <li>Security patches &amp; model upgrades</li>
+          <li>1 dedicated agent scoped and built for your business</li>
+          <li>Model and compute costs covered — no token metering</li>
+          <li>Security patches and model upgrades handled</li>
           <li>Skills built once, reused as you grow</li>
-          <li>Bi-weekly check-in</li>
+          <li>Regular check-ins and async updates</li>
+          <li>Most builds live within 2–4 weeks</li>
         </ul>
-        <a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener" class="pc-btn pc-btn-ghost">Get started →</a>
+        <a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener" class="pc-btn pc-btn-ghost">Book a call →</a>
       </div>
 
       <div class="pc">
-        <div class="pc-name">Full Stack</div>
-        <p class="pc-desc">Ready to hand it all over. We map your entire workflow, build the infrastructure, and run it.</p>
+        <div class="pc-name">Multiple Agents</div>
+        <p class="pc-desc">Up to 6 agents working together across your business. Pricing scales with the complexity and scope of the agents you need — no ceiling.</p>
+        <span class="pc-starting">Starting at</span>
         <div class="pc-price"><sup>$</sup>2,500<span style="font-size:16px;color:var(--faint);font-weight:300">/mo</span></div>
-        <div class="pc-period">+ $1,000 one-time setup · cancel anytime</div>
+        <div class="pc-period">+ starting at $1,000 one-time setup · cancel anytime</div>
         <div class="pc-divider"></div>
         <ul class="pc-list">
-          <li class="hi-item">First agent live in 7 days or first month refunded</li>
-          <li>Up to 6 agents — each with a dedicated role</li>
-          <li>Unlimited tokens across all agents</li>
-          <li>New automations built and delivered</li>
-          <li>Security patches &amp; model upgrades</li>
+          <li>Up to 6 agents coordinated across your operations</li>
+          <li>Model and compute costs covered — no token metering</li>
+          <li>New automations scoped and built as you grow</li>
+          <li>Security patches and model upgrades handled</li>
           <li>Skills built once, reused across your business</li>
           <li>Weekly call + async Loom updates</li>
+          <li>Most builds live within 2–4 weeks</li>
         </ul>
-        <a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener" class="pc-btn pc-btn-ghost">Get started →</a>
+        <a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener" class="pc-btn pc-btn-ghost">Book a call →</a>
       </div>
 
       <div class="pc">
-        <span class="pc-tag">Custom</span>
-        <div class="pc-name">Enterprise</div>
-        <p class="pc-desc">Unique workflows, large teams, or needs that don't fit a box. We'll figure it out together.</p>
-        <div class="pc-price" style="font-size:42px;letter-spacing:-.02em;line-height:1;">Let's talk</div>
-        <div class="pc-period">Priced on the discovery call</div>
+        <div class="pc-name">Custom / Enterprise</div>
+        <p class="pc-desc">For larger teams, complex workflows, high-compute builds, or engagements that don't fit the other tiers.</p>
+        <span class="pc-starting">Starting at</span>
+        <div class="pc-price"><sup>$</sup>5,000<span style="font-size:16px;color:var(--faint);font-weight:300">/mo</span></div>
+        <div class="pc-period">Scoped on the call</div>
         <div class="pc-divider"></div>
         <ul class="pc-list">
-          <li class="hi-item">Everything in Full Stack, plus:</li>
-          <li>Custom number of agents</li>
+          <li>Custom number and complexity of agents</li>
           <li>Dedicated build timeline</li>
-          <li>Priority support &amp; SLA</li>
+          <li>Priority support and SLA</li>
           <li>Custom integrations on request</li>
           <li>Dedicated account management</li>
+          <li class="hi-item">Everything in Multiple Agents, plus deeper engagement</li>
         </ul>
         <a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener" class="pc-btn pc-btn-ghost">Get a custom quote →</a>
       </div>
 
-    </div>
-
-    <div class="p-guarantee r">
-      <div class="p-guarantee-txt">
-        🛡️ &nbsp;<strong>7-day guarantee</strong> — first agent live within 7 days of kickoff or your first month's retainer is refunded. Setup fee is non-refundable.
-      </div>
     </div>
 
   </div>
