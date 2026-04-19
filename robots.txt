@@ -1,0 +1,36 @@
+# https://clawdified.com robots.txt
+
+User-agent: *
+Allow: /
+Disallow:
+
+# AI Crawlers — allowed for search, blocked for training
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
+
+# Content Signals — preferences for AI usage
+# https://contentsignals.org/
+Content-Signal: ai-train=no, search=yes, ai-input=no
+
+Sitemap: https://clawdified.com/sitemap.xml
