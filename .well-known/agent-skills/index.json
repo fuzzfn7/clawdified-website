@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "business-info",
+      "type": "skill-md",
+      "description": "Clawdified AI agency services, contact, and business information",
+      "url": "https://clawdified.com/.well-known/agent-skills/business-info/SKILL.md",
+      "digest": "sha256:8632f99118efb4f304778ff4cd5267159d384a624594c2d306105d6ca1808a25"
+    }
+  ]
+}

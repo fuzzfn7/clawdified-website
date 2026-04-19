@@ -3,10 +3,22 @@
 
 /
   X-Robots-Tag: index, follow
-  Link: </sitemap.xml>; rel="sitemap", </robots.txt>; rel="robots"
+  Link: </.well-known/api-catalog>; rel="api-catalog", </.well-known/agent-skills/index.json>; rel="service-doc", </sitemap.xml>; rel="sitemap", </robots.txt>; rel="robots"
 
 /robots.txt
   Content-Type: text/plain; charset=utf-8
 
 /sitemap.xml
   Content-Type: application/xml; charset=utf-8
+
+/.well-known/api-catalog
+  Content-Type: application/linkset+json; charset=utf-8
+
+/.well-known/mcp/server-card.json
+  Content-Type: application/json; charset=utf-8
+
+/.well-known/agent-skills/index.json
+  Content-Type: application/json; charset=utf-8
+
+/.well-known/agent-skills/business-info/SKILL.md
+  Content-Type: text/markdown; charset=utf-8

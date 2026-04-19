@@ -1,0 +1,14 @@
+{
+  "serverInfo": {
+    "name": "clawdified",
+    "version": "1.0.0"
+  },
+  "transport": {
+    "endpoint": "/mcp"
+  },
+  "capabilities": [
+    "tools",
+    "resources",
+    "prompts"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://clawdified.com",
+      "links": [
+        {
+          "rel": "service-doc",
+          "href": "https://clawdified.com/.well-known/agent-skills/index.json",
+          "type": "application/json"
+        },
+        {
+          "rel": "describedby",
+          "href": "https://clawdified.com/.well-known/agent-skills/business-info/SKILL.md",
+          "type": "text/markdown"
+        }
+      ]
+    }
+  ]
+}

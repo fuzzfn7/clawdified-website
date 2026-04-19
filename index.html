@@ -2936,5 +2936,58 @@ window.addEventListener('DOMContentLoaded', function() {
 
 });
 </script>
+<script>
+/* WebMCP — expose site tools to AI agents */
+if (typeof navigator !== 'undefined' && navigator.modelContext) {
+  var ac = new AbortController();
+
+  navigator.modelContext.registerTool({
+    name: "get_business_info",
+    description: "Get Clawdified business information including services, location, and contact details",
+    inputSchema: { type: "object", properties: {}, required: [] },
+    execute: async function() {
+      return {
+        name: "Clawdified",
+        tagline: "AI That Works For You",
+        location: "Knoxville, Tennessee",
+        website: "https://clawdified.com",
+        services: [
+          "AI Agent Development",
+          "Automated Customer Communication",
+          "Review & Reputation Management",
+          "SEO Automation",
+          "Business Process Automation"
+        ]
+      };
+    }
+  }, { signal: ac.signal });
+
+  navigator.modelContext.registerTool({
+    name: "get_services",
+    description: "Get detailed information about Clawdified AI agent services and pricing tiers",
+    inputSchema: { type: "object", properties: {}, required: [] },
+    execute: async function() {
+      return {
+        services: [
+          { name: "AI Agent Development", description: "Custom AI agents tailored to your business processes and workflows" },
+          { name: "Automated Customer Communication", description: "AI-powered responses across SMS, email, and social media channels" },
+          { name: "Review & Reputation Management", description: "Automated review solicitation, monitoring, and response" },
+          { name: "SEO Automation", description: "AI-driven content generation and search engine optimization" },
+          { name: "Business Process Automation", description: "Streamline repetitive operational tasks with intelligent AI agents" }
+        ]
+      };
+    }
+  }, { signal: ac.signal });
+
+  navigator.modelContext.registerTool({
+    name: "schedule_consultation",
+    description: "Get the link to schedule a free consultation with Clawdified",
+    inputSchema: { type: "object", properties: {}, required: [] },
+    execute: async function() {
+      return { url: "https://clawdified.com/#cta", message: "Visit our website to schedule a free consultation" };
+    }
+  }, { signal: ac.signal });
+}
+</script>
 </body>
 </html>
