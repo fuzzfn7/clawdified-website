@@ -1,0 +1,10 @@
+{
+  "issuer": "https://clawdified.com",
+  "authorization_endpoint": "https://clawdified.com/oauth/authorize",
+  "token_endpoint": "https://clawdified.com/oauth/token",
+  "jwks_uri": "https://clawdified.com/.well-known/jwks.json",
+  "response_types_supported": ["code"],
+  "grant_types_supported": ["authorization_code"],
+  "scopes_supported": ["read"],
+  "token_endpoint_auth_methods_supported": ["client_secret_basic"]
+}

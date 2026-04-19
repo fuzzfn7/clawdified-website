@@ -1,0 +1,5 @@
+{
+  "resource": "https://clawdified.com",
+  "authorization_servers": ["https://clawdified.com"],
+  "scopes_supported": ["read"]
+}
