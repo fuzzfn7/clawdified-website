@@ -1010,6 +1010,340 @@ footer{
   .integ-name{font-size:11px;}
 }
 
+/* ─── LEAD-GEN AGENT — public demo ─── */
+.lg-sec{background:var(--bg);position:relative;overflow:hidden;}
+.lg-sec::before{
+  content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+  width:min(1200px,95%);height:480px;border-radius:50%;
+  background:radial-gradient(ellipse at center, rgba(212,133,83,.07) 0%, transparent 65%);
+  pointer-events:none;filter:blur(40px);z-index:0;
+}
+.lg-sec > .si{position:relative;z-index:1;}
+.lg-head{text-align:center;margin-bottom:48px;}
+.lg-head .sec-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--hi);margin-bottom:18px;
+}
+.lg-head .sec-eyebrow::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:var(--hi);
+  box-shadow:0 0 8px rgba(212,133,83,.45);animation:pulse 1.8s ease-in-out infinite;
+}
+.lg-head .sec-h{margin-left:auto;margin-right:auto;}
+.lg-head .sec-h em{font-style:normal;color:var(--hi);}
+.lg-head .sec-sub{margin:18px auto 0;}
+
+.lg-frame{
+  background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-lg);
+  overflow:hidden;
+  box-shadow:0 1px 0 rgba(255,255,255,.03) inset, 0 32px 80px rgba(0,0,0,.55);
+}
+.lg-chrome{
+  display:flex;align-items:center;gap:14px;padding:12px 18px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+}
+.lg-chrome-dots{display:flex;gap:6px;}
+.lg-chrome-dots span{width:9px;height:9px;border-radius:50%;background:var(--line-2);}
+.lg-chrome-url{
+  flex:1;text-align:center;font-family:var(--mono);font-size:11px;color:var(--faint);
+  letter-spacing:0.01em;
+}
+.lg-chrome-status{
+  display:flex;align-items:center;gap:8px;font-family:var(--mono);
+  font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--green);
+}
+.lg-pulse{
+  width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:pulse 2s ease-in-out infinite;flex-shrink:0;display:inline-block;
+}
+
+.lg-work{
+  display:grid;grid-template-columns:1fr;
+  min-height:0;
+}
+.lg-left{
+  display:flex;flex-direction:column;
+  border-bottom:1px solid var(--line);
+}
+.lg-agent-head{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 18px;border-bottom:1px solid var(--line);
+  flex-shrink:0;
+}
+.lg-agent-av{
+  width:34px;height:34px;border-radius:var(--r-sm);
+  background:rgba(212,133,83,.14);border:1px solid rgba(212,133,83,.36);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--hi);font-family:var(--mono);font-weight:500;font-size:12px;
+  flex-shrink:0;
+}
+.lg-agent-meta{min-width:0;flex:1;}
+.lg-agent-name{font-size:14px;font-weight:500;letter-spacing:-0.005em;color:var(--ink);}
+.lg-agent-live{
+  display:flex;align-items:center;gap:6px;
+  font-family:var(--mono);font-size:10px;text-transform:uppercase;
+  letter-spacing:0.12em;color:var(--green);margin-top:2px;
+}
+
+.lg-stage{
+  position:relative;min-height:380px;
+}
+.lg-view{
+  position:absolute;inset:0;padding:32px 24px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  opacity:0;transform:translateY(10px);pointer-events:none;
+  transition:opacity .35s ease, transform .35s ease;
+}
+.lg-view.lg-on{opacity:1;transform:translateY(0);pointer-events:auto;}
+.lg-view.lg-exiting{opacity:0;transform:translateY(-10px);}
+
+.lg-ask{
+  font-family:var(--sans);font-size:clamp(22px,2.6vw,30px);
+  font-weight:500;line-height:1.12;letter-spacing:-0.025em;
+  color:var(--ink);text-align:center;margin:0 0 28px;max-width:380px;
+}
+.lg-ask em{font-style:normal;color:var(--hi);}
+.lg-fields{
+  width:100%;max-width:380px;display:flex;flex-direction:column;
+  gap:16px;margin-bottom:24px;
+}
+.lg-field{display:flex;flex-direction:column;gap:8px;}
+.lg-field-label{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);
+}
+.lg-input{
+  width:100%;display:block;
+  background:var(--bg-3);border:1px solid var(--line-2);
+  border-radius:var(--r-sm);color:var(--ink);
+  font-family:var(--sans);font-size:14px;
+  padding:12px 14px;line-height:1.5;
+  transition:border-color .15s ease, background-color .15s ease;
+}
+.lg-input.lg-mono{font-family:var(--mono);font-size:13px;}
+.lg-input.lg-area{resize:none;min-height:96px;}
+.lg-input:hover{border-color:var(--dim);}
+.lg-input:focus{outline:none;border-color:var(--hi);background:var(--bg-2);}
+.lg-input::placeholder{color:var(--faint);}
+
+.lg-actions{
+  width:100%;max-width:380px;display:flex;gap:8px;
+  justify-content:flex-end;align-items:center;flex-wrap:wrap;
+}
+.lg-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:-0.005em;
+  padding:10px 18px;border-radius:var(--r-sm);border:1px solid transparent;
+  cursor:pointer;text-decoration:none;
+  transition:background-color .15s ease, border-color .15s ease, opacity .15s ease;
+}
+.lg-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.lg-btn-hi{background:var(--hi);color:#1a0e05;font-weight:600;min-width:160px;}
+.lg-btn-hi:hover:not(:disabled){background:#dd9264;}
+.lg-btn-ghost{background:transparent;border-color:var(--line-2);color:var(--ink);}
+.lg-btn-ghost:hover:not(:disabled){background:var(--bg-3);border-color:var(--dim);}
+.lg-btn-sm{
+  font-family:var(--mono);font-size:11px;font-weight:500;
+  padding:7px 14px;min-width:0;letter-spacing:0.06em;text-transform:uppercase;
+}
+
+/* working state */
+.lg-running{
+  position:relative;width:60px;height:60px;margin-bottom:20px;flex-shrink:0;
+}
+.lg-running .lg-core{
+  position:absolute;inset:14px;border-radius:var(--r-sm);
+  background:rgba(212,133,83,.14);border:1px solid rgba(212,133,83,.4);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--hi);font-family:var(--mono);font-weight:500;font-size:13px;z-index:2;
+}
+.lg-running .lg-ring{
+  position:absolute;inset:0;border-radius:50%;
+  border:1px solid var(--hi);opacity:0;
+  animation:lg-ring 2.2s ease-out infinite;
+}
+.lg-running .lg-ring:nth-child(2){animation-delay:.7s;}
+.lg-running .lg-ring:nth-child(3){animation-delay:1.4s;}
+@keyframes lg-ring{0%{transform:scale(.55);opacity:.65;}100%{transform:scale(1.3);opacity:0;}}
+.lg-status{
+  font-size:14px;font-weight:500;letter-spacing:-0.005em;color:var(--ink);
+  margin-bottom:18px;min-height:20px;text-align:center;
+  transition:opacity .3s ease;
+}
+.lg-checklist{
+  width:100%;max-width:280px;display:flex;flex-direction:column;gap:4px;
+  margin-bottom:18px;
+}
+.lg-check{
+  display:flex;align-items:center;gap:10px;padding:4px 0;
+  font-family:var(--mono);font-size:11px;color:var(--faint);
+  transition:color .25s ease;
+}
+.lg-check.lg-active{color:var(--ink);}
+.lg-check.lg-done{color:var(--muted);}
+.lg-check-ico{
+  width:14px;height:14px;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.lg-dot-e{width:5px;height:5px;border-radius:50%;background:var(--dim);}
+.lg-spin{
+  width:11px;height:11px;border:1.5px solid var(--dim);border-top-color:var(--hi);
+  border-radius:50%;animation:lg-spin .8s linear infinite;
+}
+@keyframes lg-spin{to{transform:rotate(360deg);}}
+.lg-tick{color:var(--hi);font-size:12px;line-height:1;}
+.lg-track{
+  width:100%;max-width:280px;height:2px;
+  background:var(--line-2);border-radius:2px;overflow:hidden;
+}
+.lg-fill{
+  height:100%;width:0%;background:var(--hi);
+  box-shadow:0 0 8px rgba(212,133,83,.5);
+  transition:width .4s ease;border-radius:2px;
+}
+
+/* summary */
+.lg-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:100px;
+  background:rgba(111,179,154,.12);border:1px solid rgba(111,179,154,.3);
+  color:var(--green);font-family:var(--mono);font-size:10px;
+  text-transform:uppercase;letter-spacing:0.12em;margin-bottom:16px;
+}
+.lg-badge::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:var(--green);
+}
+.lg-sum-title{
+  font-family:var(--sans);font-size:24px;font-weight:500;
+  letter-spacing:-0.02em;color:var(--ink);text-align:center;margin:0 0 10px;
+}
+.lg-criteria{
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  text-align:center;margin:0 0 22px;max-width:300px;line-height:1.65;
+}
+.lg-sum-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+
+/* right — sheet */
+.lg-right{
+  display:flex;flex-direction:column;
+  background:var(--bg);min-height:0;
+}
+.lg-sheet-head{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 18px;border-bottom:1px solid var(--line);
+  flex-shrink:0;
+}
+.lg-sheet-icon{
+  width:24px;height:24px;border-radius:5px;
+  background:rgba(111,179,154,.14);border:1px solid rgba(111,179,154,.28);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--green);font-family:var(--mono);font-size:9px;font-weight:600;
+  flex-shrink:0;
+}
+.lg-sheet-name{
+  font-family:var(--mono);font-size:12px;color:var(--ink);flex:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.lg-sheet-name .lg-ext{color:var(--faint);}
+.lg-sheet-meta{
+  font-family:var(--mono);font-size:10px;color:var(--faint);
+  text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap;
+}
+.lg-sheet-wrap{
+  flex:1;overflow:auto;padding:6px;min-height:340px;
+}
+.lg-sheet-wrap::-webkit-scrollbar{width:6px;height:6px;}
+.lg-sheet-wrap::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:3px;}
+.lg-sheet{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;table-layout:fixed;}
+.lg-sheet th, .lg-sheet td{
+  padding:10px 11px;
+  border-bottom:1px solid var(--line);border-right:1px solid var(--line);
+  text-align:left;vertical-align:middle;height:42px;
+}
+.lg-sheet th{
+  background:var(--bg-2);font-family:var(--mono);font-weight:500;
+  font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;
+  position:sticky;top:0;z-index:1;
+}
+.lg-sheet th.lg-col-row, .lg-sheet td.lg-col-row{
+  width:36px;background:var(--bg-2);color:var(--faint);
+  text-align:center;font-family:var(--mono);font-size:11px;
+}
+.lg-sheet td.lg-col-co{width:24%;font-weight:500;color:var(--ink);}
+.lg-sheet td.lg-col-loc, .lg-sheet td.lg-col-size{
+  width:16%;font-family:var(--mono);font-size:11px;color:var(--muted);
+}
+.lg-sheet td.lg-col-fit{width:54px;text-align:center;}
+.lg-sheet td.lg-col-why{color:var(--muted);line-height:1.45;font-size:11.5px;}
+.lg-fit-pill{
+  display:inline-block;font-family:var(--mono);font-size:10px;font-weight:500;
+  padding:3px 8px;border-radius:5px;
+  background:rgba(212,133,83,.14);color:var(--hi);
+  border:1px solid rgba(212,133,83,.32);
+}
+.lg-empty::after{
+  content:'';display:inline-block;
+  width:70%;height:7px;background:rgba(236,231,220,.05);border-radius:3px;
+}
+.lg-empty.lg-short::after{width:42%;}
+.lg-empty.lg-tiny::after{width:28%;}
+.lg-sheet tr.lg-filling td{animation:lg-flash .65s ease-out;}
+@keyframes lg-flash{0%{background-color:rgba(212,133,83,.22);}100%{background-color:transparent;}}
+
+.lg-sheet-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 18px;border-top:1px solid var(--line);
+  background:var(--bg-2);
+  font-family:var(--mono);font-size:10px;color:var(--faint);
+  text-transform:uppercase;letter-spacing:0.08em;flex-shrink:0;
+}
+
+.lg-disclaimer{
+  font-family:var(--mono);font-size:11px;color:var(--faint);
+  letter-spacing:0.02em;text-align:center;margin:28px auto 0;
+  max-width:580px;line-height:1.65;
+}
+.lg-disclaimer .lg-mark{color:var(--hi);}
+
+/* desktop layout */
+@media (min-width:861px){
+  .lg-work{
+    grid-template-columns:minmax(380px,42%) 1fr;
+    min-height:540px;
+  }
+  .lg-left{border-bottom:none;border-right:1px solid var(--line);}
+  .lg-stage{min-height:0;flex:1;}
+}
+
+/* mobile refinements */
+@media (max-width:860px){
+  .lg-head{margin-bottom:32px;}
+  .lg-chrome{padding:10px 14px;gap:10px;}
+  .lg-chrome-url{font-size:10px;}
+  .lg-chrome-status{font-size:9px;letter-spacing:0.1em;}
+  .lg-agent-head{padding:12px 14px;}
+  .lg-stage{min-height:340px;}
+  .lg-view{padding:24px 18px;}
+  .lg-ask{font-size:20px;margin-bottom:22px;}
+  .lg-fields{gap:14px;margin-bottom:20px;}
+  .lg-actions{flex-direction:column-reverse;align-items:stretch;}
+  .lg-actions .lg-btn{width:100%;}
+  .lg-btn-hi{min-width:0;}
+  .lg-sheet th, .lg-sheet td{padding:9px 9px;height:40px;font-size:11px;}
+  .lg-sheet td.lg-col-loc, .lg-sheet td.lg-col-size,
+  .lg-sheet th.lg-col-loc, .lg-sheet th.lg-col-size{display:none;}
+  .lg-sheet-head{padding:10px 14px;}
+  .lg-sheet-meta{font-size:9px;}
+  .lg-sheet-foot{padding:9px 14px;}
+  .lg-sum-actions{width:100%;}
+  .lg-sum-actions .lg-btn{flex:1;}
+}
+@media (max-width:480px){
+  .lg-sheet td.lg-col-why{font-size:11px;}
+  .lg-sheet td.lg-col-co{width:42%;}
+  .lg-chrome-url{display:none;}
+}
+
 </style>
 </head>
 <body>
@@ -1045,1070 +1379,162 @@ footer{
 
 
 
-<!-- WHAT IT DOES — TABBED AGENTS -->
-<section class="sec agents-sec" id="what-it-does">
+<!-- WHAT IT DOES — LEAD PIPELINE AGENT DEMO -->
+<section class="sec lg-sec" id="what-it-does">
   <div class="si">
-    <div class="agents-head">
-      <h2 class="sec-h centered r"><span style="color:var(--hi);">Your tools work with you.</span><br>Your AI agents work for you.</h2>
-      <p class="sec-sub centered r" style="margin:0 auto;">An AI agent living inside your business 24/7 — built around your workflows, connected to your tools, and running the tasks that used to eat your day.</p>
+    <div class="lg-head r">
+      <span class="sec-eyebrow">Live demo · Lead pipeline agent</span>
+      <h2 class="sec-h centered">Two questions.<br><em>Lead sheet filled.</em></h2>
+      <p class="sec-sub centered">Tell the agent about your business and your ideal lead. Watch it fill a sample spreadsheet in real time so you can see the workflow.</p>
     </div>
 
-    <div class="agent-tabs r" id="agent-tabs">
-      <div class="agent-tab active" data-tab="mr">Market Research</div>
-      <div class="agent-tab" data-tab="ci">Competitive Intel</div>
-      <div class="agent-tab" data-tab="rep">Reputation</div>
-      <div class="agent-tab" data-tab="assist">Daily Assistant</div>
-    </div>
-
-    <!-- MARKET RESEARCH -->
-    <div class="agent-panel active r" id="panel-mr">
-      <div class="ap-left">
-        <span class="ap-tag">Market Research Agent</span>
-        <h3 class="ap-title">Scans the market.<br>Builds your campaign.</h3>
-        <p class="ap-desc">Reads Reddit, Google Trends, and competitor ads — then synthesizes everything into a ready-to-run campaign brief.</p>
-        <div class="ap-handles">
-          <div class="ap-handle">Live source scanning</div>
-          <div class="ap-handle">Trend & demand analysis</div>
-          <div class="ap-handle">Competitor ad monitoring</div>
-          <div class="ap-handle">Campaign brief generation</div>
-        </div>
+    <div class="lg-frame r">
+      <div class="lg-chrome">
+        <div class="lg-chrome-dots"><span></span><span></span><span></span></div>
+        <div class="lg-chrome-url">app.clawdified.com / lead-pipeline</div>
+        <div class="lg-chrome-status"><span class="lg-pulse"></span>Sample run</div>
       </div>
-      <div class="ap-right">
-        <div class="demo-window">
-          <div class="demo-bar">
-            <div class="demo-dots"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div></div>
-            <span class="demo-title">Market Research Agent</span>
-            <div class="demo-live"><span class="demo-live-dot"></span>Scanning now</div>
-          </div>
-          <div style="display:flex;flex-direction:column;overflow:hidden;">
-            <div class="dbt-bar">
-              <div class="dbt-tab active" id="mr-tab-src"><span class="dbt-tdot" id="mr-dot-src"></span>🔍 Sources</div>
-              <div class="dbt-tab" id="mr-tab-ins"><span class="dbt-tdot" id="mr-dot-ins"></span>💡 Insights</div>
-              <div class="dbt-tab" id="mr-tab-brx"><span class="dbt-tdot" id="mr-dot-brx"></span>📋 Brief</div>
-              <div class="agent-pill"><span class="agent-pill-dot"></span>Agent active</div>
+
+      <div class="lg-work" id="lg-section">
+        <div class="lg-left">
+          <div class="lg-agent-head">
+            <div class="lg-agent-av">LP</div>
+            <div class="lg-agent-meta">
+              <div class="lg-agent-name">Lead Pipeline Agent</div>
+              <div class="lg-agent-live"><span class="lg-pulse"></span>Online</div>
             </div>
-            <div class="inner-panel show" id="mrp-src" style="padding:14px;gap:7px;"></div>
-            <div class="inner-panel" id="mrp-ins" style="padding:14px;gap:6px;"></div>
-            <div class="inner-panel" id="mrp-brx" style="padding:14px;gap:0;"></div>
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- COMPETITIVE INTEL -->
-    <div class="agent-panel r" id="panel-ci">
-      <div class="ap-left">
-        <span class="ap-tag">Competitive Intelligence Agent</span>
-        <h3 class="ap-title">Watches your competitors.<br>Tells you your move.</h3>
-        <p class="ap-desc">Weekly scan of competitor pricing, reviews, new services, and ads. Monday morning: here's what changed and what to do about it.</p>
-        <div class="ap-handles">
-          <div class="ap-handle">Google My Business monitoring</div>
-          <div class="ap-handle">Review sentiment tracking</div>
-          <div class="ap-handle">Pricing & service changes</div>
-          <div class="ap-handle">Action recommendations</div>
-        </div>
-      </div>
-      <div class="ap-right">
-        <div class="demo-window">
-          <div class="demo-bar">
-            <div class="demo-dots"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div></div>
-            <span class="demo-title">Competitive Intel Agent</span>
-            <div class="demo-live"><span class="demo-live-dot"></span>Agent active</div>
-          </div>
-          <div style="display:flex;flex-direction:column;overflow:hidden;">
-            <div class="dbt-bar">
-              <div class="dbt-tab active" id="ci-tab-sc"><span class="dbt-tdot" id="ci-dot-sc"></span>🔎 Scanning</div>
-              <div class="dbt-tab" id="ci-tab-ch"><span class="dbt-tdot" id="ci-dot-ch"></span>⚡ Changes</div>
-              <div class="dbt-tab" id="ci-tab-mv"><span class="dbt-tdot" id="ci-dot-mv"></span>📬 Your Move</div>
-              <div class="agent-pill"><span class="agent-pill-dot"></span>Agent active</div>
+          <div class="lg-stage">
+
+            <div class="lg-view lg-on" id="lg-view-step1">
+              <h3 class="lg-ask">What's your <em>website</em>?</h3>
+              <div class="lg-fields">
+                <div class="lg-field">
+                  <label class="lg-field-label" for="lg-url">Website</label>
+                  <input type="url" class="lg-input lg-mono" id="lg-url" placeholder="https://your-business.com" value="https://acme-hvac-software.com" autocomplete="off" spellcheck="false">
+                </div>
+              </div>
+              <button type="button" class="lg-btn lg-btn-hi" id="lg-step1-next">Next &rarr;</button>
             </div>
-            <div class="inner-panel show" id="cip-sc" style="padding:14px;gap:5px;"></div>
-            <div class="inner-panel" id="cip-ch" style="padding:14px;gap:6px;"></div>
-            <div class="inner-panel" id="cip-mv" style="padding:14px;gap:6px;"></div>
+
+            <div class="lg-view" id="lg-view-step2">
+              <h3 class="lg-ask">Describe your <em>ideal lead</em>.</h3>
+              <div class="lg-fields">
+                <div class="lg-field">
+                  <label class="lg-field-label" for="lg-ideal">Your ideal lead</label>
+                  <textarea class="lg-input lg-area" id="lg-ideal" rows="4" placeholder="e.g., HVAC contractors in TN with 10–50 employees, still on paper dispatch">HVAC contractors in the Southeast with 10–50 employees, currently using paper or spreadsheets for dispatch</textarea>
+                </div>
+              </div>
+              <div class="lg-actions">
+                <button type="button" class="lg-btn lg-btn-ghost" id="lg-step2-back">&larr; Back</button>
+                <button type="button" class="lg-btn lg-btn-hi" id="lg-step2-find">Run the agent &rarr;</button>
+              </div>
+            </div>
+
+            <div class="lg-view" id="lg-view-working">
+              <div class="lg-running" aria-hidden="true">
+                <div class="lg-ring"></div>
+                <div class="lg-ring"></div>
+                <div class="lg-ring"></div>
+                <div class="lg-core">LP</div>
+              </div>
+              <div class="lg-status" id="lg-status">Analyzing your business&hellip;</div>
+              <div class="lg-checklist" id="lg-checklist"></div>
+              <div class="lg-track"><div class="lg-fill" id="lg-fill"></div></div>
+            </div>
+
+            <div class="lg-view" id="lg-view-summary">
+              <div class="lg-badge" id="lg-badge">5 sample leads ready</div>
+              <h3 class="lg-sum-title">Done.</h3>
+              <p class="lg-criteria" id="lg-criteria">Sample criteria</p>
+              <div class="lg-sum-actions">
+                <button type="button" class="lg-btn lg-btn-ghost lg-btn-sm" id="lg-restart">&#8634; Try again</button>
+                <button type="button" class="lg-btn lg-btn-hi lg-btn-sm" id="lg-export">&darr; Export CSV</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="lg-right">
+          <div class="lg-sheet-head">
+            <div class="lg-sheet-icon">XLS</div>
+            <div class="lg-sheet-name">leads-demo<span class="lg-ext">.xlsx</span></div>
+            <div class="lg-sheet-meta" id="lg-sheet-meta">Empty &middot; awaiting input</div>
+          </div>
+          <div class="lg-sheet-wrap">
+            <table class="lg-sheet" aria-label="Sample lead spreadsheet">
+              <thead>
+                <tr>
+                  <th class="lg-col-row" scope="col">#</th>
+                  <th scope="col">Company</th>
+                  <th class="lg-col-loc" scope="col">Location</th>
+                  <th class="lg-col-size" scope="col">Size</th>
+                  <th class="lg-col-fit" scope="col">Fit</th>
+                  <th scope="col">Why it matches</th>
+                </tr>
+              </thead>
+              <tbody id="lg-sheet-body"></tbody>
+            </table>
+          </div>
+          <div class="lg-sheet-foot">
+            <div id="lg-sheet-status">0 of 5 rows</div>
+            <div>Sample data</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- REPUTATION -->
-    <div class="agent-panel r" id="panel-rep">
-      <div class="ap-left">
-        <span class="ap-tag">Reputation Agent</span>
-        <h3 class="ap-title">Every review.<br>Responded to. Tonight.</h3>
-        <p class="ap-desc">Scans every platform overnight, drafts responses in your voice, posts them, and flags the one that needs you personally.</p>
-        <div class="ap-handles">
-          <div class="ap-handle">Google, Yelp, Angi, HomeAdvisor</div>
-          <div class="ap-handle">Responses in your voice</div>
-          <div class="ap-handle">Auto-post + smart flagging</div>
-          <div class="ap-handle">Referral follow-ups</div>
-        </div>
-      </div>
-      <div class="ap-right">
-        <div class="demo-window">
-          <div class="demo-bar">
-            <div class="demo-dots"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div></div>
-            <span class="demo-title">Reputation Agent</span>
-            <div class="demo-live"><span class="demo-live-dot"></span>Running overnight</div>
-          </div>
-          <div style="padding:16px;display:flex;flex-direction:column;gap:0;" id="rep-log"></div>
-          <div style="padding:12px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px;" id="rep-report"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DAILY ASSISTANT -->
-    <div class="agent-panel r" id="panel-assist">
-      <div class="ap-left">
-        <span class="ap-tag">Daily Assistant Agent</span>
-        <h3 class="ap-title">Your day.<br>Already handled.</h3>
-        <p class="ap-desc">Briefs your morning, updates your calendar, messages clients, sends team emails — all on command, any time.</p>
-        <div class="ap-handles">
-          <div class="ap-handle">Morning schedule briefings</div>
-          <div class="ap-handle">Calendar updates on the fly</div>
-          <div class="ap-handle">Client messaging</div>
-          <div class="ap-handle">Mass team emails</div>
-        </div>
-      </div>
-      <div class="ap-right">
-        <div class="demo-window">
-          <div class="demo-bar">
-            <div class="demo-dots"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div></div>
-            <span class="demo-title">Daily Assistant</span>
-            <div class="demo-live"><span class="demo-live-dot"></span>Always on</div>
-          </div>
-          <div style="padding:14px;display:flex;flex-direction:column;gap:10px;" id="assist-chat"></div>
-        </div>
-      </div>
-    </div>
-
+    <p class="lg-disclaimer r"><span class="lg-mark">Public-safe sample run.</span> The full build uses your approved data sources, pushes leads into your CRM, drafts outreach in your voice, and follows up — wired into your real stack.</p>
   </div>
 </section>
 
-<!-- LIVE PRODUCT DEMO -->
-<section class="sec tools-sec" id="tools">
-  <div class="si">
-    <div class="tools-head r" style="text-align:center;margin-bottom:40px;">
-      <h2 class="sec-h centered" style="max-width:680px;margin:0 auto;"><span style="color:var(--hi);">AI agents are complex.</span><br>We make them simple.</h2>
-      <p class="sec-sub centered" style="margin:16px auto 0;max-width:480px;">This is what it looks like inside your business — reading your tools, running your tasks, reporting back. No prompts. No babysitting.</p>
-    </div>
 
-    <!-- SIDE BY SIDE: desktop + phone -->
-    <div class="r tools-demo-grid" style="display:grid;grid-template-columns:1fr 200px;gap:16px;align-items:stretch;">
 
-      <!-- Desktop browser -->
-      <div style="background:var(--bg-3);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.55);display:flex;flex-direction:column;">
-        <div style="background:rgba(255,255,255,.03);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
-          <div style="display:flex;gap:5px;">
-            <div style="width:8px;height:8px;border-radius:50%;background:var(--line);"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:var(--line);"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:var(--line);"></div>
-          </div>
-          <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:5px;padding:4px 12px;font-size:11px;color:var(--faint);">app.clawdified.com</div>
-          <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--green);"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;display:inline-block;"></span> 4 agents active</div>
-        </div>
-        <iframe srcdoc="<!DOCTYPE html>
-<html lang=&quot;en&quot;>
-<head>
-<meta charset=&quot;UTF-8&quot;>
-<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
-<title>Clawdified</title>
-<link href=&quot;https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&amp;display=swap&quot; rel=&quot;stylesheet&quot;>
-<style>
-:root{--bg:#000;--bg2:#080808;--bg3:#0e0e0e;--tx:#fff;--tx2:rgba(255,255,255,.5);--tx3:rgba(255,255,255,.22);--ln:rgba(255,255,255,.06);--hi:#c47840;--gn:#3aab77;--rd:#d44;--bl:#5b8dd9;--yl:#d4a03a;--pu:#7c6fb0;--sb:176px}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--tx);font-family:'DM Sans',system-ui,sans-serif;font-size:13px;font-weight:400;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex}
-
-/* ─── Sidebar ─── */
-.sb{width:var(--sb);background:var(--bg2);border-right:1px solid var(--ln);display:flex;flex-direction:column;flex-shrink:0}
-.sb-top{padding:18px 14px 24px;display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--tx)}
-.sb-top svg{flex-shrink:0}
-.sb-nav{display:flex;flex-direction:column;gap:1px;padding:0 6px;flex:1}
-.n{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;color:var(--tx2);font-size:12px;font-weight:400;transition:background .1s,color .1s}
-.n:hover{background:rgba(255,255,255,.03);color:var(--tx)}
-.n.on{background:rgba(255,255,255,.06);color:var(--tx);font-weight:500}
-.n svg{width:14px;height:14px;opacity:.35;flex-shrink:0}.n.on svg{opacity:.6}
-.n .ct{margin-left:auto;font-size:9px;font-weight:600;background:rgba(196,120,64,.8);color:#fff;padding:0 5px;border-radius:8px;line-height:16px}
-.sb-ft{padding:10px 14px;border-top:1px solid var(--ln);display:flex;align-items:center;gap:6px}
-.sb-av{width:22px;height:22px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:var(--tx3)}
-.sb-fn{font-size:11px;font-weight:500;color:var(--tx)}
-.sb-dot{margin-left:auto;width:5px;height:5px;border-radius:50%;background:var(--gn);animation:pulse 2.2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
-
-/* ─── Layout ─── */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.pg{display:none;flex-direction:column;flex:1;overflow:hidden}.pg.on{display:flex}
-.hd{padding:16px 22px 12px;border-bottom:1px solid var(--ln);display:flex;align-items:baseline;gap:12px;flex-shrink:0}
-.hd-t{font-size:14px;font-weight:600}.hd-s{font-size:10.5px;color:var(--tx3);margin-left:auto}
-@keyframes fu{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
-
-/* ─── Agent list ─── */
-.al{display:flex;flex:1;overflow:hidden}
-.als{width:210px;border-right:1px solid var(--ln);overflow-y:auto;padding:4px}.als::-webkit-scrollbar{width:0}
-.ac{display:flex;align-items:center;gap:8px;padding:8px;border-radius:6px;cursor:pointer;transition:background .1s}
-.ac:hover{background:rgba(255,255,255,.03)}.ac.on{background:rgba(255,255,255,.05)}
-.ad{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:600;color:#fff;flex-shrink:0}
-.an{font-size:12px;font-weight:400;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ac.on .an{font-weight:500}
-.ap{font-size:10px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
-
-/* ─── Chat ─── */
-.ch{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.chh{padding:10px 18px;border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:8px;flex-shrink:0}
-.chd{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:600;color:#fff;flex-shrink:0}
-.chn{font-size:12.5px;font-weight:500}.cht{font-size:10.5px;color:var(--tx3)}
-.cho{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:9.5px;color:var(--gn)}.cho::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--gn);animation:pulse 2.2s infinite}
-.ms{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
-.ms::-webkit-scrollbar{width:2px}.ms::-webkit-scrollbar-thumb{background:rgba(255,255,255,.06)}
-.m{display:flex;gap:7px;align-items:flex-start;animation:fu .18s ease}.m.u{flex-direction:row-reverse}
-.ma{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;flex-shrink:0;margin-top:2px}
-.mau{background:var(--bg3);color:var(--tx3)}
-.mb{max-width:76%;display:flex;flex-direction:column;gap:3px}.m.u .mb{align-items:flex-end}
-.bb{padding:7px 11px;font-size:12px;line-height:1.6;word-break:break-word}
-.ba{background:var(--bg3);color:var(--tx);border-radius:2px 8px 8px 8px}
-.bu{background:var(--hi);color:#fff;border-radius:8px 2px 8px 8px}
-.bb p{margin:0 0 4px}.bb p:last-child{margin:0}.bb strong{font-weight:600}
-.mt{display:flex;gap:3px;flex-wrap:wrap;margin-top:2px}
-.tg{font-size:8.5px;font-weight:500;padding:1px 5px;border-radius:3px}
-.tg-g{background:rgba(58,171,119,.07);color:var(--gn)}.tg-b{background:rgba(91,141,217,.07);color:var(--bl)}.tg-a{background:rgba(196,120,64,.07);color:var(--hi)}.tg-r{background:rgba(221,68,68,.07);color:var(--rd)}
-
-/* ─── Proactive action card — upgraded ─── */
-.xc{margin-top:5px;padding:8px 11px;background:rgba(58,171,119,.04);border:1px solid rgba(58,171,119,.14);border-left:2px solid rgba(58,171,119,.5);border-radius:0 5px 5px 0}
-.xc-t{font-size:9.5px;font-weight:600;color:var(--gn);margin-bottom:3px;display:flex;align-items:center;gap:4px}
-.xc-b{font-size:11px;color:var(--tx2);line-height:1.45}
-
-/* ─── Suggested prompts ─── */
-.es{display:flex;flex-direction:column;gap:4px;padding-top:2px}
-.esl{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:4px}
-.ess{padding:7px 11px;border:1px solid var(--ln);border-radius:5px;font-size:11.5px;color:var(--tx2);cursor:pointer;max-width:380px;transition:all .14s;line-height:1.4}
-.ess:hover{border-color:rgba(196,120,64,.25);color:var(--tx);background:rgba(196,120,64,.03)}
-
-/* ─── Typing indicator ─── */
-.tp{display:flex;gap:4px;align-items:center;padding:7px 11px}
-.tp span{width:3.5px;height:3.5px;border-radius:50%;background:var(--tx3);animation:td 1.2s ease-in-out infinite}
-.tp span:nth-child(2){animation-delay:.2s}.tp span:nth-child(3){animation-delay:.4s}
-@keyframes td{0%,100%{opacity:.2;transform:translateY(0)}50%{opacity:.7;transform:translateY(-2px)}}
-
-/* ─── Input ─── */
-.ip{padding:8px 18px 10px;border-top:1px solid var(--ln);flex-shrink:0}
-.ipr{display:flex;gap:5px;align-items:flex-end}
-.ipw{flex:1;background:var(--bg3);border:1px solid var(--ln);border-radius:7px;display:flex;align-items:flex-end;transition:border-color .12s}
-.ipw:focus-within{border-color:rgba(255,255,255,.1)}
-#mi{flex:1;background:transparent;border:none;outline:none;padding:7px 10px;font-size:12px;font-family:inherit;font-weight:400;color:var(--tx);resize:none;max-height:80px;line-height:1.4}
-#mi::placeholder{color:rgba(255,255,255,.12)}
-.sn{width:28px;height:28px;margin:3px;background:var(--hi);border:none;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;opacity:.8;transition:opacity .1s}.sn:hover{opacity:1}.sn svg{fill:#fff}
-
-/* ─── Shared scroll container ─── */
-.scr{padding:20px 24px;flex:1;overflow-y:auto}.scr::-webkit-scrollbar{width:2px}.scr::-webkit-scrollbar-thumb{background:rgba(255,255,255,.05)}
-
-/* ─── Section label ─── */
-.sec-lbl{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;margin-top:4px}
-
-/* ─── Automations — card grid ─── */
-.au-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
-.wf-card{background:var(--bg2);border:1px solid var(--ln);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;transition:border-color .15s}
-.wf-card:hover{border-color:rgba(255,255,255,.1)}
-.wf-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
-.wf-body{flex:1;min-width:0}
-.wf-name{font-size:12px;font-weight:500;color:var(--tx);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.wf-sched{font-size:10px;color:var(--tx3)}
-.wf-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:100px;flex-shrink:0}
-.wf-badge.active{background:rgba(58,171,119,.1);color:var(--gn)}
-.wf-badge.running{background:rgba(91,141,217,.1);color:var(--bl)}
-.wf-badge.scheduled{background:rgba(196,120,64,.1);color:var(--hi)}
-.wf-badge.failed{background:rgba(221,68,68,.1);color:var(--rd)}
-.au-agent-lbl{display:flex;align-items:center;gap:6px;margin-bottom:8px;margin-top:20px}
-.au-agent-lbl:first-of-type{margin-top:0}
-.au-agent-dot{width:6px;height:6px;border-radius:3px;flex-shrink:0}
-.au-agent-nm{font-size:10.5px;font-weight:500;color:var(--tx2)}
-
-/* ─── Activity — timeline ─── */
-.act-day{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:12px;margin-top:4px}
-.act-feed{display:flex;flex-direction:column;gap:2px;margin-bottom:24px}
-.act-row{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-radius:8px;transition:background .12s}
-.act-row:hover{background:var(--bg2)}
-.act-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0;padding-top:5px}
-.act-dot-c{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.act-row-body{flex:1;min-width:0}
-.act-row-txt{font-size:11.5px;color:var(--tx2);line-height:1.4}
-.act-row-meta{font-size:10px;color:var(--tx3);margin-top:1px;display:flex;align-items:center;gap:6px}
-.act-row-agent{color:var(--tx3)}
-
-/* ─── Inbox ─── */
-.ib-scr{padding:20px 24px;flex:1;overflow-y:auto}.ib-scr::-webkit-scrollbar{width:2px}
-.ib-card{background:var(--bg2);border:1px solid var(--ln);border-radius:10px;padding:14px 16px;margin-bottom:8px;transition:border-color .15s}
-.ib-card:last-child{margin-bottom:0}
-.ib-card:hover{border-color:rgba(255,255,255,.1)}
-.ib-card.is-flagged{border-left:2px solid var(--rd)}
-.ib-card.is-urgent{border-left:2px solid var(--rd)}
-.ib-card.is-waiting{border-left:2px solid var(--yl)}
-.ib-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.ib-p{font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
-.ib-p.waiting{color:var(--yl)}.ib-p.flagged{color:var(--rd)}.ib-p.urgent{color:var(--rd)}
-.ib-t{font-size:13px;font-weight:500;color:var(--tx);flex:1}
-.ib-a{font-size:10px;color:var(--tx3);white-space:nowrap}
-.ib-d{font-size:11.5px;color:var(--tx2);line-height:1.5;margin-bottom:10px}
-.ib-btns{display:flex;gap:6px}
-.ibtn{font-size:11px;font-weight:500;padding:5px 14px;border-radius:6px;cursor:pointer;border:none;transition:opacity .12s,background .12s}.ibtn:hover{opacity:.8}
-.ibtn-a{background:var(--gn);color:#fff}.ibtn-e{background:rgba(255,255,255,.04);color:var(--tx2);border:1px solid var(--ln)}
-
-/* ─── Integrations ─── */
-.ig-scr{padding:20px 24px;flex:1;overflow-y:auto}.ig-scr::-webkit-scrollbar{width:2px}
-.ig-section-lbl{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;margin-top:20px}
-.ig-section-lbl:first-of-type{margin-top:0}
-.ig-g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px}
-.ig{padding:12px;background:var(--bg2);border:1px solid var(--ln);border-radius:9px;display:flex;align-items:center;gap:10px;transition:border-color .14s;cursor:default}
-.ig:hover{border-color:rgba(255,255,255,.1)}
-.ig-i{font-size:16px;flex-shrink:0;width:24px;text-align:center}
-.ig-n{font-size:11.5px;font-weight:400;color:var(--tx)}.ig-s{font-size:9.5px;margin-top:1px}
-.ig-s.live{color:var(--gn)}.ig-s.off{color:var(--tx3)}
-.ig-add{padding:12px;background:transparent;border:1px dashed rgba(255,255,255,.08);border-radius:9px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:all .14s;font-size:11px;color:var(--tx3);font-weight:400}
-.ig-add:hover{border-color:rgba(196,120,64,.2);color:var(--hi)}
-
-/* ─── Replay ─── */
-.replay-wrap{display:flex;justify-content:center;padding:4px 0 2px;animation:fu .3s ease}
-.replay-btn{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--ln);color:var(--tx3);font-size:10.5px;font-weight:500;font-family:inherit;padding:5px 13px;border-radius:100px;cursor:pointer;transition:border-color .15s,color .15s,background .15s}
-.replay-btn:hover{border-color:rgba(196,120,64,.3);color:var(--hi);background:rgba(196,120,64,.04)}
-.replay-btn svg{width:10px;height:10px;flex-shrink:0;opacity:.6}
-/* ─── Filter bar ─── */
-.filter-bar{display:flex;align-items:center;gap:6px;padding:0 24px 14px;flex-wrap:wrap;flex-shrink:0}
-.filter-lbl{font-size:9.5px;color:var(--tx3);margin-right:2px;white-space:nowrap}
-.fp{font-size:10.5px;font-weight:500;padding:4px 11px;border-radius:100px;border:1px solid var(--ln);color:var(--tx3);background:transparent;cursor:pointer;transition:all .14s;white-space:nowrap}
-.fp:hover{border-color:rgba(255,255,255,.14);color:var(--tx2)}
-.fp.on{border-color:transparent;color:#fff}
-
-/* ─── Mobile: hide sidebar + agent list, show only chat ─── */
-@media(max-width:500px){
-  .sb{display:none}
-  .als{display:none}
-  .al{display:block}
-  .ch{display:flex}
-  .hd{padding:10px 14px 8px}
-  .hd-t{font-size:12px}
-  .ms{padding:10px 12px}
-  .bb{font-size:11px;padding:6px 9px}
-  .mb{max-width:90%}
-  .ip{padding:6px 12px 8px}
-  #mi{font-size:11px;padding:6px 8px}
-  .ig-g{grid-template-columns:repeat(2,1fr)}
-  .ess{font-size:10.5px}
-  .xc{padding:6px 9px}
-  .xc-b{font-size:10px}
-  .filter-bar{padding:0 12px 10px}
-}
-</style>
-</head>
-<body>
-<div class=&quot;sb&quot;>
-  <div class=&quot;sb-top&quot;>
-    <svg width=&quot;14&quot; height=&quot;14&quot; viewBox=&quot;0 0 30 30&quot; fill=&quot;none&quot;><path d=&quot;M10 3 C18 3 23 8 23 15 C23 21 18 25 13 25 C10 25 8 23 9 21 C10 19 13 20 13 18 C13 14 9 10 7 7 C5 4 7 3 10 3Z&quot; fill=&quot;#c47840&quot;/></svg>
-    Clawdified
-  </div>
-  <div class=&quot;sb-nav&quot;>
-    <div class=&quot;n on&quot; onclick=&quot;nav('ag')&quot; id=&quot;n-ag&quot;><svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.2&quot;><path d=&quot;M2 6l6-4 6 4v8H2z&quot;/><path d=&quot;M6 14V9h4v5&quot;/></svg>Agents</div>
-    <div class=&quot;n&quot; onclick=&quot;nav('au')&quot; id=&quot;n-au&quot;><svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.2&quot;><path d=&quot;M4 2v4l4 2-4 2v4&quot;/><path d=&quot;M12 8h2&quot;/></svg>Automations</div>
-    <div class=&quot;n&quot; onclick=&quot;nav('ib')&quot; id=&quot;n-ib&quot;><svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.2&quot;><rect x=&quot;2&quot; y=&quot;3&quot; width=&quot;12&quot; height=&quot;10&quot; rx=&quot;1.5&quot;/><path d=&quot;M2 6l6 4 6-4&quot;/></svg>Inbox<span class=&quot;ct&quot;>3</span></div>
-    <div class=&quot;n&quot; onclick=&quot;nav('ig')&quot; id=&quot;n-ig&quot;><svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.2&quot;><circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;2&quot;/><path d=&quot;M8 2v2M8 12v2M2 8h2M12 8h2&quot;/></svg>Integrations</div>
-    <div class=&quot;n&quot; onclick=&quot;nav('at')&quot; id=&quot;n-at&quot;><svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.2&quot;><polyline points=&quot;2 10 5 6 8 9 11 4 14 7&quot;/></svg>Activity</div>
-  </div>
-  <div class=&quot;sb-ft&quot;>
-    <div class=&quot;sb-av&quot;>M</div>
-    <div class=&quot;sb-fn&quot;>Mike</div>
-    <div class=&quot;sb-dot&quot;></div>
-  </div>
-</div>
-
-<div class=&quot;main&quot;>
-  <div class=&quot;pg on&quot; id=&quot;p-ag&quot;>
-    <div class=&quot;al&quot;>
-      <div class=&quot;als&quot; id=&quot;als&quot;></div>
-      <div class=&quot;ch&quot;>
-        <div class=&quot;chh&quot;>
-          <div class=&quot;chd&quot; id=&quot;chd&quot;></div>
-          <div>
-            <div class=&quot;chn&quot; id=&quot;chn&quot;></div>
-            <div class=&quot;cht&quot; id=&quot;chtl&quot;></div>
-          </div>
-          <div class=&quot;cho&quot;>Online</div>
-        </div>
-        <div class=&quot;ms&quot; id=&quot;ms&quot;></div>
-        <div class=&quot;ip&quot;>
-          <div class=&quot;ipr&quot;>
-            <div class=&quot;ipw&quot;>
-              <textarea id=&quot;mi&quot; rows=&quot;1&quot; placeholder=&quot;Message…&quot;></textarea>
-            </div>
-            <button class=&quot;sn&quot; onclick=&quot;send()&quot;>
-              <svg width=&quot;11&quot; height=&quot;11&quot; viewBox=&quot;0 0 16 16&quot;><path d=&quot;M14.5 8L2 2l2.5 6H14.5zm0 0L2 14l2.5-6H14.5z&quot;/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class=&quot;pg&quot; id=&quot;p-au&quot;><div class=&quot;hd&quot;><div class=&quot;hd-t&quot;>Automations</div><div class=&quot;hd-s&quot;>Always running in the background</div></div><div class=&quot;filter-bar&quot; id=&quot;au-filters&quot;></div><div class=&quot;scr&quot; id=&quot;au-scr&quot;></div></div>
-  <div class=&quot;pg&quot; id=&quot;p-ib&quot;><div class=&quot;hd&quot;><div class=&quot;hd-t&quot;>Inbox</div><div class=&quot;hd-s&quot;>Needs your approval</div></div><div class=&quot;filter-bar&quot; id=&quot;ib-filters&quot;></div><div class=&quot;ib-scr&quot; id=&quot;ib-scr&quot;></div></div>
-  <div class=&quot;pg&quot; id=&quot;p-ig&quot;><div class=&quot;hd&quot;><div class=&quot;hd-t&quot;>Integrations</div></div><div class=&quot;ig-scr&quot; id=&quot;ig-scr&quot;></div></div>
-  <div class=&quot;pg&quot; id=&quot;p-at&quot;><div class=&quot;hd&quot;><div class=&quot;hd-t&quot;>Activity</div><div class=&quot;hd-s&quot;>Last 24 hours</div></div><div class=&quot;filter-bar&quot; id=&quot;at-filters&quot;></div><div class=&quot;scr&quot; id=&quot;at-scr&quot;></div></div>
-</div>
-
-<script>
-var AG = [
-  {
-    id: 'finance',
-    nm: 'Finance Agent',
-    ini: 'FN',
-    cl: '#7c6fb0',
-    tl: ['QuickBooks', 'Gmail', 'Sheets', 'Slack'],
-    sg: [
-      'How are we looking this month — full snapshot',
-      'Flag every invoice overdue 30+ days and start collections',
-      'Send me a job-by-job P&amp;L breakdown for Q1'
-    ],
-    pv: '💰 April snapshot — 31% margin',
-    chat: [
-      {r:'u', t:'How are we looking this month — give me the full snapshot'},
-      {r:'a', t:'Pulling live from QuickBooks...', tg:[{l:'QuickBooks — live pull',s:'b'}]},
-      {r:'a', t:'**April — Month to Date**\n\nRevenue: **$127,400** · Costs: **$87,800** · Gross margin: **31.1%**\nInvoiced: $142,000 · Collected: $114,600 · Outstanding: **$27,400**\n\n⚠️ 2 invoices overdue 30+ days:\n• Torres Roofing — $8,200 (34 days)\n• Valley Property Mgmt — $5,500 (41 days)\n\nCollections sequences started on both.', tg:[{l:'✓ QuickBooks synced',s:'g'},{l:'⚠ 2 overdue — collections on',s:'r'}]},
-      {r:'u', t:'Good. Send me the Q1 job-by-job P&amp;L'},
-      {r:'a', t:'**Q1 Job P&amp;L — sent to your inbox.**\n\nTop performers: Henderson (41% margin), Parkview (38%).\nUnderperformer: Torres job — **14% margin.** Material costs ran 22% over estimate.\n\nFull breakdown in Sheets. Slack summary in #finance. Torres margin flagged for bid review.', tg:[{l:'✓ Gmail — report sent',s:'g'},{l:'✓ Sheets — full data',s:'g'},{l:'✓ Slack — posted',s:'g'}], ac:{t:'⚡ Torres margin alert', b:'14% is below your 25% floor. Material overrun of $3,400 identified. Recommend repricing this job type on future bids — flagged in Sheets.'}}
-    ],
-    auto: [
-      {s:'active', n:'Monthly P&amp;L Report', t:'1st of month'},
-      {s:'active', n:'Overdue Invoice Collections', t:'30-day trigger'},
-      {s:'active', n:'Weekly Cash Flow Snapshot', t:'Mon 7am'}
-    ],
-    act: [
-      'April snapshot delivered · 7:02 AM',
-      'Torres &amp; Valley — collections started · auto',
-      'Q1 job P&amp;L sent · Apr 1 7:00 AM'
-    ]
-  },
-
-  {
-    id: 'estimate',
-    nm: 'Estimating Agent',
-    ini: 'EA',
-    cl: '#5b8dd9',
-    tl: ['QuickBooks', 'Gmail', 'PDF Builder', 'HubSpot'],
-    sg: [
-      'Build a proposal for the Henderson commercial HVAC job — 12,000 sq ft',
-      'Price out a full roof replacement — 4,200 sq ft residential',
-      'Send the Riverside estimate with 10% contingency added'
-    ],
-    pv: '📄 Henderson proposal — $29,490',
-    chat: [
-      {r:'u', t:'Build a full estimate for the Henderson commercial HVAC job — 12,000 sq ft office space'},
-      {r:'a', t:'On it. Pulling current material pricing and labor rates...', tg:[{l:'QuickBooks — cost data',s:'b'},{l:'Ferguson Supply — live pricing',s:'b'}]},
-      {r:'a', t:'**Henderson Commercial HVAC — Draft Estimate**\n\n• 4× Carrier 5-ton rooftop units @ $2,840 = **$11,360**\n• Ductwork, vents &amp; sheet metal: **$8,200**\n• Labor — 3-man crew × 4 days: **$6,400**\n• Permits &amp; city inspection: **$850**\n\n**Subtotal: $26,810** · Margin: 34% · Est. timeline: 4–5 days', tg:[{l:'✓ 4 line items priced',s:'g'}]},
-      {r:'u', t:'Add 10% contingency and send it to Henderson'},
-      {r:'a', t:'**Updated total: $29,490.**\n\nBranded proposal PDF built and delivered:\n• Email sent to henderson@acmeprop.com\n• HubSpot opportunity created — $29,490 · &quot;Proposal Sent&quot;\n• Auto follow-up sequence armed: Fri 10am if no open, Sun if opened but silent', tg:[{l:'✓ PDF — sent',s:'g'},{l:'✓ HubSpot — logged',s:'g'},{l:'✓ Follow-up — armed',s:'g'}], ac:{t:'⚡ Escalation logic active', b:'Opened 3× with no reply → bumped to phone-call task. Opened 0× by Friday → re-sent with alternate subject line Sunday.'}}
-    ],
-    auto: [
-      {s:'active', n:'Material Price Sync', t:'6am daily'},
-      {s:'active', n:'Proposal Follow-Up Sequences', t:'On send'},
-      {s:'scheduled', n:'Monthly Margin Report', t:'1st of month'}
-    ],
-    act: [
-      'Henderson proposal sent — $29,490 · 2:14 PM',
-      'Riverside estimate drafted — $18,750 · 11:08 AM',
-      'April margin report delivered · Apr 1 7:00 AM'
-    ]
-  },
-
-  {
-    id: 'pipeline',
-    nm: 'Lead Pipeline Agent',
-    ini: 'LP',
-    cl: '#c47840',
-    tl: ['Gmail', 'HubSpot', 'Calendar', 'Twilio SMS'],
-    sg: [
-      'New lead just came in — commercial roofing, 20k sq ft downtown Knoxville',
-      'Which deals are closest to closing this week?',
-      'Re-engage every lead that went quiet in Q1'
-    ],
-    pv: '🔥 Henderson escalated to Hot',
-    chat: [
-      {r:'u', t:'New lead just came in — commercial roofing, downtown Knoxville, roughly 20,000 sq ft'},
-      {r:'a', t:'Enriching contact and scoring...', tg:[{l:'HubSpot — enriching',s:'b'},{l:'Lead scoring model',s:'b'}]},
-      {r:'a', t:'**Lead captured: Sarah Chen · Midtown Office Park**\n\nLead score: **9.1 / 10** — High value\nEstimated project size: **$75,000 – $95,000**\nDecision timeline: 30–45 days\n\nIntro email sent. Discovery call booked **Thu 2:00 PM**. $85K opportunity created in HubSpot and assigned to you.', tg:[{l:'✓ Gmail — intro sent',s:'g'},{l:'✓ Calendar — Thu 2pm',s:'g'},{l:'✓ HubSpot — $85K opp',s:'g'}]},
-      {r:'u', t:&quot;Good. What's closest to closing right now?&quot;},
-      {r:'a', t:'**3 deals on the edge this week:**\n\n• **Henderson** — Proposal opened 4× in 48 hrs, no reply. Score: 8.8. Moved to Hot.\n• **Parkview LLC** — Site visit complete, quiet 5 days. Re-engagement sent this morning.\n• **Torres** — Verbal yes, contract unsigned. Call task on your calendar at 3pm today.', tg:[{l:'✓ HubSpot — 3 flagged',s:'g'},{l:'✓ Torres — call set',s:'g'}], ac:{t:'⚡ Henderson — high close probability', b:'4 proposal opens in 48 hours is a buying signal. Moved to Hot, flagged for same-day call. Close probability: 74%.'}}
-    ],
-    auto: [
-      {s:'active', n:'Real-Time Lead Scoring', t:'On intake'},
-      {s:'active', n:'Cold Lead Re-Engagement', t:'Mon 8am'},
-      {s:'active', n:'Close-Probability Alerts', t:'Daily 8am'}
-    ],
-    act: [
-      'Sarah Chen — discovery call booked · 1:42 PM',
-      'Henderson moved to Hot · 9:14 AM',
-      'Q1 ghost list re-engaged — 14 contacts · Mon 8:00 AM'
-    ]
-  },
-
-  {
-    id: 'coordinator',
-    nm: 'Ops Coordinator',
-    ini: 'OC',
-    cl: '#3aab77',
-    tl: ['Calendar', 'Gmail', 'Twilio SMS', 'Slack', 'Sheets'],
-    sg: [
-      'Morning briefing — full rundown on every active job today',
-      'Miller job is running 2 days behind — handle client comms and reschedule crew',
-      'Generate a formal progress report for the Parkview client'
-    ],
-    pv: '📋 Morning briefing delivered',
-    chat: [
-      {r:'u', t:'Morning briefing — full rundown on every active job'},
-      {r:'a', t:'Pulling job status, crew schedules, and open flags...', tg:[{l:'Sheets — job data',s:'b'},{l:'Calendar',s:'b'}]},
-      {r:'a', t:'**Active Jobs — Monday Briefing**\n\n✅ **Henderson HVAC** — Day 2 of 4. On schedule. All 3 crew confirmed.\n⚠️ **Miller Roofing** — Supplier delayed materials 1 day. Crew shift needed.\n🔄 **Parkview Office** — Inspection at 2pm today. Permit cleared Friday.\n\nAll crews texted. Miller client notified of 1-day adjustment and given revised completion date.', tg:[{l:'✓ 3 jobs synced',s:'g'},{l:'✓ Crews texted',s:'g'},{l:'✓ Miller — client notified',s:'g'}]},
-      {r:'u', t:'Generate a progress report for Parkview'},
-      {r:'a', t:'**Parkview Progress Report — sent.**\n\nCovered: phases completed, inspection status, revised timeline, next milestones, crew schedule.\n\nDelivered to parkview@mgmt.com · Logged in Sheets · Slack summary posted to #active-jobs.\n\nParkview contact replied confirmed within 8 minutes.', tg:[{l:'✓ Gmail — delivered',s:'g'},{l:'✓ Sheets — logged',s:'g'},{l:'✓ Slack — posted',s:'g'}], ac:{t:'🔁 Weekly client reports — always on', b:'Every Friday at 4pm, progress reports auto-sent to every active job client. No action needed from you.'}}
-    ],
-    auto: [
-      {s:'active', n:'Daily Job Briefing', t:'6:30am daily'},
-      {s:'active', n:'Crew SMS Dispatch', t:'7am daily'},
-      {s:'active', n:'Weekly Client Progress Reports', t:'Fri 4pm'}
-    ],
-    act: [
-      'Miller client notified — 1-day delay · 6:31 AM',
-      'Parkview inspection confirmed · 6:31 AM',
-      'All crews dispatched · 7:00 AM'
-    ]
-  }
-];
-
-var IB = [
-  {p:'flagged', t:'Henderson — high close signal', d:'Opened proposal 4× in 48 hrs with no reply. Moved to Hot. Recommend same-day call — 74% close probability.', a:'Lead Pipeline Agent', agentId:'pipeline', tm:'9:14 AM'},
-  {p:'urgent',  t:'Torres invoice — $8,200 overdue 34 days', d:'Collections sequence started. Final notice staged. Approve send or hold for manual outreach.', a:'Finance Agent', agentId:'finance', tm:'7:02 AM'},
-  {p:'waiting', t:'Miller Roofing — revised schedule', d:'Supplier delay resolved. Crew rescheduled to Wed. Client notified. Approve updated completion date (Fri → Mon).', a:'Ops Coordinator', agentId:'coordinator', tm:'6:31 AM'}
-];
-
-var IG = [
-  {i:'💰', n:'QuickBooks', s:1},
-  {i:'✉',  n:'Gmail',     s:1},
-  {i:'📅', n:'Calendar',  s:1},
-  {i:'🔶', n:'HubSpot',   s:1},
-  {i:'💬', n:'Slack',     s:1},
-  {i:'📊', n:'Sheets',    s:1},
-  {i:'📱', n:'Twilio',    s:1},
-  {i:'📄', n:'PDF Builder',s:1},
-  {i:'📁', n:'Drive',     s:0},
-  {i:'📝', n:'Notion',    s:0},
-  {i:'☁️', n:'Salesforce',s:0},
-  {i:'🏗',  n:'Procore',  s:0},
-  {i:'🏠', n:'Jobber',   s:0},
-  {i:'🔊', n:'ElevenLabs',s:0}
-];
-
-var S = {cur:null, h:{}, timer:null, played:{}};
-AG.forEach(function(a){S.h[a.id]=[]});
-
-function nav(id) {
-  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on')});
-  document.getElementById('p-'+id).classList.add('on');
-  document.querySelectorAll('.n').forEach(function(n){n.classList.remove('on')});
-  document.getElementById('n-'+id).classList.add('on');
-  if(id==='ag'&amp;&amp;!S.cur) sel(AG[0].id);
-}
-
-function bL() {
-  var el = document.getElementById('als');
-  AG.forEach(function(a) {
-    var d = document.createElement('div');
-    d.className='ac'; d.id='ac-'+a.id;
-    d.onclick = function(){sel(a.id)};
-    d.innerHTML = '<div class=&quot;ad&quot; style=&quot;background:'+a.cl+'&quot;>'+a.ini+'</div>'
-      +'<div style=&quot;min-width:0&quot;><div class=&quot;an&quot;>'+a.nm+'</div><div class=&quot;ap&quot;>'+a.pv+'</div></div>';
-    el.appendChild(d);
-  });
-}
-
-function sel(id) {
-  var a = AG.find(function(x){return x.id===id});
-  if(!a) return;
-  S.cur = a;
-  document.querySelectorAll('.ac').forEach(function(c){c.classList.remove('on')});
-  document.getElementById('ac-'+id).classList.add('on');
-  document.getElementById('chd').textContent = a.ini;
-  document.getElementById('chd').style.background = a.cl;
-  document.getElementById('chn').textContent = a.nm;
-  document.getElementById('chtl').textContent = a.tl.join(' · ');
-  document.getElementById('mi').placeholder = 'Message '+a.nm+'…';
-  render(a);
-}
-
-function render(a) {
-  var el = document.getElementById('ms');
-  el.innerHTML = '';
-  if(S.timer){clearTimeout(S.timer); S.timer=null;}
-  if(S.played[a.id]) S.played[a.id] = false;
-
-  var es = document.createElement('div');
-  es.className='es'; es.id='es';
-  var l = document.createElement('div');
-  l.className='esl'; l.textContent='Try asking';
-  es.appendChild(l);
-  a.sg.forEach(function(s) {
-    var d = document.createElement('div');
-    d.className='ess'; d.textContent=s;
-    d.onclick = function(){document.getElementById('mi').value=s; send();};
-    es.appendChild(d);
-  });
-  el.appendChild(es);
-
-  // Demo plays on user interaction only — prompts stay visible until clicked
-}
-
-function play(a, ms, i) {
-  if(i>=ms.length || S.cur.id!==a.id) return;
-  var m = ms[i];
-  if(i===0){var e=document.getElementById('es'); if(e) e.remove();}
-  if(m.r==='u') {
-    addM('u', m.t, a, 1);
-    S.timer = setTimeout(function(){play(a, ms, i+1);}, 500);
-  } else {
-    addT(a);
-    var t = Math.min(700 + m.t.length * 2.2, 2200);
-    S.timer = setTimeout(function() {
-      rmT();
-      addM('a', m.t, a, 1, m.tg, m.ac);
-      S.timer = setTimeout(function(){play(a, ms, i+1);}, m.ac ? 1600 : 800);
-    }, t);
-  }
-  if(i===ms.length-1) {
-    S.played[a.id]=true;
-    S.timer = setTimeout(function(){ showReplay(a); }, m.ac ? 2000 : 1200);
-  }
-}
-
-function md(t) {
-  return t
-    .replace(/&amp;/g,'&amp;amp;').replace(/</g,'&amp;lt;').replace(/>/g,'&amp;gt;')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\n\n/g,'</p><p>')
-    .replace(/\n• /g,'<br>• ')
-    .replace(/\n/g,'<br>');
-}
-
-function addM(r, t, a, anim, tg, ac) {
-  var el = document.getElementById('ms');
-  var d = document.createElement('div');
-  d.className = 'm'+(r==='u'?' u':'');
-  if(anim) d.style.animation='fu .18s ease';
-
-  var c = r==='u'
-    ? t.replace(/&amp;/g,'&amp;amp;').replace(/</g,'&amp;lt;')
-    : '<p>'+md(t)+'</p>';
-
-  var th = '';
-  if(tg &amp;&amp; tg.length) {
-    th = '<div class=&quot;mt&quot;>';
-    tg.forEach(function(x){th+='<span class=&quot;tg tg-'+x.s+'&quot;>'+x.l+'</span>';});
-    th += '</div>';
-  }
-
-  var ah = '';
-  if(ac) ah = '<div class=&quot;xc&quot;><div class=&quot;xc-t&quot;>'+ac.t+'</div><div class=&quot;xc-b&quot;>'+ac.b+'</div></div>';
-
-  if(r==='u') {
-    d.innerHTML = '<div class=&quot;ma mau&quot;>M</div><div class=&quot;mb&quot;><div class=&quot;bb bu&quot;>'+c+'</div></div>';
-  } else {
-    d.innerHTML = '<div class=&quot;ma&quot; style=&quot;background:'+a.cl+';color:#fff;border-radius:5px&quot;>'+a.ini+'</div>'
-      +'<div class=&quot;mb&quot;><div class=&quot;bb ba&quot;>'+c+'</div>'+th+ah+'</div>';
-  }
-  el.appendChild(d);
-  el.scrollTop = el.scrollHeight;
-}
-
-function addT(a) {
-  var el = document.getElementById('ms');
-  var d = document.createElement('div');
-  d.className='m'; d.id='tp';
-  d.innerHTML = '<div class=&quot;ma&quot; style=&quot;background:'+a.cl+';color:#fff;border-radius:5px&quot;>'+a.ini+'</div>'
-    +'<div class=&quot;mb&quot;><div class=&quot;bb ba&quot;><div class=&quot;tp&quot;><span></span><span></span><span></span></div></div></div>';
-  el.appendChild(d);
-  el.scrollTop = el.scrollHeight;
-}
-
-function rmT(){var t=document.getElementById('tp'); if(t) t.remove();}
-
-function showReplay(a) {
-  var el = document.getElementById('ms');
-  var w = document.createElement('div');
-  w.className='replay-wrap'; w.id='replay-wrap';
-  w.innerHTML = '<button class=&quot;replay-btn&quot; onclick=&quot;replayDemo()&quot;>'
-    +'<svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.5&quot;><path d=&quot;M2 8a6 6 0 1 0 1.5-4L2 2v4h4&quot;/></svg>'
-    +'Replay demo</button>';
-  el.appendChild(w);
-  el.scrollTop = el.scrollHeight;
-}
-
-function replayDemo() {
-  var a = S.cur;
-  if(!a) return;
-  S.played[a.id] = false;
-  if(S.timer){clearTimeout(S.timer); S.timer=null;}
-  var el = document.getElementById('ms');
-  el.innerHTML = '';
-  S.timer = setTimeout(function(){play(a, a.chat, 0);}, 400);
-}
-
-function send() {
-  var t = document.getElementById('mi').value.trim();
-  if(!t || !S.cur) return;
-  document.getElementById('mi').value='';
-  var e = document.getElementById('es'); if(e) e.remove();
-  var a = S.cur;
-  if(a.chat &amp;&amp; a.chat.length &amp;&amp; !S.played[a.id]) {
-    if(S.timer){clearTimeout(S.timer); S.timer=null;}
-    play(a, a.chat, 0);
-    return;
-  }
-  addM('u', t, S.cur, 1);
-  addT(S.cur);
-  setTimeout(function() {
-    rmT();
-    addM('a', 'On it — pulling from your connected tools now.', S.cur, 1, [{l:'Working…',s:'b'}]);
-  }, 900);
-}
-
-function bAu(filter) {
-  filter = filter || 'all';
-  var el = document.getElementById('au-scr');
-  el.innerHTML = '';
-  var icons = ['⚡','📅','📊','🔄','✉','📋'];
-  var ic = 0;
-  AG.forEach(function(a) {
-    if(!a.auto || !a.auto.length) return;
-    if(filter !== 'all' &amp;&amp; a.id !== filter) { ic += a.auto.length; return; }
-    var lbl = document.createElement('div');
-    lbl.className = 'au-agent-lbl';
-    lbl.innerHTML = '<div class=&quot;au-agent-dot&quot; style=&quot;background:'+a.cl+'&quot;></div>'
-      +'<div class=&quot;au-agent-nm&quot;>'+a.nm+'</div>';
-    el.appendChild(lbl);
-    var grid = document.createElement('div');
-    grid.className = 'au-grid';
-    a.auto.forEach(function(w) {
-      var icon = icons[ic % icons.length]; ic++;
-      grid.innerHTML += '<div class=&quot;wf-card&quot;>'
-        +'<div class=&quot;wf-icon&quot; style=&quot;background:rgba(255,255,255,.03)&quot;>'+icon+'</div>'
-        +'<div class=&quot;wf-body&quot;><div class=&quot;wf-name&quot;>'+w.n+'</div><div class=&quot;wf-sched&quot;>'+w.t+'</div></div>'
-        +'<div class=&quot;wf-badge '+w.s+'&quot;>'+w.s.charAt(0).toUpperCase()+w.s.slice(1)+'</div>'
-        +'</div>';
-    });
-    el.appendChild(grid);
-  });
-}
-
-function bAuFilters() {
-  var bar = document.getElementById('au-filters');
-  var active = 'all';
-  function render() {
-    bar.innerHTML = '<span class=&quot;filter-lbl&quot;>Agent</span>';
-    var pills = [{id:'all',nm:'All'}].concat(AG.map(function(a){return {id:a.id,nm:a.nm,cl:a.cl};}));
-    pills.forEach(function(p) {
-      var el = document.createElement('button');
-      el.className = 'fp' + (active===p.id?' on':'');
-      el.textContent = p.nm;
-      if(active===p.id &amp;&amp; p.cl) el.style.background = p.cl;
-      el.onclick = function(){ active = p.id; render(); bAu(active); };
-      bar.appendChild(el);
-    });
-  }
-  render();
-}
-
-function bAt(filter) {
-  filter = filter || 'all';
-  var el = document.getElementById('at-scr');
-  el.innerHTML = '';
-  var lbl = document.createElement('div');
-  lbl.className = 'act-day'; lbl.textContent = 'Today';
-  el.appendChild(lbl);
-  var feed = document.createElement('div');
-  feed.className = 'act-feed';
-  AG.forEach(function(a) {
-    if(!a.act || !a.act.length) return;
-    if(filter !== 'all' &amp;&amp; a.id !== filter) return;
-    a.act.forEach(function(x) {
-      var p = x.split(' · ');
-      feed.innerHTML += '<div class=&quot;act-row&quot;>'
-        +'<div class=&quot;act-dot-wrap&quot;><div class=&quot;act-dot-c&quot; style=&quot;background:'+a.cl+'&quot;></div></div>'
-        +'<div class=&quot;act-row-body&quot;>'
-        +'<div class=&quot;act-row-txt&quot;>'+p[0]+'</div>'
-        +'<div class=&quot;act-row-meta&quot;><span class=&quot;act-row-agent&quot;>'+a.nm+'</span>'+(p[1]?' · <span>'+p[1]+'</span>':'')+'</div>'
-        +'</div></div>';
-    });
-  });
-  el.appendChild(feed);
-}
-
-function bAtFilters() {
-  var bar = document.getElementById('at-filters');
-  var active = 'all';
-  function render() {
-    bar.innerHTML = '<span class=&quot;filter-lbl&quot;>Agent</span>';
-    var pills = [{id:'all',nm:'All'}].concat(AG.map(function(a){return {id:a.id,nm:a.nm,cl:a.cl};}));
-    pills.forEach(function(p) {
-      var el = document.createElement('button');
-      el.className = 'fp' + (active===p.id?' on':'');
-      el.textContent = p.nm;
-      if(active===p.id &amp;&amp; p.cl) el.style.background = p.cl;
-      el.onclick = function(){ active = p.id; render(); bAt(active); };
-      bar.appendChild(el);
-    });
-  }
-  render();
-}
-
-function bIb(filter) {
-  filter = filter || 'all';
-  var el = document.getElementById('ib-scr');
-  el.innerHTML = '';
-  var items = filter === 'all' ? IB : IB.filter(function(x){ return x.agentId === filter; });
-  if(!items.length) {
-    el.innerHTML = '<div style=&quot;padding:32px 24px;font-size:12px;color:var(--tx3)&quot;>No items for this agent.</div>';
-    return;
-  }
-  items.forEach(function(x) {
-    var d = document.createElement('div');
-    d.className='ib-card is-'+x.p;
-    d.innerHTML = '<div class=&quot;ib-top&quot;>'
-      +'<div class=&quot;ib-p '+x.p+'&quot;>'+x.p+'</div>'
-      +'<div class=&quot;ib-t&quot;>'+x.t+'</div>'
-      +'<div class=&quot;ib-a&quot;>'+x.tm+'</div>'
-      +'</div>'
-      +'<div class=&quot;ib-d&quot;>'+x.d+'</div>'
-      +'<div style=&quot;font-size:10px;color:var(--tx3);margin-bottom:10px&quot;>'+x.a+'</div>'
-      +'<div class=&quot;ib-btns&quot;><button class=&quot;ibtn ibtn-a&quot;>Approve</button><button class=&quot;ibtn ibtn-e&quot;>Edit</button></div>';
-    el.appendChild(d);
-  });
-}
-
-function bIbFilters() {
-  var bar = document.getElementById('ib-filters');
-  var active = 'all';
-  function render() {
-    bar.innerHTML = '<span class=&quot;filter-lbl&quot;>Agent</span>';
-    var agentIds = [];
-    IB.forEach(function(x){ if(agentIds.indexOf(x.agentId)<0) agentIds.push(x.agentId); });
-    var pills = [{id:'all',nm:'All'}].concat(agentIds.map(function(id){
-      var a = AG.find(function(x){return x.id===id;}); return a ? {id:a.id,nm:a.nm,cl:a.cl} : null;
-    }).filter(Boolean));
-    pills.forEach(function(p) {
-      var el = document.createElement('button');
-      el.className = 'fp' + (active===p.id?' on':'');
-      el.textContent = p.nm;
-      if(active===p.id &amp;&amp; p.cl) el.style.background = p.cl;
-      el.onclick = function(){ active = p.id; render(); bIb(active); };
-      bar.appendChild(el);
-    });
-  }
-  render();
-}
-
-function bIg() {
-  var scr = document.getElementById('ig-scr');
-  // Connected
-  var lbl1 = document.createElement('div');
-  lbl1.className='ig-section-lbl'; lbl1.textContent='Connected';
-  scr.appendChild(lbl1);
-  var g1 = document.createElement('div'); g1.className='ig-g';
-  IG.filter(function(x){return x.s;}).forEach(function(x) {
-    var d = document.createElement('div'); d.className='ig';
-    d.innerHTML = '<div class=&quot;ig-i&quot;>'+x.i+'</div>'
-      +'<div><div class=&quot;ig-n&quot;>'+x.n+'</div><div class=&quot;ig-s live&quot;>✓ Live</div></div>';
-    g1.appendChild(d);
-  });
-  scr.appendChild(g1);
-  // Available
-  var lbl2 = document.createElement('div');
-  lbl2.className='ig-section-lbl'; lbl2.textContent='Available';
-  scr.appendChild(lbl2);
-  var g2 = document.createElement('div'); g2.className='ig-g';
-  IG.filter(function(x){return !x.s;}).forEach(function(x) {
-    var d = document.createElement('div'); d.className='ig';
-    d.innerHTML = '<div class=&quot;ig-i&quot;>'+x.i+'</div>'
-      +'<div><div class=&quot;ig-n&quot;>'+x.n+'</div><div class=&quot;ig-s off&quot;>Available</div></div>';
-    g2.appendChild(d);
-  });
-  var add = document.createElement('div');
-  add.className='ig-add'; add.textContent='+ Request integration';
-  g2.appendChild(add);
-  scr.appendChild(g2);
-}
-
-var inp = document.getElementById('mi');
-inp.addEventListener('input', function(){this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,80)+'px';});
-inp.addEventListener('keydown', function(e){if(e.key==='Enter'&amp;&amp;!e.shiftKey){e.preventDefault(); send();}});
-
-bL(); bAuFilters(); bAu(); bAtFilters(); bAt(); bIbFilters(); bIb(); bIg();
-sel(AG[0].id);
-</script>
-</body>
-</html>
-" style="width:100%;height:520px;border:none;display:block;background:#000;flex:1;"></iframe>
-      </div>
-
-      <!-- iPhone demo -->
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div style="position:relative;width:200px;">
-          <div style="background:#111;border-radius:38px;padding:8px;box-shadow:0 0 0 1px rgba(255,255,255,.1),inset 0 0 0 1px rgba(255,255,255,.04),0 32px 64px rgba(0,0,0,.7);">
-            <div style="background:#000;border-radius:32px;overflow:hidden;">
-              <!-- dynamic island -->
-              <div style="height:30px;display:flex;align-items:center;justify-content:center;background:#000;">
-                <div style="width:68px;height:18px;background:#0a0a0a;border:1px solid rgba(255,255,255,.08);border-radius:20px;"></div>
-              </div>
-              <!-- screen — #000 like demo -->
-              <div style="background:#000;display:flex;flex-direction:column;height:460px;font-family:'DM Sans',system-ui,sans-serif;">
-                <!-- status bar -->
-                <div style="padding:2px 12px 3px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-                  <span style="font-size:9px;font-weight:600;color:rgba(255,255,255,.8);">9:41</span>
-                  <div style="display:flex;gap:4px;align-items:center;">
-                    <svg width="11" height="8" viewBox="0 0 12 8" fill="none"><rect x="0" y="3" width="2" height="5" rx="1" fill="rgba(255,255,255,.6)"/><rect x="3" y="2" width="2" height="6" rx="1" fill="rgba(255,255,255,.6)"/><rect x="6" y="1" width="2" height="7" rx="1" fill="rgba(255,255,255,.6)"/><rect x="9" y="0" width="2" height="8" rx="1" fill="rgba(255,255,255,.6)"/></svg>
-                    <svg width="17" height="8" viewBox="0 0 18 8" fill="none"><rect x="0.5" y="0.5" width="15" height="7" rx="2.5" stroke="rgba(255,255,255,.3)"/><rect x="1.5" y="1.5" width="11" height="5" rx="1.5" fill="rgba(255,255,255,.65)"/><path d="M17 2.5v3c.8-.4.8-2.6 0-3z" fill="rgba(255,255,255,.35)"/></svg>
-                  </div>
-                </div>
-                <!-- app header — matches .chh from demo exactly -->
-                <div style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;flex-shrink:0;background:#080808;">
-                  <!-- .chd — colored avatar with initials -->
-                  <div style="width:22px;height:22px;border-radius:6px;background:#5b8dd9;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff;flex-shrink:0;">EA</div>
-                  <div style="flex:1;min-width:0;">
-                    <!-- .chn -->
-                    <div style="font-size:11px;font-weight:500;color:#fff;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Executive Assistant</div>
-                    <!-- .cht — tool list -->
-                    <div style="font-size:9px;color:rgba(255,255,255,.22);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Gmail · Calendar · HubSpot · Slack</div>
-                  </div>
-                  <!-- .cho -->
-                  <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#3aab77;flex-shrink:0;"><span style="width:4px;height:4px;border-radius:50%;background:#3aab77;display:inline-block;animation:pulse 2.2s infinite;"></span>Online</div>
-                </div>
-                <!-- messages — .ms from demo -->
-                <div id="mobile-chat" style="flex:1;padding:8px 8px 4px;display:flex;flex-direction:column;gap:7px;overflow:hidden;background:#000;"></div>
-                <!-- input — .ip from demo -->
-                <div style="padding:5px 8px 7px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:5px;align-items:center;flex-shrink:0;background:#080808;">
-                  <div style="flex:1;background:#0e0e0e;border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:5px 8px;font-size:9px;color:rgba(255,255,255,.12);">Message your agent...</div>
-                  <div style="width:24px;height:24px;background:#c47840;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.85;">
-                    <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1 9L9 1M9 1H3M9 1V7" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </div>
-                </div>
-              </div>
-              <!-- home bar -->
-              <div style="height:18px;background:#000;display:flex;align-items:center;justify-content:center;">
-                <div style="width:48px;height:3px;background:rgba(255,255,255,.18);border-radius:10px;"></div>
-              </div>
-            </div>
-          </div>
-          <!-- side buttons -->
-          <div style="position:absolute;right:-3px;top:90px;width:3px;height:44px;background:#1a1a1a;border-radius:0 2px 2px 0;"></div>
-          <div style="position:absolute;left:-3px;top:80px;width:3px;height:30px;background:#1a1a1a;border-radius:2px 0 0 2px;"></div>
-          <div style="position:absolute;left:-3px;top:120px;width:3px;height:30px;background:#1a1a1a;border-radius:2px 0 0 2px;"></div>
-          <div style="position:absolute;left:-3px;top:160px;width:3px;height:50px;background:#1a1a1a;border-radius:2px 0 0 2px;"></div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
 <!-- HOW IT WORKS — PROCESS -->
 <section class="sec process-sec" id="how-it-works">
   <div class="si">
-    <h2 class="sec-h r">From conversation<br>to live agent.</h2>
+    <h2 class="sec-h r">From messy workflow<br>to working agent.</h2>
 
     <div class="process-steps">
-
-      <!-- FOUR STEPS HORIZONTAL -->
       <div class="proc-row r">
 
         <div class="proc-step">
           <div class="proc-num">01</div>
-          <div class="proc-label">Discovery</div>
-          <div class="proc-title">We listen. Then we get to work.</div>
-          <p class="proc-body">30 minutes — Zoom or in person. You walk us through your week. We ask the questions. No AI knowledge required. <span style="color:var(--hi);"><a href="#in-person" style="color:var(--hi);text-decoration:none;">Reach out to arrange an in-person session.</a></span></p>
+          <div class="proc-label">Walkthrough</div>
+          <div class="proc-title">You show us the work.</div>
+          <p class="proc-body">Zoom or in person around Knoxville. You walk us through the repeat work, the tools you use, and the places leads or customers slip through.</p>
         </div>
 
         <div class="proc-divider"></div>
 
-        <div class="proc-step proc-step-hi" id="proc-step-02">
+        <div class="proc-step proc-step-hi">
           <div class="proc-num proc-num-hi">02</div>
           <div class="proc-label">Build</div>
-          <div class="proc-title">Your agent, live.</div>
-          <p class="proc-body">We build what you actually need — connected to your real tools, tested, and running.</p>
+          <div class="proc-title">We build the first useful agent.</div>
+          <p class="proc-body">One real workflow first: lead follow-up, reviews, scheduling, inbox triage, CRM cleanup, or whatever gives you the fastest ROI.</p>
         </div>
 
         <div class="proc-divider"></div>
 
         <div class="proc-step">
           <div class="proc-num">03</div>
-          <div class="proc-label">Maintain</div>
-          <div class="proc-title">We keep it sharp.</div>
-          <p class="proc-body">Model updates, new skills, bug fixes — we push updates to your agent as things improve. You never touch it.</p>
+          <div class="proc-label">Handoff</div>
+          <div class="proc-title">You run it in plain English.</div>
+          <p class="proc-body">No prompt engineering. You message the agent from your phone or computer, and it works inside the tools your business already uses.</p>
         </div>
 
         <div class="proc-divider"></div>
 
         <div class="proc-step">
           <div class="proc-num">04</div>
-          <div class="proc-label">Expand</div>
-          <div class="proc-title">Ready for more? Just ask.</div>
-          <p class="proc-body">When you want another agent or a new workflow, we scope it with you. On your timeline, no pressure.</p>
+          <div class="proc-label">Maintain</div>
+          <div class="proc-title">We keep it sharp.</div>
+          <p class="proc-body">We handle updates, fixes, model changes, and new workflows as your business changes. Start with one agent, expand when it makes sense.</p>
         </div>
 
       </div>
-
-      <!-- VISUALS ROW — drops from 02, 03, 04 -->
-      <div class="proc-vis-row r" id="proc-vis-row">
-
-        <!-- spacer under 01 -->
-        <div></div><div></div>
-
-        <!-- 02: chat assistant -->
-        <div class="proc-vis-col" id="pv-col-02">
-          <div class="proc-vis-line" id="pv-line-02"></div>
-          <div class="proc-vis-node" id="pv-node-02"></div>
-          <div class="proc-vis-card" id="pv-card-02">
-            <div class="pdc-header">
-              <div class="ad-avatar">EA</div>
-              <div>
-                <div class="ad-name">Executive Assistant</div>
-                <div class="ad-status"><span class="ad-status-dot"></span>online</div>
-              </div>
-            </div>
-            <div class="pdc-messages" id="proc-msgs"></div>
-          </div>
-        </div>
-
-        <div></div>
-
-        <!-- 03: maintenance panel -->
-        <div class="proc-vis-col" id="pv-col-03">
-          <div class="proc-vis-line" id="pv-line-03"></div>
-          <div class="proc-vis-node" id="pv-node-03"></div>
-          <div class="proc-vis-card" id="pv-card-03">
-            <div class="pv-panel-hd">
-              <span class="pv-panel-dot"></span>
-              <span class="pv-panel-title">Agent updates</span>
-            </div>
-            <div class="pv-updates" id="pv-updates"></div>
-          </div>
-        </div>
-
-        <div></div>
-
-        <!-- 04: new agent expanding -->
-        <div class="proc-vis-col" id="pv-col-04">
-          <div class="proc-vis-line" id="pv-line-04"></div>
-          <div class="proc-vis-node" id="pv-node-04"></div>
-          <div class="proc-vis-card" id="pv-card-04">
-            <div class="pv-panel-hd">
-              <span class="pv-panel-dot"></span>
-              <span class="pv-panel-title">Your agents</span>
-            </div>
-            <div class="pv-agents-list" id="pv-agents"></div>
-          </div>
-        </div>
-
-      </div>
-
     </div>
   </div>
 </section>
@@ -2270,6 +1696,230 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  /* ── Lead-gen agent demo — public-safe deterministic run ── */
+  (function initLeadGenDemo() {
+    var root = document.getElementById('lg-section');
+    if (!root) return;
+
+    var leadSets = {
+      hvac: [
+        { co:'Smoky Mountain Comfort Co.', loc:'Knoxville, TN', size:'18 emp · 6 trucks', fit:94, why:'Growing service routes; likely needs faster quote follow-up and review requests.' },
+        { co:'Volunteer Air & Heat', loc:'Maryville, TN', size:'24 emp · 8 trucks', fit:91, why:'Multi-truck home service company with obvious scheduling and dispatch handoffs.' },
+        { co:'Appalachian Climate Pros', loc:'Sevierville, TN', size:'15 emp · 5 trucks', fit:88, why:'Seasonal demand makes missed calls and slow lead response expensive.' },
+        { co:'East Ridge Mechanical', loc:'Chattanooga, TN', size:'31 emp · 10 trucks', fit:85, why:'Enough field volume for CRM updates, quote reminders, and appointment nudges.' },
+        { co:'Foothills Heating Group', loc:'Oak Ridge, TN', size:'12 emp · 4 trucks', fit:82, why:'Owner-led shop where one admin workflow agent could replace hours of repeat work.' }
+      ],
+      plumbing: [
+        { co:'Volunteer Pipe & Drain', loc:'Knoxville, TN', size:'21 emp · 7 trucks', fit:93, why:'Service calls, after-hours inquiries, and quote follow-up are strong automation fits.' },
+        { co:'Maryville Plumbing Works', loc:'Maryville, TN', size:'14 emp · 5 trucks', fit:89, why:'Local home-service business with likely repeat scheduling and review workflows.' },
+        { co:'Cedar Bluff Plumbing Co.', loc:'Knoxville, TN', size:'19 emp · 6 trucks', fit:86, why:'Would benefit from lead response, dispatch notes, and customer status messages.' },
+        { co:'Rocky Top Rooter', loc:'Powell, TN', size:'10 emp · 3 trucks', fit:83, why:'Small enough for owner pain, large enough for missed-call ROI.' },
+        { co:'Lakeside Pipe Services', loc:'Lenoir City, TN', size:'17 emp · 5 trucks', fit:81, why:'Recurring emergency work makes fast intake and follow-up valuable.' }
+      ],
+      roofing: [
+        { co:'Appalachian Roof Systems', loc:'Knoxville, TN', size:'28 emp · 9 crews', fit:92, why:'Estimate follow-up, storm-season lead triage, and review requests are high-value.' },
+        { co:'Foothills Exterior Pros', loc:'Maryville, TN', size:'22 emp · 7 crews', fit:90, why:'Multi-crew operation with quote tracking and customer update needs.' },
+        { co:'Volunteer Roofing Group', loc:'Oak Ridge, TN', size:'18 emp · 5 crews', fit:87, why:'Likely receives form leads that need fast qualification and appointment booking.' },
+        { co:'Smoky Ridge Roofing', loc:'Sevierville, TN', size:'16 emp · 4 crews', fit:84, why:'Seasonal demand and local reputation make review automation useful.' },
+        { co:'East Tennessee Gutters & Roof', loc:'Farragut, TN', size:'13 emp · 4 crews', fit:80, why:'Adjacent services create cross-sell and follow-up opportunities.' }
+      ],
+      dental: [
+        { co:'Smoky Mountain Dental Group', loc:'Knoxville, TN', size:'14 staff · 3 dr', fit:93, why:'Patient scheduling, reminders, review requests, and missed-call follow-up fit well.' },
+        { co:'Farragut Family Dentistry', loc:'Farragut, TN', size:'12 staff · 2 dr', fit:90, why:'Practice admin work can be streamlined without changing patient experience.' },
+        { co:'Maryville Smile Studio', loc:'Maryville, TN', size:'18 staff · 4 dr', fit:86, why:'Enough front-desk volume for intake, reminders, and recall workflows.' },
+        { co:'Oak Ridge Dental Arts', loc:'Oak Ridge, TN', size:'10 staff · 2 dr', fit:83, why:'Local practice where reputation and appointment reminders matter.' },
+        { co:'Cedar Bluff Pediatric Dental', loc:'Knoxville, TN', size:'16 staff · 3 dr', fit:81, why:'Family/pediatric communication creates repeat reminder and review tasks.' }
+      ],
+      restaurant: [
+        { co:'Tellico River Bar & Grill', loc:'Knoxville, TN', size:'32 staff · 1 loc', fit:91, why:'Reservation questions, review replies, and event follow-up can be automated.' },
+        { co:'Old City Coffee House', loc:'Knoxville, TN', size:'18 staff · 2 loc', fit:88, why:'Local traffic plus reviews/social messages create daily communication load.' },
+        { co:'Foothills Taproom', loc:'Maryville, TN', size:'24 staff · 1 loc', fit:85, why:'Events, reviews, and group inquiries are good agent workflows.' },
+        { co:'Market Square Kitchen', loc:'Knoxville, TN', size:'27 staff · 1 loc', fit:83, why:'High review visibility and customer questions make response speed valuable.' },
+        { co:'Smoky Supper Club', loc:'Sevierville, TN', size:'35 staff · 1 loc', fit:80, why:'Tourism demand likely creates repetitive reservation and inquiry patterns.' }
+      ],
+      custom: [
+        { co:'Volunteer Service Co.', loc:'Knoxville, TN', size:'18 emp · local', fit:90, why:'Local owner-led business with repeat intake, follow-up, and review workflows.' },
+        { co:'Foothills Operations Group', loc:'Maryville, TN', size:'22 emp · local', fit:87, why:'Enough day-to-day admin volume for an agent to save measurable hours.' },
+        { co:'East Tennessee Client Services', loc:'Oak Ridge, TN', size:'14 emp · local', fit:84, why:'Customer communication and CRM cleanup are likely recurring bottlenecks.' },
+        { co:'Appalachian Growth Partners', loc:'Knoxville, TN', size:'26 emp · local', fit:82, why:'Lead follow-up and reporting workflows could justify a first automation build.' },
+        { co:'Southern Field Office', loc:'Lenoir City, TN', size:'16 emp · local', fit:79, why:'Small team with likely owner/admin overlap and repeat scheduling work.' }
+      ]
+    };
+
+    var steps = [
+      { label:'Reading your website', dur:520 },
+      { label:'Understanding your ideal customer', dur:560 },
+      { label:'Searching a safe sample market', dur:760 },
+      { label:'Filtering for fit', dur:620 },
+      { label:'Writing the lead sheet', dur:680 },
+      { label:'Ranking next-best opportunities', dur:520 }
+    ];
+    var statusText = [
+      'Analyzing your business…',
+      'Building your lead profile…',
+      'Searching the sample market…',
+      'Checking company fit…',
+      'Writing rows to the sheet…',
+      'Scoring and ranking…'
+    ];
+
+    function el(id) { return document.getElementById(id); }
+    var views = {
+      step1: el('lg-view-step1'),
+      step2: el('lg-view-step2'),
+      working: el('lg-view-working'),
+      summary: el('lg-view-summary')
+    };
+
+    function showView(key) {
+      Object.keys(views).forEach(function(k) {
+        var node = views[k];
+        if (!node) return;
+        if (k === key) {
+          node.classList.add('lg-on');
+          node.classList.remove('lg-exiting');
+        } else if (node.classList.contains('lg-on')) {
+          node.classList.remove('lg-on');
+          node.classList.add('lg-exiting');
+          setTimeout(function(){ node.classList.remove('lg-exiting'); }, 360);
+        }
+      });
+    }
+
+    function buildEmptySheet() {
+      var body = el('lg-sheet-body');
+      if (!body) return;
+      body.innerHTML = '';
+      for (var i = 0; i < 5; i++) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td class="lg-col-row">' + (i + 1) + '</td>'
+          + '<td class="lg-col-co"><span class="lg-empty"></span></td>'
+          + '<td class="lg-col-loc"><span class="lg-empty lg-short"></span></td>'
+          + '<td class="lg-col-size"><span class="lg-empty lg-short"></span></td>'
+          + '<td class="lg-col-fit"><span class="lg-empty lg-tiny"></span></td>'
+          + '<td class="lg-col-why"><span class="lg-empty"></span></td>';
+        body.appendChild(tr);
+      }
+      if (el('lg-sheet-status')) el('lg-sheet-status').textContent = '0 of 5 rows';
+      if (el('lg-sheet-meta')) el('lg-sheet-meta').textContent = 'Empty · awaiting input';
+    }
+
+    function leadSetFor(query) {
+      var q = String(query || '').toLowerCase();
+      if (/hvac|heating|cooling|air\s?conditioning|a\/c/.test(q)) return 'hvac';
+      if (/plumb|pipe|drain/.test(q)) return 'plumbing';
+      if (/roof|gutter|exterior/.test(q)) return 'roofing';
+      if (/dent|orthodont|practice|clinic/.test(q)) return 'dental';
+      if (/restaurant|bar|cafe|coffee|food|kitchen|brew/.test(q)) return 'restaurant';
+      return 'custom';
+    }
+
+    function fillRow(i, leads) {
+      var body = el('lg-sheet-body');
+      if (!body || !body.children[i] || !leads[i]) return;
+      var row = body.children[i];
+      var l = leads[i];
+      row.classList.add('lg-filling');
+      row.innerHTML = '<td class="lg-col-row">' + (i + 1) + '</td>'
+        + '<td class="lg-col-co">' + l.co + '</td>'
+        + '<td class="lg-col-loc">' + l.loc + '</td>'
+        + '<td class="lg-col-size">' + l.size + '</td>'
+        + '<td class="lg-col-fit"><span class="lg-fit-pill">' + l.fit + '</span></td>'
+        + '<td class="lg-col-why">' + l.why + '</td>';
+      if (el('lg-sheet-status')) el('lg-sheet-status').textContent = (i + 1) + ' of 5 rows';
+      if (el('lg-sheet-meta')) el('lg-sheet-meta').textContent = 'Writing · row ' + (i + 1);
+      setTimeout(function(){ row.classList.remove('lg-filling'); }, 700);
+    }
+
+    function runDemo() {
+      showView('working');
+      var ideal = (el('lg-ideal') && el('lg-ideal').value.trim()) || 'local service businesses around Knoxville';
+      var key = leadSetFor(ideal);
+      var leads = leadSets[key] || leadSets.custom;
+      window.__clawdifiedLeadDemoRows = leads;
+
+      var checklist = el('lg-checklist');
+      if (checklist) {
+        checklist.innerHTML = steps.map(function(s, i) {
+          return '<div class="lg-check" id="lg-check-' + i + '"><div class="lg-check-ico"><div class="lg-dot-e"></div></div><span>' + s.label + '</span></div>';
+        }).join('');
+      }
+      if (el('lg-fill')) el('lg-fill').style.width = '0%';
+      if (el('lg-status')) el('lg-status').textContent = statusText[0];
+      if (el('lg-sheet-meta')) el('lg-sheet-meta').textContent = 'Agent writing…';
+
+      [1600, 2050, 2500, 2950, 3400].forEach(function(delay, idx) {
+        setTimeout(function(){ fillRow(idx, leads); }, delay);
+      });
+
+      var total = steps.reduce(function(a, s) { return a + s.dur; }, 0);
+      var elapsed = 0;
+      var chain = Promise.resolve();
+      steps.forEach(function(step, i) {
+        chain = chain.then(function() {
+          var row = el('lg-check-' + i);
+          if (row) {
+            row.classList.add('lg-active');
+            var icon = row.querySelector('.lg-check-ico');
+            if (icon) icon.innerHTML = '<div class="lg-spin"></div>';
+          }
+          var status = el('lg-status');
+          if (status) {
+            status.style.opacity = '0';
+            setTimeout(function(){ status.textContent = statusText[i]; status.style.opacity = '1'; }, 130);
+          }
+          return wait(step.dur).then(function() {
+            elapsed += step.dur;
+            if (row) {
+              row.classList.remove('lg-active');
+              row.classList.add('lg-done');
+              var icon = row.querySelector('.lg-check-ico');
+              if (icon) icon.innerHTML = '<div class="lg-tick">✓</div>';
+            }
+            if (el('lg-fill')) el('lg-fill').style.width = Math.round((elapsed / total) * 100) + '%';
+          });
+        });
+      });
+
+      chain.then(function() {
+        return wait(250);
+      }).then(function() {
+        if (el('lg-criteria')) el('lg-criteria').textContent = '“' + ideal + '”';
+        if (el('lg-badge')) el('lg-badge').textContent = '5 sample leads ready';
+        if (el('lg-sheet-meta')) el('lg-sheet-meta').textContent = '5 of 5 rows · sample complete';
+        if (el('lg-sheet-status')) el('lg-sheet-status').textContent = '5 of 5 rows · ready';
+        showView('summary');
+      });
+    }
+
+    function exportCsv() {
+      var rows = window.__clawdifiedLeadDemoRows || leadSets.hvac;
+      var csvRows = [['Company','Location','Size','Fit','Why it matches']];
+      rows.forEach(function(l) { csvRows.push([l.co,l.loc,l.size,l.fit,l.why]); });
+      var csv = csvRows.map(function(r) {
+        return r.map(function(c) { return '"' + String(c).replace(/"/g, '""') + '"'; }).join(',');
+      }).join('\n');
+      var blob = new Blob([csv], { type:'text/csv' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'clawdified-sample-leads.csv';
+      a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 500);
+    }
+
+    var next = el('lg-step1-next');
+    var back = el('lg-step2-back');
+    var run = el('lg-step2-find');
+    var restart = el('lg-restart');
+    var exp = el('lg-export');
+    if (next) next.addEventListener('click', function(){ showView('step2'); });
+    if (back) back.addEventListener('click', function(){ showView('step1'); });
+    if (run) run.addEventListener('click', runDemo);
+    if (restart) restart.addEventListener('click', function(){ buildEmptySheet(); showView('step1'); });
+    if (exp) exp.addEventListener('click', exportCsv);
+    buildEmptySheet();
+  })();
+
   /* ── Hero typewriter ── */
   var hwPhrases = ['for you.','while you sleep.','on your leads.','24 / 7.','inside your tools.','so you don\'t have to.'];
   var hwEl = document.getElementById('hw-phrase'), hwIdx = 0;
@@ -2326,11 +1976,14 @@ window.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  document.getElementById('agent-tabs').addEventListener('click', function(e) {
-    var tab = e.target.closest('.agent-tab');
-    if (!tab) return;
-    switchAgentTab(tab.dataset.tab, true);
-  });
+  var legacyAgentTabs = document.getElementById('agent-tabs');
+  if (legacyAgentTabs) {
+    legacyAgentTabs.addEventListener('click', function(e) {
+      var tab = e.target.closest('.agent-tab');
+      if (!tab) return;
+      switchAgentTab(tab.dataset.tab, true);
+    });
+  }
 
   var agentsSecObs = new IntersectionObserver(function(entries) {
     entries.forEach(function(e) {
