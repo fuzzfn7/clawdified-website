@@ -174,6 +174,7 @@ nav.scrolled{border-bottom-color:var(--line);background:rgba(15,14,10,.88);}
 .n-links{display:flex;gap:28px;align-items:center;}
 .n-links a{font-size:13px;font-weight:400;color:var(--muted);text-decoration:none;transition:color .15s ease;letter-spacing:-0.005em;}
 .n-links a:hover{color:var(--ink);}
+.agents-nav-cta{margin-left:-8px;}
 
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
@@ -823,6 +824,7 @@ footer{
   /* ─── Nav ─── */
   nav{padding:0 16px;height:52px;}
   .n-links a:not(.btn){display:none;}
+  .n-links .agents-nav-cta{display:none;}
   .n-links .btn{font-size:11px;padding:6px 14px;letter-spacing:.02em;}
   .n-logo{font-size:16px;gap:8px;}
   .n-logo svg{width:18px;height:18px;}
@@ -1025,6 +1027,7 @@ footer{
     <a href="#what-it-does">What it does</a>
     <a href="#how-it-works">How it works</a>
     <a href="#pricing">Pricing</a>
+    <a href="/agents/" class="btn btn-ghost agents-nav-cta">Try live agents</a>
     <a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener" class="btn btn-hi">Book a call</a>
   </div>
 </nav>
