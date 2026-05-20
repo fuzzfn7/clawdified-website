@@ -168,22 +168,20 @@ nav.scrolled{border-bottom-color:var(--line);background:rgba(15,14,10,.9);}
 .result-panel{padding:18px;display:flex;flex-direction:column;gap:12px;overflow:auto;}.result-card{border:1px solid var(--line);background:rgba(21,19,13,.78);border-radius:var(--r-md);padding:15px;animation:fadeUp .28s ease;}.result-k{font-family:var(--mono);font-size:10px;color:var(--hi);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}.result-title{font-size:17px;line-height:1.18;font-weight:500;letter-spacing:-.018em;margin-bottom:9px;}.result-text{font-size:13px;color:var(--muted);line-height:1.68;}.result-list{display:flex;flex-direction:column;gap:8px;margin-top:10px;}.result-list li{list-style:none;font-size:12px;color:var(--muted);line-height:1.5;padding-left:18px;position:relative;}.result-list li::before{content:'•';position:absolute;left:3px;color:var(--hi);}.draft-box{border-left:2px solid var(--hi);padding:11px 12px;background:rgba(212,133,83,.055);font-size:13px;line-height:1.62;color:var(--ink);border-radius:0 8px 8px 0;}.draft-box strong{color:var(--hi-2);font-weight:500;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-.custom-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:42px;}.custom-card{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--r-md);padding:20px;min-height:210px;display:flex;flex-direction:column;}.custom-card .cc-k{font-family:var(--mono);font-size:10px;color:var(--hi);letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px;}.custom-card h3{font-size:20px;line-height:1.08;font-weight:500;letter-spacing:-.025em;margin-bottom:10px;}.custom-card p{font-size:13px;color:var(--muted);line-height:1.65;margin-top:auto;}.custom-card.feature{grid-column:span 2;background:linear-gradient(135deg, rgba(212,133,83,.09), rgba(21,19,13,.92));border-color:var(--hi-line);}
-
-.wire{display:grid;grid-template-columns:.85fr 1.15fr;gap:34px;align-items:start;}.wire-panel{border:1px solid var(--line);border-radius:var(--r-lg);background:var(--bg-2);overflow:hidden;}.wire-row{display:grid;grid-template-columns:72px 1fr;gap:16px;padding:20px;border-bottom:1px solid var(--line);}.wire-row:last-child{border-bottom:0;}.wire-num{font-family:var(--mono);font-size:11px;color:var(--hi);}.wire-row h3{font-size:19px;font-weight:500;letter-spacing:-.02em;margin-bottom:5px;}.wire-row p{font-size:13px;color:var(--muted);line-height:1.65;}.wire-note{border:1px solid var(--hi-line);background:var(--hi-dim);border-radius:var(--r-md);padding:18px;margin-top:22px;}.wire-note h3{font-size:18px;font-weight:500;margin-bottom:8px;}.wire-note p{font-size:13px;color:var(--muted);line-height:1.7;}
+.custom-build-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.62fr);gap:34px;align-items:end;margin-bottom:34px;}.custom-build-head .sec-h{margin-bottom:0;max-width:800px;}.custom-note{border:1px solid var(--line);background:rgba(255,255,255,.018);border-radius:var(--r-md);padding:16px 18px;color:var(--muted);font-size:13px;line-height:1.65;}.custom-note strong{display:block;color:var(--ink);font-size:14px;font-weight:500;margin-bottom:5px;}.build-showcase{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(320px,.88fr);gap:14px;align-items:stretch;}.build-board{position:relative;overflow:hidden;border:1px solid var(--hi-line);border-radius:22px;background:radial-gradient(640px 340px at 12% 4%, rgba(212,133,83,.13), transparent 58%),linear-gradient(180deg, rgba(27,24,18,.94), rgba(15,14,10,.98));box-shadow:0 28px 82px rgba(0,0,0,.32);padding:24px;min-height:590px;}.build-board::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(236,231,220,.035) 1px, transparent 1px),linear-gradient(90deg, rgba(236,231,220,.028) 1px, transparent 1px);background-size:42px 42px;mask-image:linear-gradient(180deg, rgba(0,0,0,.85), transparent 76%);pointer-events:none;}.build-top{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px;}.board-tag{font-family:var(--mono);font-size:10px;color:var(--hi);letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--hi-line);background:var(--hi-dim);border-radius:100px;padding:6px 10px;}.board-status{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.02em;}.flow-map{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}.flow-map::before{content:'';position:absolute;left:8%;right:8%;top:96px;height:1px;background:linear-gradient(90deg, transparent, var(--hi-line), transparent);}.flow-node{position:relative;z-index:1;min-height:178px;display:flex;flex-direction:column;justify-content:space-between;border:1px solid var(--line);background:rgba(15,14,10,.76);border-radius:var(--r-md);padding:15px;box-shadow:0 16px 36px rgba(0,0,0,.16);}.flow-node:nth-child(even){margin-top:34px;}.node-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px;}.node-num{font-family:var(--mono);font-size:10px;color:var(--hi);}.node-icon{width:34px;height:34px;border-radius:10px;border:1px solid var(--line-2);background:rgba(255,255,255,.026);display:flex;align-items:center;justify-content:center;color:var(--hi-2);font-family:var(--mono);font-size:9px;line-height:1;text-transform:uppercase;letter-spacing:.04em;}.flow-node h3{font-size:17px;line-height:1.08;font-weight:500;letter-spacing:-.025em;margin-bottom:8px;}.flow-node p{font-size:12px;color:var(--muted);line-height:1.48;}.node-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px;}.node-chips span{font-family:var(--mono);font-size:9px;color:var(--faint);border:1px solid rgba(236,231,220,.07);border-radius:100px;padding:3px 6px;background:rgba(255,255,255,.015);}.build-output{position:relative;z-index:1;display:grid;grid-template-columns:.95fr 1.05fr;gap:14px;margin-top:22px;}.output-doc,.approval-card{border:1px solid var(--line);background:rgba(21,19,13,.82);border-radius:var(--r-md);padding:16px;}.doc-label,.approval-label{font-family:var(--mono);font-size:10px;color:var(--hi);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;}.doc-title{font-size:22px;line-height:1.08;font-weight:500;letter-spacing:-.028em;margin-bottom:14px;}.doc-lines{display:flex;flex-direction:column;gap:8px;}.doc-lines span{height:8px;border-radius:100px;background:rgba(236,231,220,.11);}.doc-lines span:nth-child(2){width:82%;}.doc-lines span:nth-child(3){width:58%;}.doc-stamp{display:inline-flex;margin-top:18px;border:1px solid var(--green);color:var(--green);border-radius:100px;padding:5px 9px;font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.06em;}.approval-row{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid rgba(236,231,220,.055);}.approval-row:last-child{border-bottom:0;padding-bottom:0;}.approval-dot{width:8px;height:8px;border-radius:50%;background:var(--hi);margin-top:6px;box-shadow:0 0 0 4px var(--hi-dim);}.approval-row strong{display:block;font-size:13px;font-weight:500;color:var(--ink);margin-bottom:2px;}.approval-row span{font-size:12px;color:var(--muted);line-height:1.45;}.build-menu{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg, rgba(21,19,13,.88), rgba(15,14,10,.94));padding:18px;display:flex;flex-direction:column;gap:0;}.menu-head{padding:8px 4px 16px;border-bottom:1px solid var(--line);margin-bottom:4px;}.menu-head span{display:block;font-family:var(--mono);font-size:10px;color:var(--hi);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}.menu-head strong{display:block;font-size:24px;line-height:1.08;font-weight:500;letter-spacing:-.03em;}.menu-row{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:14px 4px;border-bottom:1px solid rgba(236,231,220,.06);}.menu-row.feature{margin:10px -4px 0;padding:16px 12px;border:1px solid var(--hi-line);border-radius:var(--r-md);background:var(--hi-dim);}.menu-mark{width:34px;height:34px;border-radius:10px;border:1px solid var(--line-2);background:rgba(255,255,255,.02);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--hi);}.menu-row h3{font-size:16px;font-weight:500;letter-spacing:-.018em;margin-bottom:4px;}.menu-row p{font-size:12px;color:var(--muted);line-height:1.48;}.build-menu .btn{margin-top:auto;width:100%;}
 
 .cta-sec{padding:112px var(--s-page);text-align:center;background:linear-gradient(180deg, transparent, rgba(212,133,83,.035));border-top:1px solid var(--line);}.cta-h{font-size:clamp(38px,5vw,70px);font-weight:500;line-height:1.02;letter-spacing:-.04em;margin-bottom:18px;text-wrap:balance;}.cta-h em{font-family:var(--serif);font-style:italic;color:var(--hi);font-weight:400;}.cta-sub{font-size:16px;color:var(--muted);line-height:1.75;max-width:560px;margin:0 auto 34px;text-wrap:pretty;}
 footer{border-top:1px solid var(--line);padding:28px var(--s-page);display:flex;align-items:center;justify-content:space-between;gap:18px;}.f-logo{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500;color:var(--ink);}.f-copy,.f-link{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.02em;text-decoration:none;}.f-link:hover{color:var(--muted);}
 
 @media(max-width:1000px){
-  .hero-proof,.system-grid{grid-template-columns:1fr;}.stage-body{grid-template-columns:1fr;}.stage-side{border-right:0;border-bottom:1px solid var(--line);}.output-area{grid-template-columns:1fr;}.agent-console{border-right:0;border-bottom:1px solid var(--line);}.custom-grid{grid-template-columns:repeat(2,1fr);}.wire{grid-template-columns:1fr;}
+  .hero-proof,.system-grid{grid-template-columns:1fr;}.stage-body{grid-template-columns:1fr;}.stage-side{border-right:0;border-bottom:1px solid var(--line);}.output-area{grid-template-columns:1fr;}.agent-console{border-right:0;border-bottom:1px solid var(--line);}.custom-build-head,.build-showcase{grid-template-columns:1fr;}.flow-map{grid-template-columns:repeat(2,1fr);}.flow-node:nth-child(even){margin-top:0;}.build-output{grid-template-columns:1fr;}
 }
 @media(max-width:860px){
   nav{padding:0 16px;height:52px;}.n-links a:not(.btn){display:none;}.n-links .agents-nav-cta{display:none;}.n-links .btn{font-size:11px;padding:6px 14px;letter-spacing:.02em;}.n-logo{font-size:16px;}.n-logo svg{width:18px;height:18px;}
-  .hero,.sec,.cta-sec{padding-left:20px;padding-right:20px;}.hero{min-height:auto;padding-top:108px;padding-bottom:60px;}.hero h1{font-size:clamp(38px,11vw,58px);letter-spacing:-.025em;}.hero-sub{font-size:15px;max-width:360px;}.hero-btns{flex-direction:column;align-items:stretch;max-width:310px;margin-left:auto;margin-right:auto;}.hero-btns .btn{width:100%;}.sec{padding-top:82px;padding-bottom:82px;}.sec-h{font-size:clamp(30px,8vw,46px);}.sec-sub{font-size:14px;line-height:1.7;}.stage-body{min-height:auto;}.workflow{grid-template-columns:1fr 1fr;}.wf-step{min-height:104px;}.custom-grid{grid-template-columns:1fr;}.custom-card.feature{grid-column:span 1;}footer{flex-direction:column;text-align:center;padding:24px 20px;}.stage-url{display:none;}.wire-row{grid-template-columns:1fr;gap:8px;}
+  .hero,.sec,.cta-sec{padding-left:20px;padding-right:20px;}.hero{min-height:auto;padding-top:108px;padding-bottom:60px;}.hero h1{font-size:clamp(38px,11vw,58px);letter-spacing:-.025em;}.hero-sub{font-size:15px;max-width:360px;}.hero-btns{flex-direction:column;align-items:stretch;max-width:310px;margin-left:auto;margin-right:auto;}.hero-btns .btn{width:100%;}.sec{padding-top:82px;padding-bottom:82px;}.sec-h{font-size:clamp(30px,8vw,46px);}.sec-sub{font-size:14px;line-height:1.7;}.stage-body{min-height:auto;}.workflow{grid-template-columns:1fr 1fr;}.wf-step{min-height:104px;}.custom-build-head{gap:16px;margin-bottom:24px;}.build-board,.build-menu{border-radius:16px;}.flow-map{grid-template-columns:1fr;}.flow-map::before{display:none;}.flow-node{min-height:auto;}.build-board{padding:18px;min-height:auto;}footer{flex-direction:column;text-align:center;padding:24px 20px;}.stage-url{display:none;}
 }
 @media(max-width:520px){
-  .hero-proof{width:100%;}.system-card{min-height:auto;padding:20px;}.stage{border-radius:14px;margin-left:-8px;margin-right:-8px;}.stage-side{padding:16px;}.workflow{grid-template-columns:1fr;}.output-area{display:block;}.agent-console,.result-panel{padding:14px;}.prompt-actions{flex-direction:column;}.stage-live{display:none;}.hero h1{font-size:clamp(34px,12vw,46px);}.btn-lg{padding:13px 18px;}
+  .hero-proof{width:100%;}.system-card{min-height:auto;padding:20px;}.stage{border-radius:14px;margin-left:-8px;margin-right:-8px;}.stage-side{padding:16px;}.workflow{grid-template-columns:1fr;}.output-area{display:block;}.agent-console,.result-panel{padding:14px;}.prompt-actions{flex-direction:column;}.stage-live{display:none;}.hero h1{font-size:clamp(34px,12vw,46px);}.btn-lg{padding:13px 18px;}.build-top{align-items:flex-start;flex-direction:column;}.menu-row{grid-template-columns:1fr;gap:8px;}.menu-mark{width:30px;height:30px;}.doc-title{font-size:19px;}
 }
 </style>
 </head>
@@ -197,7 +195,6 @@ footer{border-top:1px solid var(--line);padding:28px var(--s-page);display:flex;
     <a href="/">Home</a>
     <a href="#systems" class="active">Systems</a>
     <a href="#custom-builds">Custom builds</a>
-    <a href="#wire-in">Wire-in plan</a>
     <a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener" class="btn btn-hi">Book a call</a>
   </div>
 </nav>
@@ -301,34 +298,66 @@ footer{border-top:1px solid var(--line);padding:28px var(--s-page);display:flex;
 <section class="sec" id="custom-builds">
   <div class="si">
     <div class="sec-k">Custom workflow builds</div>
-    <div style="display:grid;grid-template-columns:1fr .8fr;gap:24px;align-items:end;margin-bottom:10px;">
-      <h2 class="sec-h" style="margin-bottom:0;">Not every agent belongs in a public gallery.</h2>
-      <p class="sec-sub">Some agents are built around the exact way a business runs. Those belong as case-study-style proof, not as clutter in the showroom.</p>
+    <div class="custom-build-head">
+      <h2 class="sec-h">Private agents should feel like <em>your workflow</em>, not another software menu.</h2>
+      <div class="custom-note"><strong>What changes</strong> Instead of a wall of bot cards, we map the repeatable work: what comes in, what rules matter, where the agent acts, and what a human approves.</div>
     </div>
-    <div class="custom-grid">
-      <article class="custom-card feature"><div class="cc-k">Document-heavy workflows</div><h3>Proposal and report automation</h3><p>Turn project notes, pricing rules, scope details, photos, and approvals into polished proposals, reports, appendices, or follow-up packets.</p></article>
-      <article class="custom-card"><div class="cc-k">Field service</div><h3>Inspection / job summary agents</h3><p>Convert field inputs into clean internal handoffs and client-ready summaries.</p></article>
-      <article class="custom-card"><div class="cc-k">Reputation</div><h3>Review and follow-up systems</h3><p>Draft review requests, missed-call replies, job-complete texts, and objection responses.</p></article>
-      <article class="custom-card"><div class="cc-k">Operations</div><h3>Internal admin assistants</h3><p>Sort updates, summarize conversations, create task lists, and keep the owner out of repetitive coordination work.</p></article>
-      <article class="custom-card"><div class="cc-k">Sales pipeline</div><h3>CRM cleanup and next-step agents</h3><p>Read messy pipeline notes, flag stalled opportunities, and draft the next action for each deal.</p></article>
-      <article class="custom-card"><div class="cc-k">Client-specific</div><h3>Your exact workflow</h3><p>If the public systems do not match your business, that is usually where the highest-value build starts.</p></article>
-    </div>
-  </div>
-</section>
 
-<section class="sec" id="wire-in">
-  <div class="si wire">
-    <div>
-      <div class="sec-k">How it becomes real</div>
-      <h2 class="sec-h">The showroom is the front door. The build connects the machinery.</h2>
-      <p class="sec-sub">The public page should prove the user interface and business flow without exposing your data, paid providers, or outbound messaging. Client builds add the real connections behind it.</p>
-      <div class="wire-note"><h3>Best approach</h3><p>Launch the showroom shell first, then wire each system into the real agent runtime behind safe limits, approvals, rate caps, and human review.</p></div>
-    </div>
-    <div class="wire-panel">
-      <div class="wire-row"><div class="wire-num">01</div><div><h3>Interface and offer framing</h3><p>The visitor sees what the system does, what inputs it needs, and what output it creates.</p></div></div>
-      <div class="wire-row"><div class="wire-num">02</div><div><h3>Public-safe sample run</h3><p>The website can run deterministic samples without spending credits, exposing PII, or sending external messages.</p></div></div>
-      <div class="wire-row"><div class="wire-num">03</div><div><h3>Agent backend connection</h3><p>The production version connects to MCPs, search providers, calendars, CRMs, docs, email, or client systems.</p></div></div>
-      <div class="wire-row"><div class="wire-num">04</div><div><h3>Approval and deployment rules</h3><p>Anything sensitive — paid reveal, real outreach, client records, or public posting — gets explicit caps and approval gates.</p></div></div>
+    <div class="build-showcase" aria-label="Custom workflow build examples">
+      <article class="build-board">
+        <div class="build-top">
+          <span class="board-tag">From messy work</span>
+          <span class="board-status">to repeatable agent system</span>
+        </div>
+
+        <div class="flow-map" aria-label="Custom workflow path">
+          <div class="flow-node">
+            <div class="node-top"><span class="node-num">01</span><span class="node-icon">in</span></div>
+            <div><h3>Messy inputs</h3><p>Notes, calls, photos, forms, CRM rows, PDFs, screenshots, and owner context.</p></div>
+            <div class="node-chips"><span>field notes</span><span>client details</span><span>raw data</span></div>
+          </div>
+          <div class="flow-node">
+            <div class="node-top"><span class="node-num">02</span><span class="node-icon">rule</span></div>
+            <div><h3>Business rules</h3><p>Pricing logic, tone, exclusions, approval gates, required fields, and edge cases.</p></div>
+            <div class="node-chips"><span>do / don't</span><span>brand voice</span><span>checks</span></div>
+          </div>
+          <div class="flow-node">
+            <div class="node-top"><span class="node-num">03</span><span class="node-icon">run</span></div>
+            <div><h3>Agent work</h3><p>Research, summarize, compare, draft, route, update records, and flag missing pieces.</p></div>
+            <div class="node-chips"><span>research</span><span>draft</span><span>route</span></div>
+          </div>
+          <div class="flow-node">
+            <div class="node-top"><span class="node-num">04</span><span class="node-icon">out</span></div>
+            <div><h3>Finished output</h3><p>Proposal, report, follow-up, job handoff, review request, or next-step queue.</p></div>
+            <div class="node-chips"><span>proposal</span><span>report</span><span>follow-up</span></div>
+          </div>
+        </div>
+
+        <div class="build-output">
+          <div class="output-doc">
+            <div class="doc-label">Example output</div>
+            <h3 class="doc-title">Client-ready packet, not another dashboard.</h3>
+            <div class="doc-lines" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="doc-stamp">Ready for approval</div>
+          </div>
+          <div class="approval-card">
+            <div class="approval-label">Human control stays visible</div>
+            <div class="approval-row"><span class="approval-dot"></span><div><strong>Approve before send</strong><span>No email, public post, client update, or record change goes out silently.</span></div></div>
+            <div class="approval-row"><span class="approval-dot"></span><div><strong>Missing info gets flagged</strong><span>The agent asks for the open detail instead of pretending the workflow is complete.</span></div></div>
+            <div class="approval-row"><span class="approval-dot"></span><div><strong>Output matches the business</strong><span>The system is shaped around the real handoff, not a generic bot template.</span></div></div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="build-menu" aria-label="Common private agent build types">
+        <div class="menu-head"><span>Private build menu</span><strong>Where custom agents usually land.</strong></div>
+        <div class="menu-row"><div class="menu-mark">DOC</div><div><h3>Proposal and report automation</h3><p>Project notes, pricing rules, photos, and approvals become polished packets.</p></div></div>
+        <div class="menu-row"><div class="menu-mark">FS</div><div><h3>Field service handoffs</h3><p>Inspection notes and job updates turn into clean internal or client summaries.</p></div></div>
+        <div class="menu-row"><div class="menu-mark">REV</div><div><h3>Review and follow-up loops</h3><p>Job-complete texts, missed-call replies, review requests, and objection drafts.</p></div></div>
+        <div class="menu-row"><div class="menu-mark">CRM</div><div><h3>Pipeline next steps</h3><p>Messy deal notes become stalled-opportunity alerts and suggested next actions.</p></div></div>
+        <div class="menu-row feature"><div class="menu-mark">YOU</div><div><h3>Your exact workflow</h3><p>If the showroom systems are close but not exact, the private build is where the real value usually starts.</p></div></div>
+        <a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener" class="btn btn-soft">Map my workflow</a>
+      </aside>
     </div>
   </div>
 </section>
