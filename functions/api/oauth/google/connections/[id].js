@@ -1,5 +1,6 @@
 import {
   authorizedAdmin,
+  buildAgentHandoff,
   clean,
   json,
   readConnection,
@@ -33,6 +34,7 @@ export async function onRequestGet(context) {
 
   return json({
     ...record,
+    agent_handoff: includeSecrets ? buildAgentHandoff(record.agent_package, { origin: new URL(request.url).origin }) : null,
     includes_sensitive_tokens: includeSecrets,
     warning: includeSecrets
       ? 'This response contains Gmail OAuth tokens. Do not paste it into public chats, browser UIs, or client-visible docs.'

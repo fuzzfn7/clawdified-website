@@ -374,6 +374,111 @@ export function redactTokens(value) {
   return redacted;
 }
 
+function arrayValue(value) {
+  return Array.isArray(value) ? value.filter(Boolean) : [];
+}
+
+function packageScopes(packageData = {}) {
+  return arrayValue(packageData?.oauth?.granted_scopes)
+    .concat(arrayValue(packageData?.required_for_outreach_agent?.granted_scopes))
+    .concat(arrayValue(packageData?.google_oauth?.requested_scopes))
+    .filter(Boolean);
+}
+
+function hasScope(scopes, wanted) {
+  return scopes.includes(wanted) || scopes.some((scope) => String(scope || '').endsWith(`/${wanted.split('/').pop()}`));
+}
+
+export function summarizeAgentPackage(packageData = {}, { origin = '' } = {}) {
+  const connectionId = clean(packageData.connection_id || '', 120);
+  const clientName = clean(packageData?.client?.name || packageData?.client_name || '', 160);
+  const workflow = clean(packageData?.client?.workflow || '', 500);
+  const connectedEmail = clean(
+    packageData?.gmail_profile?.emailAddress
+      || packageData?.google_account?.email
+      || '',
+    180,
+  );
+  const scopes = [...new Set(packageScopes(packageData))];
+  const refreshTokenStored = Boolean(
+    packageData?.required_for_outreach_agent?.refresh_token_present
+      || packageData?.oauth?.refresh_token,
+  );
+  const sendScope = Boolean(
+    packageData?.required_for_outreach_agent?.send_scope_requested
+      || hasScope(scopes, 'https://www.googleapis.com/auth/gmail.send'),
+  );
+  const modifyScope = Boolean(
+    packageData?.required_for_outreach_agent?.modify_scope_requested
+      || hasScope(scopes, 'https://www.googleapis.com/auth/gmail.modify'),
+  );
+  const readyForAgent = Boolean(connectionId && connectedEmail && refreshTokenStored && sendScope);
+  const detailPath = `/api/oauth/google/connections/${encodeURIComponent(connectionId)}?include=agent_package`;
+
+  return {
+    connection_id: connectionId,
+    service: 'gmail',
+    status: readyForAgent ? 'connected' : 'needs_attention',
+    client_name: clientName,
+    workflow,
+    connected_email: connectedEmail,
+    created_at: clean(packageData.created_at || '', 80),
+    refresh_token_stored: refreshTokenStored,
+    send_scope_granted: sendScope,
+    modify_scope_granted: modifyScope,
+    granted_scopes_count: scopes.length,
+    ready_for_agent: readyForAgent,
+    detail_url: origin && connectionId ? `${origin}${detailPath}` : detailPath,
+  };
+}
+
+export function buildAgentHandoff(packageData = {}, { origin = '' } = {}) {
+  const summary = summarizeAgentPackage(packageData, { origin });
+  const scopes = [...new Set(packageScopes(packageData))];
+  return {
+    handoff_type: 'clawdified.gmail_agent_connection.v1',
+    service: 'gmail',
+    connection_id: summary.connection_id,
+    client_name: summary.client_name,
+    workflow: summary.workflow,
+    connected_email: summary.connected_email,
+    created_at: summary.created_at,
+    status: {
+      ready_for_outbound_agent: summary.ready_for_agent,
+      refresh_token_present: summary.refresh_token_stored,
+      gmail_send_scope_granted: summary.send_scope_granted,
+      gmail_modify_scope_granted: summary.modify_scope_granted,
+    },
+    oauth: {
+      auth_type: 'google_oauth_refresh_token',
+      token_uri: 'https://oauth2.googleapis.com/token',
+      client_id: packageData?.google_oauth?.client_id || '',
+      client_secret_source: 'GOOGLE_CLIENT_SECRET',
+      client_secret_note: 'Use the Clawdified Google OAuth client secret from the agent runtime/server environment. Do not ask the client for a Google password.',
+      refresh_token: packageData?.oauth?.refresh_token || '',
+      access_token: packageData?.oauth?.access_token || '',
+      access_token_expires_at: packageData?.oauth?.expires_at || null,
+      token_type: packageData?.oauth?.token_type || 'Bearer',
+      granted_scopes: scopes,
+    },
+    gmail: {
+      email: summary.connected_email,
+      profile: packageData?.gmail_profile || null,
+      endpoints: packageData?.endpoints || gmailEndpointMap(),
+    },
+    clawdified: {
+      dashboard_detail_url: summary.detail_url,
+      connector: 'https://clawdified.com/connect/gmail/',
+    },
+    agent_instructions: [
+      'This is a ready-to-use Clawdified Gmail OAuth connection package for the named client/mailbox.',
+      'Use oauth.refresh_token plus the server-side GOOGLE_CLIENT_SECRET and oauth.client_id at oauth.token_uri to mint fresh access tokens when the agent runs.',
+      'Use Gmail send only for approved outbound outreach. Use messages/threads/history/labels only when inbox/reply tracking is part of the approved workflow.',
+      'Never expose oauth.refresh_token, oauth.access_token, ID tokens, or this raw package to public/client-visible pages.',
+    ],
+  };
+}
+
 async function aesKeyFromSecret(secret) {
   const digest = await crypto.subtle.digest('SHA-256', textEncoder.encode(secret));
   return crypto.subtle.importKey('raw', digest, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
@@ -449,6 +554,48 @@ export async function readConnection({ env, connectionId, includeSecrets = false
   };
 }
 
+export async function listConnections({ env, origin = '', limit = 100, cursor = '' } = {}) {
+  if (!hasKv(env)) throw new Error('SOCIAL_CONNECTOR_KV binding is not configured');
+  if (typeof env.SOCIAL_CONNECTOR_KV.list !== 'function') {
+    throw new Error('SOCIAL_CONNECTOR_KV list support is not configured');
+  }
+
+  const safeLimit = Math.min(Math.max(Number(limit) || 100, 1), 200);
+  const listOptions = { prefix: CONNECTION_KEY_PREFIX, limit: safeLimit };
+  const safeCursor = clean(cursor, 500);
+  if (safeCursor) listOptions.cursor = safeCursor;
+  const listed = await env.SOCIAL_CONNECTOR_KV.list(listOptions);
+  const connections = [];
+
+  for (const key of listed.keys || []) {
+    const keyName = clean(key?.name || '', 300);
+    if (!keyName.startsWith(CONNECTION_KEY_PREFIX)) continue;
+    const raw = await env.SOCIAL_CONNECTOR_KV.get(keyName);
+    if (!raw) continue;
+    try {
+      const record = JSON.parse(raw);
+      const publicPackage = record.public_agent_package || {};
+      const summary = summarizeAgentPackage({
+        ...publicPackage,
+        connection_id: record.connection_id || keyName.slice(CONNECTION_KEY_PREFIX.length),
+        created_at: record.created_at || publicPackage.created_at || key?.metadata?.created_at || '',
+      }, { origin });
+      connections.push(summary);
+    } catch (_err) {
+      // Skip malformed records rather than breaking the whole dashboard.
+    }
+  }
+
+  connections.sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+  return {
+    ok: true,
+    service: 'gmail',
+    connections,
+    cursor: listed.cursor || '',
+    list_complete: listed.list_complete !== false,
+  };
+}
+
 export function authorizedAdmin(request, env = {}) {
   const configured = adminTokenFromEnv(env);
   if (!configured) return false;
@@ -458,20 +605,16 @@ export function authorizedAdmin(request, env = {}) {
   return safeEqual(bearer || queryToken, configured);
 }
 
-export function renderSuccessPage({ connectionId, publicPackage, returnTo = '' }) {
-  const scopes = publicPackage?.oauth?.granted_scopes || [];
-  const email = publicPackage?.gmail_profile?.emailAddress || publicPackage?.google_account?.email || 'Gmail account';
-  const hasRefresh = Boolean(publicPackage?.required_for_outreach_agent?.refresh_token_present);
+export function renderSuccessPage({ publicPackage, returnTo = '' }) {
+  const email = publicPackage?.gmail_profile?.emailAddress || publicPackage?.google_account?.email || 'your Gmail account';
   const returnLink = returnTo ? `<a class="button ghost" href="${escapeHtml(returnTo)}">Back to Clawdified</a>` : '<a class="button ghost" href="/connect/gmail/">Back to connector</a>';
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gmail connected | Clawdified</title>
-<style>:root{color-scheme:dark;--bg:#0f0e0a;--panel:#17140e;--ink:#f8edda;--muted:rgba(248,237,218,.72);--line:rgba(248,237,218,.14);--gold:#f1b45b;--orange:#d48553;--green:#7ad99d}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0%,rgba(241,180,91,.18),transparent 34rem),var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:grid;place-items:center;padding:24px}.card{max-width:880px;width:100%;border:1px solid var(--line);background:rgba(23,20,14,.9);border-radius:28px;padding:34px;box-shadow:0 28px 90px rgba(0,0,0,.35)}.eyebrow{color:var(--green);text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:800}h1{font-family:Georgia,serif;font-size:clamp(36px,7vw,72px);line-height:.95;margin:12px 0 16px;font-weight:500}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}.stat{border:1px solid var(--line);border-radius:18px;padding:16px;background:rgba(255,255,255,.035)}.stat b{display:block;font-size:22px;color:var(--gold);overflow-wrap:anywhere}p,li{color:var(--muted);line-height:1.55}.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;border:1px solid var(--line);background:#080705;border-radius:14px;padding:12px;overflow:auto}.button{display:inline-flex;align-items:center;justify-content:center;margin-top:10px;margin-right:10px;padding:12px 16px;border-radius:999px;background:linear-gradient(135deg,var(--gold),var(--orange));color:#1a1008;text-decoration:none;font-weight:800}.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}@media(max-width:700px){.grid{grid-template-columns:1fr}.card{padding:24px}}</style></head>
-<body><main class="card"><div class="eyebrow">Connected</div><h1>Gmail authorization is complete.</h1>
-<p>Clawdified received the Google OAuth callback and stored the agent-ready Gmail package server-side. No tokens are shown on this public success page.</p>
-<div class="grid"><div class="stat"><b>${escapeHtml(email)}</b><span>Connected mailbox</span></div><div class="stat"><b>${escapeHtml(scopes.length)}</b><span>Granted scopes</span></div><div class="stat"><b>${hasRefresh ? 'Yes' : 'No'}</b><span>Refresh token stored</span></div></div>
-<p><strong>Connection ID</strong></p><div class="code">${escapeHtml(connectionId)}</div>
-<p>Give this ID to Wesley if he asks. The protected admin endpoint can pull the full package, including the encrypted OAuth refresh token, using the server-side admin token.</p>
+<style>:root{color-scheme:dark;--bg:#0f0e0a;--panel:#17140e;--ink:#f8edda;--muted:rgba(248,237,218,.72);--line:rgba(248,237,218,.14);--gold:#f1b45b;--orange:#d48553;--green:#7ad99d}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0%,rgba(241,180,91,.18),transparent 34rem),var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:grid;place-items:center;padding:24px}.card{max-width:680px;width:100%;border:1px solid var(--line);background:rgba(23,20,14,.9);border-radius:28px;padding:34px;text-align:center;box-shadow:0 28px 90px rgba(0,0,0,.35)}.eyebrow{color:var(--green);text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:800}h1{font-family:Georgia,serif;font-size:clamp(38px,7vw,72px);line-height:.95;margin:12px 0 16px;font-weight:500}p{color:var(--muted);line-height:1.55}.mailbox{color:var(--gold);font-weight:800;overflow-wrap:anywhere}.button{display:inline-flex;align-items:center;justify-content:center;margin-top:10px;padding:12px 16px;border-radius:999px;background:linear-gradient(135deg,var(--gold),var(--orange));color:#1a1008;text-decoration:none;font-weight:800}.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}@media(max-width:700px){.card{padding:24px}}</style></head>
+<body><main class="card"><div class="eyebrow">Connected</div><h1>Gmail is connected.</h1>
+<p>Thank you — <span class="mailbox">${escapeHtml(email)}</span> is connected to Clawdified. You can close this window.</p>
+<p>No passwords, tokens, or technical details are shown here.</p>
 ${returnLink}</main></body></html>`;
 }
 

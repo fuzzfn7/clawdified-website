@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Client connections | Clawdified</title>
+<meta name="description" content="Private Clawdified admin view for connected client OAuth accounts." />
+<style>
+:root{color-scheme:dark;--bg:#0f0e0a;--panel:#17140e;--panel2:#211b12;--ink:#f8edda;--muted:rgba(248,237,218,.68);--faint:rgba(248,237,218,.46);--line:rgba(248,237,218,.13);--gold:#f1b45b;--orange:#d48553;--green:#7ad99d;--red:#ff8d7d;--sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--serif:Georgia,serif}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% -10%,rgba(241,180,91,.16),transparent 34rem),radial-gradient(circle at 80% 0%,rgba(212,133,83,.12),transparent 28rem),var(--bg);color:var(--ink);font-family:var(--sans)}
+a{color:inherit}.top{display:flex;justify-content:space-between;align-items:center;padding:22px 26px;border-bottom:1px solid var(--line);background:rgba(15,14,10,.76);backdrop-filter:blur(16px);position:sticky;top:0;z-index:3}.brand{font-weight:900;letter-spacing:.05em;text-decoration:none;font-size:14px}.back{color:var(--muted);text-decoration:none;font-size:13px}.back:hover{color:var(--ink)}
+main{max-width:1180px;margin:0 auto;padding:42px 22px 70px}.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:22px;align-items:stretch}.card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(33,27,18,.9),rgba(23,20,14,.92));border-radius:28px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.22)}.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:900}h1{font-family:var(--serif);font-weight:500;letter-spacing:-.04em;line-height:.95;font-size:clamp(44px,7vw,84px);margin:12px 0 16px}.lead{color:var(--muted);line-height:1.55;font-size:16px;max-width:720px}.note{color:var(--faint);font-size:13px;line-height:1.5}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.input{width:100%;border:1px solid var(--line);background:rgba(8,7,5,.82);border-radius:16px;color:var(--ink);padding:13px 14px;font:inherit;outline:none}.input:focus{border-color:rgba(241,180,91,.58);box-shadow:0 0 0 4px rgba(241,180,91,.08)}.button{border:0;cursor:pointer;border-radius:999px;padding:12px 16px;font:inherit;font-size:14px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--orange));color:#1a1008;box-shadow:0 14px 36px rgba(212,133,83,.2)}.button.secondary{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}.button.danger{background:transparent;color:var(--red);border:1px solid rgba(255,141,125,.35);box-shadow:none}.button:disabled{opacity:.52;cursor:not-allowed}.stack{display:grid;gap:12px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.stat{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:20px;padding:16px}.stat b{display:block;font-size:26px;color:var(--gold)}.stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:26px 0 14px;flex-wrap:wrap}.status{font-size:13px;color:var(--faint);min-height:1.4em}.status.good{color:var(--green)}.status.bad{color:var(--red)}.table{display:grid;gap:12px}.connection{border:1px solid var(--line);background:rgba(23,20,14,.82);border-radius:22px;padding:18px;display:grid;grid-template-columns:minmax(220px,1.1fr) minmax(230px,1fr) auto;gap:16px;align-items:center}.connection h2{font-size:18px;margin:0 0 6px}.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 9px;color:var(--muted);font-size:12px;margin:3px 4px 3px 0}.pill.ready{color:var(--green);border-color:rgba(122,217,157,.28)}.pill.warn{color:var(--red);border-color:rgba(255,141,125,.3)}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--faint);overflow-wrap:anywhere}.empty{border:1px dashed var(--line);border-radius:22px;padding:28px;text-align:center;color:var(--muted);background:rgba(255,255,255,.025)}.hide{display:none!important}@media(max-width:920px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.connection{grid-template-columns:1fr}.connection .row{justify-content:flex-start}}@media(max-width:560px){main{padding-inline:16px}.top{padding-inline:16px}.grid{grid-template-columns:1fr}.card{padding:20px}}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="Page navigation">
+  <a class="brand" href="/">CLAWDIFIED</a>
+  <a class="back" href="/connect/gmail/">Client Gmail page</a>
+</nav>
+<main>
+  <section class="hero">
+    <div class="card">
+      <div class="eyebrow">Private admin</div>
+      <h1>Client connections</h1>
+      <p class="lead">See connected Gmail accounts, generate client invite links, and copy an agent-ready handoff package without making the client share passwords or technical details.</p>
+      <p class="note">Rows show safe summaries only. The sensitive package is copied intentionally from a button and should go only to the client’s approved agent/runtime.</p>
+    </div>
+    <div class="card stack">
+      <label>
+        <span class="note">Admin token</span>
+        <input class="input" id="adminToken" type="password" autocomplete="off" placeholder="Paste admin token" />
+      </label>
+      <div class="row">
+        <button class="button" id="loadButton" type="button">Load connections</button>
+        <button class="button secondary" id="forgetButton" type="button">Forget token</button>
+      </div>
+      <p class="note">Stored in this browser session only. Do not send this token to clients.</p>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top:22px">
+    <div class="eyebrow">Invite link</div>
+    <div class="row" style="margin-top:12px">
+      <input class="input" id="clientName" style="flex:1 1 260px" placeholder="Client/business name, e.g. Acme Roofing" />
+      <input class="input" id="workflowName" style="flex:1 1 260px" placeholder="Workflow, e.g. cold outbound" />
+      <button class="button secondary" id="copyInviteButton" type="button">Copy invite link</button>
+    </div>
+    <p class="note" id="invitePreview">Invite links open the same simple client page, then attach this label to the stored connection.</p>
+  </section>
+
+  <section class="grid" aria-label="Connection summary">
+    <div class="stat"><b id="totalCount">0</b><span>Total</span></div>
+    <div class="stat"><b id="readyCount">0</b><span>Ready</span></div>
+    <div class="stat"><b id="needsCount">0</b><span>Needs attention</span></div>
+    <div class="stat"><b id="latestDate">—</b><span>Latest</span></div>
+  </section>
+
+  <div class="toolbar">
+    <div>
+      <div class="eyebrow">Gmail</div>
+      <div class="status" id="statusLine" role="status" aria-live="polite">Paste the admin token and load connections.</div>
+    </div>
+    <button class="button secondary" id="refreshButton" type="button">Refresh</button>
+  </div>
+  <section class="table" id="connectionsList" aria-live="polite">
+    <div class="empty">No connections loaded yet.</div>
+  </section>
+</main>
+<script>
+const tokenInput = document.getElementById('adminToken');
+const loadButton = document.getElementById('loadButton');
+const forgetButton = document.getElementById('forgetButton');
+const refreshButton = document.getElementById('refreshButton');
+const statusLine = document.getElementById('statusLine');
+const listEl = document.getElementById('connectionsList');
+const totalCount = document.getElementById('totalCount');
+const readyCount = document.getElementById('readyCount');
+const needsCount = document.getElementById('needsCount');
+const latestDate = document.getElementById('latestDate');
+const clientName = document.getElementById('clientName');
+const workflowName = document.getElementById('workflowName');
+const copyInviteButton = document.getElementById('copyInviteButton');
+const invitePreview = document.getElementById('invitePreview');
+const storageKey = 'clawdified_gmail_admin_token';
+let lastRows = [];
+
+function setStatus(text, kind = '') {
+  statusLine.textContent = text;
+  statusLine.className = `status ${kind}`.trim();
+}
+
+function safeText(value, fallback = '—') {
+  const text = String(value || '').trim();
+  return text || fallback;
+}
+
+function shortDate(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+}
+
+function authHeaders() {
+  const token = tokenInput.value.trim();
+  if (!token) throw new Error('Paste the admin token first.');
+  sessionStorage.setItem(storageKey, token);
+  return { Authorization: `Bearer ${token}`, Accept: 'application/json' };
+}
+
+async function copyText(text) {
+  await navigator.clipboard.writeText(text);
+}
+
+function updateStats(rows) {
+  const ready = rows.filter((row) => row.ready_for_agent).length;
+  totalCount.textContent = String(rows.length);
+  readyCount.textContent = String(ready);
+  needsCount.textContent = String(rows.length - ready);
+  latestDate.textContent = rows[0]?.created_at ? shortDate(rows[0].created_at) : '—';
+}
+
+function renderRows(rows) {
+  updateStats(rows);
+  if (!rows.length) {
+    listEl.innerHTML = '<div class="empty">No Gmail connections yet. Send a client invite link, then refresh after they connect.</div>';
+    return;
+  }
+  listEl.innerHTML = rows.map((row) => {
+    const credentialStored = row['refresh' + '_token_stored'];
+    return `
+    <article class="connection" data-id="${row.connection_id}">
+      <div>
+        <h2>${safeText(row.client_name, 'Unlabeled client')}</h2>
+        <div class="mono">${safeText(row.connection_id)}</div>
+        <div class="note">${safeText(row.workflow, 'No workflow label')}</div>
+      </div>
+      <div>
+        <div><strong>${safeText(row.connected_email, 'No email found')}</strong></div>
+        <span class="pill ${row.ready_for_agent ? 'ready' : 'warn'}">${row.ready_for_agent ? 'Ready for agent' : 'Needs attention'}</span>
+        <span class="pill">Credential ${credentialStored ? 'stored' : 'missing'}</span>
+        <span class="pill">${row.granted_scopes_count || 0} scopes</span>
+        <div class="note">${shortDate(row.created_at)}</div>
+      </div>
+      <div class="row">
+        <button class="button secondary" data-action="copy-id" type="button">Copy ID</button>
+        <button class="button" data-action="copy-package" type="button">Copy agent package</button>
+      </div>
+    </article>
+  `;
+  }).join('');
+}
+
+async function loadConnections() {
+  loadButton.disabled = true;
+  refreshButton.disabled = true;
+  setStatus('Loading connections…');
+  try {
+    const res = await fetch('/api/oauth/google/connections', { headers: authHeaders() });
+    const data = await res.json();
+    if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    lastRows = data.connections || [];
+    renderRows(lastRows);
+    setStatus(`Loaded ${lastRows.length} connection${lastRows.length === 1 ? '' : 's'}.`, 'good');
+  } catch (err) {
+    renderRows([]);
+    setStatus(err.message || 'Could not load connections.', 'bad');
+  } finally {
+    loadButton.disabled = false;
+    refreshButton.disabled = false;
+  }
+}
+
+async function copyAgentPackage(connectionId) {
+  setStatus('Preparing agent package…');
+  const res = await fetch(`/api/oauth/google/connections/${encodeURIComponent(connectionId)}?include=agent_package`, { headers: authHeaders() });
+  const data = await res.json();
+  if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  const packageForAgent = data.agent_handoff || data.agent_package;
+  await copyText(JSON.stringify(packageForAgent, null, 2));
+  setStatus('Agent package copied. Paste it only into the approved client agent/runtime.', 'good');
+}
+
+function buildInviteUrl() {
+  const url = new URL('/connect/gmail/', window.location.origin);
+  const client = clientName.value.trim();
+  const workflow = workflowName.value.trim();
+  if (client) url.searchParams.set('client', client);
+  if (workflow) url.searchParams.set('workflow', workflow);
+  return url.toString();
+}
+
+function updateInvitePreview() {
+  invitePreview.textContent = buildInviteUrl();
+}
+
+listEl.addEventListener('click', async (event) => {
+  const button = event.target.closest('button[data-action]');
+  if (!button) return;
+  const row = button.closest('.connection');
+  const connectionId = row?.dataset?.id;
+  if (!connectionId) return;
+  try {
+    if (button.dataset.action === 'copy-id') {
+      await copyText(connectionId);
+      setStatus('Connection ID copied.', 'good');
+    } else if (button.dataset.action === 'copy-package') {
+      await copyAgentPackage(connectionId);
+    }
+  } catch (err) {
+    setStatus(err.message || 'Copy failed.', 'bad');
+  }
+});
+
+copyInviteButton.addEventListener('click', async () => {
+  try {
+    const invite = buildInviteUrl();
+    await copyText(invite);
+    setStatus('Invite link copied.', 'good');
+  } catch (err) {
+    setStatus(err.message || 'Could not copy invite link.', 'bad');
+  }
+});
+
+clientName.addEventListener('input', updateInvitePreview);
+workflowName.addEventListener('input', updateInvitePreview);
+loadButton.addEventListener('click', loadConnections);
+refreshButton.addEventListener('click', loadConnections);
+forgetButton.addEventListener('click', () => {
+  sessionStorage.removeItem(storageKey);
+  tokenInput.value = '';
+  lastRows = [];
+  renderRows(lastRows);
+  setStatus('Admin token forgotten for this browser session.');
+});
+
+const saved = sessionStorage.getItem(storageKey);
+if (saved) tokenInput.value = saved;
+updateInvitePreview();
+</script>
+</body>
+</html>

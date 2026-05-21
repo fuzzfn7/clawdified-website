@@ -1,17 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 
 import {
+  buildAgentHandoff,
   buildAgentPackage,
   buildAuthUrl,
   createSignedState,
   decryptJson,
   encryptJson,
+  listConnections,
   readiness,
   redactTokens,
+  renderSuccessPage,
   scopesFromEnv,
+  summarizeAgentPackage,
   verifySignedState,
 } from '../functions/api/oauth/google/_shared.mjs';
+import { onRequestGet as listConnectionsRequest } from '../functions/api/oauth/google/connections/index.js';
 
 const completeEnv = {
   GOOGLE_CLIENT_ID: 'google-client-id.apps.googleusercontent.com',
@@ -127,4 +133,178 @@ test('buildAgentPackage creates agent-ready Gmail endpoint map', () => {
   assert.equal(packageData.required_for_outreach_agent.refresh_token_present, true);
   assert.equal(packageData.required_for_outreach_agent.send_scope_requested, true);
   assert.equal(packageData.required_for_outreach_agent.modify_scope_requested, true);
+});
+
+function sampleAgentPackage(overrides = {}) {
+  return {
+    connection_id: 'gmail_conn_123',
+    created_at: '2026-05-21T20:00:00.000Z',
+    client: { name: 'Heller Hats', workflow: 'cold outbound' },
+    google_oauth: {
+      client_id: 'google-client-id.apps.googleusercontent.com',
+      redirect_uri: 'https://clawdified.com/api/oauth/google/callback',
+      requested_scopes: scopesFromEnv(completeEnv),
+    },
+    google_account: { sub: 'google-user-1', email: 'owner@example.com', name: 'Client Owner' },
+    gmail_profile: { emailAddress: 'owner@example.com', messagesTotal: 10, threadsTotal: 3 },
+    oauth: {
+      access_token: 'ya29-access-token',
+      refresh_token: 'refresh-token',
+      token_type: 'Bearer',
+      expires_at: '2026-05-21T21:00:00.000Z',
+      granted_scopes: scopesFromEnv(completeEnv),
+    },
+    endpoints: {
+      profile: 'https://gmail.googleapis.com/gmail/v1/users/me/profile',
+      send: 'https://gmail.googleapis.com/gmail/v1/users/me/messages/send',
+      messages: 'https://gmail.googleapis.com/gmail/v1/users/me/messages',
+      threads: 'https://gmail.googleapis.com/gmail/v1/users/me/threads',
+      labels: 'https://gmail.googleapis.com/gmail/v1/users/me/labels',
+      history: 'https://gmail.googleapis.com/gmail/v1/users/me/history',
+      drafts: 'https://gmail.googleapis.com/gmail/v1/users/me/drafts',
+    },
+    required_for_outreach_agent: {
+      client_id_present: true,
+      email_present: true,
+      access_token_present: true,
+      refresh_token_present: true,
+      send_scope_requested: true,
+      modify_scope_requested: true,
+      granted_scopes: scopesFromEnv(completeEnv),
+    },
+    ...overrides,
+  };
+}
+
+test('summarizeAgentPackage creates dashboard-safe Gmail rows without raw tokens', () => {
+  const summary = summarizeAgentPackage(sampleAgentPackage());
+
+  assert.equal(summary.connection_id, 'gmail_conn_123');
+  assert.equal(summary.service, 'gmail');
+  assert.equal(summary.client_name, 'Heller Hats');
+  assert.equal(summary.connected_email, 'owner@example.com');
+  assert.equal(summary.status, 'connected');
+  assert.equal(summary.refresh_token_stored, true);
+  assert.equal(summary.ready_for_agent, true);
+  assert.equal(JSON.stringify(summary).includes('refresh-token'), false);
+  assert.equal(JSON.stringify(summary).includes('ya29-access-token'), false);
+});
+
+test('buildAgentHandoff creates self-describing package an agent can use', () => {
+  const handoff = buildAgentHandoff(sampleAgentPackage(), { origin: 'https://clawdified.com' });
+
+  assert.equal(handoff.handoff_type, 'clawdified.gmail_agent_connection.v1');
+  assert.equal(handoff.connection_id, 'gmail_conn_123');
+  assert.equal(handoff.connected_email, 'owner@example.com');
+  assert.equal(handoff.status.ready_for_outbound_agent, true);
+  assert.equal(handoff.oauth.auth_type, 'google_oauth_refresh_token');
+  assert.equal(handoff.oauth.refresh_token, 'refresh-token');
+  assert.equal(handoff.oauth.client_id, 'google-client-id.apps.googleusercontent.com');
+  assert.equal(handoff.oauth.client_secret_source, 'GOOGLE_CLIENT_SECRET');
+  assert.equal(handoff.oauth.token_uri, 'https://oauth2.googleapis.com/token');
+  assert.equal(handoff.gmail.endpoints.send, 'https://gmail.googleapis.com/gmail/v1/users/me/messages/send');
+  assert.match(handoff.agent_instructions.join(' '), /refresh_token/i);
+  assert.match(handoff.agent_instructions.join(' '), /GOOGLE_CLIENT_SECRET/i);
+});
+
+test('listConnections returns recent dashboard rows from Gmail KV records', async () => {
+  const publicPackage = redactTokens(sampleAgentPackage());
+  const record = {
+    ok: true,
+    connection_id: 'gmail_conn_123',
+    created_at: '2026-05-21T20:00:00.000Z',
+    public_agent_package: publicPackage,
+    encrypted_agent_package: { alg: 'AES-GCM-SHA256', iv: 'unused', ciphertext: 'unused' },
+  };
+  const env = {
+    ...completeEnv,
+    SOCIAL_CONNECTOR_KV: {
+      async list({ prefix }) {
+        assert.equal(prefix, 'gmail-google-connection:');
+        return { keys: [{ name: 'gmail-google-connection:gmail_conn_123' }], list_complete: true };
+      },
+      async get(key) {
+        assert.equal(key, 'gmail-google-connection:gmail_conn_123');
+        return JSON.stringify(record);
+      },
+      async put() {},
+    },
+  };
+
+  const result = await listConnections({ env, origin: 'https://clawdified.com' });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.connections.length, 1);
+  assert.equal(result.connections[0].connection_id, 'gmail_conn_123');
+  assert.equal(result.connections[0].connected_email, 'owner@example.com');
+  assert.equal(result.connections[0].detail_url, 'https://clawdified.com/api/oauth/google/connections/gmail_conn_123?include=agent_package');
+  assert.equal(JSON.stringify(result).includes('refresh-token'), false);
+});
+
+test('renderSuccessPage thanks clients without exposing connection IDs or tokens', () => {
+  const html = renderSuccessPage({
+    connectionId: 'gmail_conn_123',
+    publicPackage: redactTokens(sampleAgentPackage()),
+    returnTo: '/connect/gmail/',
+  });
+
+  assert.match(html, /Gmail is connected/i);
+  assert.match(html, /close this window/i);
+  assert.equal(html.includes('gmail_conn_123'), false);
+  assert.equal(html.includes('Connection ID'), false);
+  assert.equal(html.includes('refresh-token'), false);
+});
+
+test('connections list route requires admin token and returns safe rows', async () => {
+  const publicPackage = redactTokens(sampleAgentPackage());
+  const env = {
+    ...completeEnv,
+    SOCIAL_CONNECTOR_KV: {
+      async list() {
+        return { keys: [{ name: 'gmail-google-connection:gmail_conn_123' }], list_complete: true };
+      },
+      async get() {
+        return JSON.stringify({
+          ok: true,
+          connection_id: 'gmail_conn_123',
+          created_at: '2026-05-21T20:00:00.000Z',
+          public_agent_package: publicPackage,
+        });
+      },
+      async put() {},
+    },
+  };
+
+  const denied = await listConnectionsRequest({
+    request: new Request('https://clawdified.com/api/oauth/google/connections'),
+    env,
+  });
+  assert.equal(denied.status, 401);
+
+  const allowed = await listConnectionsRequest({
+    request: new Request('https://clawdified.com/api/oauth/google/connections', {
+      headers: { Authorization: 'Bearer admin-secret' },
+    }),
+    env,
+  });
+  const body = await allowed.json();
+  assert.equal(allowed.status, 200);
+  assert.equal(body.connections[0].connected_email, 'owner@example.com');
+  assert.equal(body.connections[0].ready_for_agent, true);
+  assert.equal(JSON.stringify(body).includes('refresh-token'), false);
+});
+
+test('admin dashboard and connector page expose the intended non-technical flow', () => {
+  const dashboard = readFileSync(new URL('../admin/connections/index.html', import.meta.url), 'utf8');
+  assert.match(dashboard, /Client connections/i);
+  assert.match(dashboard, /Copy agent package/i);
+  assert.match(dashboard, /\/api\/oauth\/google\/connections/);
+  assert.match(dashboard, /Authorization/);
+  assert.match(dashboard, /sessionStorage/);
+  assert.equal(dashboard.includes('refresh_token'), false, 'dashboard should not print raw token field labels by default');
+
+  const connector = readFileSync(new URL('../connect/gmail/index.html', import.meta.url), 'utf8');
+  assert.match(connector, /client/);
+  assert.match(connector, /workflow/);
+  assert.match(connector, /return_to/);
 });

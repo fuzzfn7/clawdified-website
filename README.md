@@ -15,8 +15,10 @@ The Meta/Facebook + Instagram social connector has been added under:
 The Gmail outbound/inbox connector has been added under:
 
 - Public client page: `/connect/gmail/` — intentionally minimal: brand, one-sentence description, one `Connect Gmail` button, and tiny legal links. No public token/package explanation, workflow form, route list, or Google API jargon.
+- Private admin dashboard: `/admin/connections/` — paste the admin bearer token locally, view safe connection summaries, generate client invite links, and copy an agent-ready Gmail handoff package intentionally.
 - OAuth start route: `/api/oauth/google/start`
 - OAuth callback route: `/api/oauth/google/callback`
+- Protected admin list route: `/api/oauth/google/connections`
 - Protected admin package route: `/api/oauth/google/connections/{connection_id}?include=agent_package`
 - Health/readiness route: `/api/oauth/google/health`
 
@@ -49,7 +51,9 @@ After authorization, the callback exchanges the Meta OAuth code, discovers Faceb
 - Graph endpoint map for Page, conversations, messages, feed, media, and subscribed apps
 - Business IDs/verification status when Meta grants business access
 
-Public success pages only show a connection ID and redacted metadata. Full tokens are returned only from the protected admin endpoint using `SOCIAL_CONNECTOR_ADMIN_TOKEN`.
+Public Meta success pages show a connection ID and redacted metadata. Gmail client success pages deliberately show only a simple thank-you/connected message; Wesley retrieves Gmail connection summaries and agent handoff packages from `/admin/connections/`. Full tokens are returned only from protected admin endpoints using `SOCIAL_CONNECTOR_ADMIN_TOKEN` or `GMAIL_CONNECTOR_ADMIN_TOKEN`.
+
+Gmail agent handoff packages are intentionally self-describing for non-technical operation. Wesley can copy the package from the dashboard and paste it into the approved client agent/runtime. The agent should use the included connection ID, connected email, Gmail endpoints, granted scopes, OAuth refresh credential, and the server-side Clawdified `GOOGLE_CLIENT_SECRET` to mint fresh Gmail access tokens; Wesley should not manually handle Google token exchange details.
 
 ## Required Cloudflare Pages configuration
 
@@ -121,6 +125,7 @@ node --check functions/api/oauth/google/_shared.mjs
 node --check functions/api/oauth/google/start.js
 node --check functions/api/oauth/google/callback.js
 node --check functions/api/oauth/google/health.js
+node --check functions/api/oauth/google/connections/index.js
 node --check 'functions/api/oauth/google/connections/[id].js'
 ```
 
