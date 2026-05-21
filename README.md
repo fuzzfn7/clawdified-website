@@ -91,11 +91,13 @@ Optional:
 Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
 
 - Cloudflare Pages project: `clawdifiedweb`
-- OAuth-scope fix production deployment verified from source `25d5c6a` (`fix: default Meta OAuth to safe public scope`) as Cloudflare deployment `874d925a-4e08-48e3-b4a7-fd18d9a9de54`.
+- Latest Gmail admin dashboard deployment from `main` was manually deployed with Wrangler and verified on both `clawdified.com` and the Pages preview URL.
 - Live social connector page: `https://clawdified.com/connect/social/`
 - Meta app redirect URI is saved under Facebook Login settings: `https://clawdified.com/api/social/meta/callback`
 - Live Meta health endpoint now returns `ok: true`; `META_APP_SECRET` is present in Cloudflare production and visible to Pages Functions after redeploy.
 - Live Gmail connector page: `https://clawdified.com/connect/gmail/`
+- Live private Gmail admin dashboard page: `https://clawdified.com/admin/connections/`
+- Live Gmail admin list endpoint requires the admin bearer token; unauthenticated requests return `401`.
 - Google OAuth client redirect URIs include `https://clawdified.com/api/oauth/google/callback` and the earlier `https://app.clawdified.com/api/oauth/google/callback`.
 - Live Gmail health endpoint returns `ok: true`; `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, shared state/encryption/admin secrets, and `SOCIAL_CONNECTOR_KV` are visible to Pages Functions.
 - Live `/api/oauth/google/start` returns a Google OAuth 302 using the `clawdified.com` callback and the requested `openid`, `email`, `profile`, `gmail.send`, and `gmail.modify` scopes.
