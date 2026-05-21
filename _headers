@@ -9,6 +9,18 @@
   X-Robots-Tag: index, follow
   Link: </.well-known/api-catalog>; rel="api-catalog", </.well-known/agent-skills/index.json>; rel="service-doc", </sitemap.xml>; rel="sitemap", </robots.txt>; rel="robots"
 
+/privacy
+  X-Robots-Tag: index, follow
+  Content-Type: text/html; charset=utf-8
+
+/terms
+  X-Robots-Tag: index, follow
+  Content-Type: text/html; charset=utf-8
+
+/data-deletion
+  X-Robots-Tag: index, follow
+  Content-Type: text/html; charset=utf-8
+
 /robots.txt
   Content-Type: text/plain; charset=utf-8
 
