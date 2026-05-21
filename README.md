@@ -16,8 +16,11 @@ The Meta/Facebook + Instagram social connector has been added under:
 The Gmail outbound/inbox connector has been added under:
 
 - Public client page: `/connect/gmail/` — intentionally minimal: brand, one-sentence description, one `Connect Gmail` button, and tiny legal links. No public token/package explanation, workflow form, route list, or Google API jargon.
-- Private admin dashboard: `/admin/connections/` — simple email/password sign-in backed by an HttpOnly admin session cookie. This is the shared private API/OAuth console for Gmail and Facebook/Instagram connection summaries, client invite links, and intentional copy actions for agent-ready handoff packages.
+- Private admin dashboard: `/admin/connections/` — simple email/password sign-in backed by an HttpOnly admin session cookie. This is the shared private API/OAuth console for Gmail, Facebook/Instagram, and future API/OAuth connector summaries, client invite links, and intentional copy actions for agent-ready handoff packages.
 - Admin login/session routes: `/api/admin/login`, `/api/admin/session`, `/api/admin/logout`
+- Unified registry/list route: `/api/admin/connections` — one protected endpoint that returns connector metadata plus safe rows across every registered service.
+- Unified registry/package route: `/api/admin/connections/{service}/{connection_id}?include=agent_package` — one protected detail pattern that dispatches to the service-specific package builder. Existing Gmail/Meta list/detail routes remain for compatibility.
+- New connector extension point: add the service descriptor/list/read/handoff functions to `functions/api/admin/connections/_registry.mjs`, then the dashboard invite selector, rows, and copy-package action pick it up from the registry response.
 - OAuth start route: `/api/oauth/google/start`
 - OAuth callback route: `/api/oauth/google/callback`
 - Protected admin list route: `/api/oauth/google/connections`
@@ -125,7 +128,10 @@ Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
 ## Verification commands
 
 ```bash
-node --test test/social-meta-connector.test.mjs test/gmail-google-connector.test.mjs
+node --test test/social-meta-connector.test.mjs test/gmail-google-connector.test.mjs test/admin-connections-registry.test.mjs
+node --check functions/api/admin/connections/index.js
+node --check 'functions/api/admin/connections/[service]/[id].js'
+node --check functions/api/admin/connections/_registry.mjs
 node --check functions/api/social/meta/start.js
 node --check functions/api/social/meta/callback.js
 node --check functions/api/social/meta/health.js

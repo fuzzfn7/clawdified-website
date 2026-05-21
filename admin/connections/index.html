@@ -243,9 +243,9 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
     <div class="card">
       <div class="eyebrow">Private admin</div>
       <h1>Client API connections</h1>
-      <p class="lead">One private place for client OAuth/API access — Gmail now, Facebook + Instagram next, and more connectors later without asking clients for passwords.</p>
+      <p class="lead">One private place for client OAuth/API access — Gmail and Facebook + Instagram now, with the same registry ready for the next OAuth or API connector.</p>
       <p class="note" style="margin-top:14px">Rows show safe summaries only. Sensitive agent packages are copied intentionally from a button and should go only to the approved client agent runtime.</p>
-      <div class="service-strip" aria-label="Connected service types">
+      <div class="service-strip" id="serviceStrip" aria-label="Connected service types">
         <span class="service-chip">Gmail</span>
         <span class="service-chip meta">Facebook + Instagram</span>
       </div>
@@ -304,23 +304,27 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   const ROUTE_SESSION     = '/api/admin/session';
   const ROUTE_LOGIN       = '/api/admin/login';
   const ROUTE_LOGOUT      = '/api/admin/logout';
-  const ROUTE_GMAIL_CONNECTIONS = '/api/oauth/google/connections';
-  const ROUTE_META_CONNECTIONS  = '/api/social/meta/connections';
+  const ROUTE_ADMIN_CONNECTIONS = '/api/admin/connections';
+  const ROUTE_GMAIL_CONNECTIONS = '/api/oauth/google/connections'; // legacy compatibility
+  const ROUTE_META_CONNECTIONS  = '/api/social/meta/connections';  // legacy compatibility
 
-  const SERVICES = {
+  const DEFAULT_SERVICE_CONFIG = {
     gmail: {
       label: 'Gmail',
       connector: '/connect/gmail/',
-      route: ROUTE_GMAIL_CONNECTIONS,
+      detailPathTemplate: '/api/admin/connections/gmail/{connection_id}?include=agent_package',
       packageLabel: 'Gmail agent package',
+      serviceKind: 'oauth',
     },
     meta: {
       label: 'Facebook + Instagram',
       connector: '/connect/social/',
-      route: ROUTE_META_CONNECTIONS,
+      detailPathTemplate: '/api/admin/connections/meta/{connection_id}?include=agent_package',
       packageLabel: 'Meta agent package',
+      serviceKind: 'oauth',
     },
   };
+  let SERVICES = { ...DEFAULT_SERVICE_CONFIG };
 
   // --- Elements ---
   const loginView    = document.getElementById('loginView');
@@ -346,6 +350,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   const copyInviteButton = document.getElementById('copyInviteButton');
   const openInviteLink = document.getElementById('openInviteLink');
   const invitePreview  = document.getElementById('invitePreview');
+  const serviceStrip   = document.getElementById('serviceStrip');
 
   const jsonHeaders = { Accept: 'application/json' };
   let lastRows = [];
@@ -371,6 +376,47 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
     statusLine.className = `status ${kind}`.trim();
   };
   const setLoginError = (msg) => { loginError.textContent = msg || ''; };
+
+  const serviceChipClass = (serviceKey) => serviceKey === 'meta' ? 'meta' : '';
+
+  function mergeConnectorRegistry(connectors = []) {
+    const next = { ...DEFAULT_SERVICE_CONFIG };
+    for (const connector of connectors) {
+      const key = safeText(connector.service, '').toLowerCase();
+      if (!key) continue;
+      next[key] = {
+        ...(next[key] || {}),
+        label: connector.service_label || connector.label || next[key]?.label || key,
+        connector: connector.connector_path || next[key]?.connector || '',
+        detailPathTemplate: connector.detail_path_template || next[key]?.detailPathTemplate || `/api/admin/connections/${encodeURIComponent(key)}/{connection_id}?include=agent_package`,
+        packageLabel: connector.package_label || next[key]?.packageLabel || 'Agent package',
+        serviceKind: connector.service_kind || next[key]?.serviceKind || 'connector',
+        provider: connector.provider || next[key]?.provider || key,
+        ready: connector.ready !== false,
+      };
+    }
+    SERVICES = next;
+    renderServiceOptions();
+    renderServiceStrip();
+  }
+
+  function renderServiceOptions() {
+    const current = serviceName.value;
+    const entries = Object.entries(SERVICES).filter(([, service]) => service.connector);
+    serviceName.innerHTML = entries.map(([key, service]) => `<option value="${escapeHtml(key)}">${escapeHtml(service.label)}</option>`).join('');
+    if (SERVICES[current]?.connector) serviceName.value = current;
+  }
+
+  function renderServiceStrip() {
+    const entries = Object.entries(SERVICES).filter(([, service]) => service.connector);
+    serviceStrip.innerHTML = entries.map(([key, service]) => `<span class="service-chip ${serviceChipClass(key)}">${escapeHtml(service.label)}</span>`).join('');
+  }
+
+  function detailPathFor(serviceKey, connectionId) {
+    const service = SERVICES[serviceKey] || SERVICES.gmail;
+    const template = service.detailPathTemplate || `/api/admin/connections/${encodeURIComponent(serviceKey)}/{connection_id}?include=agent_package`;
+    return template.replace('{connection_id}', encodeURIComponent(connectionId));
+  }
 
   // --- View switching ---
   const showLogin = (email = '') => {
@@ -472,35 +518,16 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   }
 
   function rowIdentity(row) {
-    if (row.service === 'meta') {
-      const pageNames = Array.isArray(row.facebook_page_names) ? row.facebook_page_names : [];
-      const igNames = Array.isArray(row.instagram_usernames) ? row.instagram_usernames.map((name) => `@${name}`) : [];
-      return safeText(pageNames.concat(igNames)[0] || row.connected_account || row.facebook_user_name, 'No Page/Instagram asset yet');
-    }
-    return safeText(row.connected_email, 'No email found');
+    return safeText(row.primary_account || row.connected_account || row.connected_email || row.facebook_user_name, 'No connected account found');
   }
 
   function credentialLabel(row) {
-    if (row.service === 'meta') {
-      const pageTokens = !!row.page_tokens_stored;
-      const userToken = !!row.user_token_stored;
-      if (pageTokens) return 'Page token stored';
-      if (userToken) return 'User token stored';
-      return 'Credential missing';
-    }
-    return `Credential ${row['refresh' + '_token_stored'] ? 'stored' : 'missing'}`;
+    return safeText(row.credential_status, `Credential ${row['refresh' + '_token_stored'] ? 'stored' : 'missing'}`);
   }
 
   function detailPills(row) {
-    if (row.service === 'meta') {
-      const pageCount = Number(row.facebook_pages_count) || 0;
-      const igCount = Number(row.instagram_accounts_count) || 0;
-      const scopes = Number(row.granted_scopes_count) || 0;
-      return [
-        `<span class="pill muted">${pageCount} Page${pageCount === 1 ? '' : 's'}</span>`,
-        `<span class="pill muted">${igCount} Instagram</span>`,
-        `<span class="pill muted">${scopes} scope${scopes === 1 ? '' : 's'}</span>`,
-      ].join('');
+    if (Array.isArray(row.dashboard_pills) && row.dashboard_pills.length) {
+      return row.dashboard_pills.map((pill) => `<span class="pill ${escapeHtml(pill.tone || 'muted')}">${escapeHtml(pill.label || '')}</span>`).join('');
     }
     const scopes = Number(row.granted_scopes_count) || 0;
     return `<span class="pill muted">${scopes} scope${scopes === 1 ? '' : 's'}</span>`;
@@ -526,7 +553,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
       return `
       <article class="connection" data-service="${escapeHtml(service)}" data-id="${escapeHtml(row.connection_id || '')}">
         <div class="who">
-          <div class="service-chip ${service === 'meta' ? 'meta' : ''}">${escapeHtml(serviceLabel(row))}</div>
+          <div class="service-chip ${serviceChipClass(service)}">${escapeHtml(serviceLabel(row))}</div>
           <h2>${escapeHtml(safeText(row.client_name, 'Unlabeled client'))}</h2>
           <div class="workflow">${escapeHtml(safeText(row.workflow, 'No workflow label'))}</div>
           <div class="id">${escapeHtml(safeText(row.connection_id))}</div>
@@ -549,42 +576,36 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
     }).join('')}`;
   }
 
-  async function fetchConnectionsForService(serviceKey) {
-    const service = SERVICES[serviceKey];
-    const res = await fetch(service.route, { headers: jsonHeaders, credentials: 'same-origin' });
-    if (res.status === 401 || res.status === 403) {
-      const err = new Error('Session expired. Sign in again.');
-      err.auth = true;
-      throw err;
-    }
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.ok) throw new Error(`${service.label}: ${data.error || `HTTP ${res.status}`}`);
-    return (data.connections || []).map((row) => ({ ...row, service: row.service || serviceKey, service_label: row.service_label || service.label }));
-  }
-
   async function loadConnections() {
     refreshButton.disabled = true;
     setStatus('Loading client connections…', 'working');
     try {
       serviceErrors = [];
-      const results = await Promise.allSettled(Object.keys(SERVICES).map(fetchConnectionsForService));
-      const rows = [];
-      for (const result of results) {
-        if (result.status === 'fulfilled') {
-          rows.push(...result.value);
-        } else if (result.reason?.auth) {
-          showLogin();
-          setLoginError('Session expired. Sign in again.');
-          return;
-        } else {
-          serviceErrors.push(result.reason?.message || 'One connector could not load.');
-        }
+      const res = await fetch(ROUTE_ADMIN_CONNECTIONS, { headers: jsonHeaders, credentials: 'same-origin' });
+      if (res.status === 401 || res.status === 403) {
+        showLogin();
+        setLoginError('Session expired. Sign in again.');
+        return;
       }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      mergeConnectorRegistry(data.connectors || []);
+      serviceErrors = (data.service_errors || []).map((item) => `${item.service_label || item.service || 'Connector'}: ${item.error || 'could not load'}`);
+      const rows = (data.connections || []).map((row) => {
+        const serviceKey = row.service || 'gmail';
+        const service = SERVICES[serviceKey] || {};
+        return {
+          ...row,
+          service: serviceKey,
+          service_label: row.service_label || service.label || serviceKey,
+          package_label: row.package_label || service.packageLabel || 'Agent package',
+        };
+      });
       rows.sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
       lastRows = rows;
       renderRows(lastRows, { initial: true });
       const warning = serviceErrors.length ? ` (${serviceErrors.length} connector warning${serviceErrors.length === 1 ? '' : 's'})` : '';
-      setStatus(`Loaded ${lastRows.length} connection${lastRows.length === 1 ? '' : 's'}${warning}.`, serviceErrors.length ? 'bad' : 'good');
+      setStatus(`Loaded ${lastRows.length} connection${lastRows.length === 1 ? '' : 's'} from unified registry${warning}.`, serviceErrors.length ? 'bad' : 'good');
     } catch (err) {
       renderRows([], { initial: true });
       setStatus(err.message || 'Could not load connections.', 'bad');
@@ -596,7 +617,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   async function copyAgentPackage(serviceKey, connectionId) {
     const service = SERVICES[serviceKey] || SERVICES.gmail;
     setStatus(`Preparing ${service.packageLabel}…`, 'working');
-    const url = `${service.route}/${encodeURIComponent(connectionId)}?include=agent_package`;
+    const url = detailPathFor(serviceKey, connectionId);
     const res = await fetch(url, { headers: jsonHeaders, credentials: 'same-origin' });
     if (res.status === 401 || res.status === 403) {
       showLogin();
@@ -667,6 +688,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   refreshButton.addEventListener('click', loadConnections);
 
   // --- Boot ---
+  mergeConnectorRegistry([]);
   updateInvitePreview();
   checkSession();
 })();
