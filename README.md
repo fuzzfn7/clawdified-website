@@ -12,11 +12,27 @@ The Meta/Facebook + Instagram social connector has been added under:
 - Protected admin package route: `/api/social/meta/connections/{connection_id}?include=agent_package`
 - Health/readiness route: `/api/social/meta/health`
 
+The Gmail outbound/inbox connector has been added under:
+
+- Public client page: `/connect/gmail/` — intentionally minimal: brand, one-sentence description, one `Connect Gmail` button, and tiny legal links. No public token/package explanation, workflow form, route list, or Google API jargon.
+- OAuth start route: `/api/oauth/google/start`
+- OAuth callback route: `/api/oauth/google/callback`
+- Protected admin package route: `/api/oauth/google/connections/{connection_id}?include=agent_package`
+- Health/readiness route: `/api/oauth/google/health`
+
 Meta app:
 
 - Name: `Clawdified Social Connector`
 - App ID: `979754104796418`
 - Expected redirect URI: `https://clawdified.com/api/social/meta/callback`
+
+Google OAuth app:
+
+- Project: `gmail-0auth-497017`
+- OAuth client: `Clawdified Gmail OAuth Web Client`
+- Client ID: `1028192088822-tvps78pnmi3kvpu92sbvluv2rve9mao4.apps.googleusercontent.com`
+- Expected redirect URI for this Pages app: `https://clawdified.com/api/oauth/google/callback`
+- Currently requested scopes: `openid`, `email`, `profile`, `https://www.googleapis.com/auth/gmail.send`, `https://www.googleapis.com/auth/gmail.modify`
 
 ## What the connector is meant to do
 
@@ -37,7 +53,9 @@ Public success pages only show a connection ID and redacted metadata. Full token
 
 ## Required Cloudflare Pages configuration
 
-The connector health endpoint returns `ok: true` only when these are configured:
+The connector health endpoints return `ok: true` only when these are configured.
+
+Meta social connector:
 
 - `META_APP_ID` — safe public app ID. Can be `979754104796418`.
 - `META_APP_SECRET` — Meta app secret. Secret; do not commit or show in UI.
@@ -45,6 +63,16 @@ The connector health endpoint returns `ok: true` only when these are configured:
 - `SOCIAL_CONNECTOR_ENCRYPTION_KEY` — random secret used to encrypt stored agent packages.
 - `SOCIAL_CONNECTOR_ADMIN_TOKEN` — random bearer token for Wesley/server-side agent retrieval.
 - `SOCIAL_CONNECTOR_KV` — Cloudflare KV binding for connection records.
+
+Gmail connector:
+
+- `GOOGLE_CLIENT_ID` — safe public OAuth client ID. The code includes the current client ID as a fallback, but production should still set it explicitly.
+- `GOOGLE_CLIENT_SECRET` — Google OAuth client secret. Secret; do not commit or show in UI.
+- `GOOGLE_REDIRECT_URI` — optional override. Use `https://clawdified.com/api/oauth/google/callback` for the current Pages deployment.
+- `GMAIL_CONNECTOR_STATE_SECRET` — optional Gmail-specific state HMAC secret; falls back to `SOCIAL_CONNECTOR_STATE_SECRET`.
+- `GMAIL_CONNECTOR_ENCRYPTION_KEY` — optional Gmail-specific encryption key; falls back to `SOCIAL_CONNECTOR_ENCRYPTION_KEY`.
+- `GMAIL_CONNECTOR_ADMIN_TOKEN` — optional Gmail-specific admin token; falls back to `SOCIAL_CONNECTOR_ADMIN_TOKEN`.
+- `SOCIAL_CONNECTOR_KV` — reused Cloudflare KV binding for encrypted connection records.
 
 Optional:
 
@@ -70,19 +98,26 @@ Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
 
 ## Safety rules
 
-- Do not commit app secrets, access tokens, admin bearer tokens, or raw connection packages.
+- Do not commit app secrets, access tokens, admin bearer tokens, OAuth refresh tokens, ID tokens, or raw connection packages.
 - Do not expose tokens in client-visible pages or browser console logs.
 - Do not send clients through `/connect/social/` unless `/api/social/meta/health` returns `ok: true`.
-- Publishing the Cloudflare code is separate from Meta app live mode / App Review. Meta may still require business verification, permissions review, screencast, and valid use-case documentation before third-party production use.
+- Do not send clients through `/connect/gmail/` unless `/api/oauth/google/health` returns `ok: true`.
+- Gmail `gmail.modify` is a restricted Google scope. Google may require app verification and a security assessment before broad third-party production use.
+- Publishing the Cloudflare code is separate from Meta app live mode / App Review and Google OAuth app verification. Both platforms may still require business verification, permission/scope review, screencasts, and valid use-case documentation before third-party production use.
 
 ## Verification commands
 
 ```bash
-node --test test/social-meta-connector.test.mjs
+node --test test/social-meta-connector.test.mjs test/gmail-google-connector.test.mjs
 node --check functions/api/social/meta/start.js
 node --check functions/api/social/meta/callback.js
 node --check functions/api/social/meta/health.js
 node --check 'functions/api/social/meta/connections/[id].js'
+node --check functions/api/oauth/google/_shared.mjs
+node --check functions/api/oauth/google/start.js
+node --check functions/api/oauth/google/callback.js
+node --check functions/api/oauth/google/health.js
+node --check 'functions/api/oauth/google/connections/[id].js'
 ```
 
 For local Pages smoke, run Wrangler with a supported compatibility date if needed:
