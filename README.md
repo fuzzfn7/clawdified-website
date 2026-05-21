@@ -54,6 +54,19 @@ Optional:
 - `META_REDIRECT_URI` — override callback URL if Meta uses a non-default route.
 - `SOCIAL_CONNECTOR_BASE_URL` — override public origin if needed.
 
+## Current production verification — 2026-05-21
+
+Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
+
+- Cloudflare Pages project: `clawdifiedweb`
+- Production deployment source: `cd23db5` (`feat: add Meta social connector`), redeployed as `b9b15a41-9f81-44f3-b5e4-f583977f43d5` after Cloudflare secret setup.
+- Live connector page: `https://clawdified.com/connect/social/`
+- Meta app redirect URI is saved under Facebook Login settings: `https://clawdified.com/api/social/meta/callback`
+- Live health endpoint now returns `ok: true`; `META_APP_SECRET` is present in Cloudflare production and visible to Pages Functions after redeploy.
+- Cloudflare production has these configured: `META_APP_ID`, `META_APP_SECRET`, `META_GRAPH_VERSION`, `META_REDIRECT_URI`, `SOCIAL_CONNECTOR_ADMIN_TOKEN`, `SOCIAL_CONNECTOR_BASE_URL`, `SOCIAL_CONNECTOR_ENCRYPTION_KEY`, `SOCIAL_CONNECTOR_STATE_SECRET`, and `SOCIAL_CONNECTOR_KV`.
+- Meta Publish screen is not publishable yet: business portfolio `Wesley Taylor` is unverified, and the final Publish button is disabled.
+- The Facebook Login use case currently shows `public_profile` ready for testing; Page/Instagram/business messaging permissions still need to be added/requested through Meta App Review or a Business Login configuration before third-party clients can authorize the full outreach package.
+
 ## Safety rules
 
 - Do not commit app secrets, access tokens, admin bearer tokens, or raw connection packages.
