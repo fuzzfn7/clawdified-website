@@ -5,8 +5,8 @@ const JSON_HEADERS = {
 
 export const DEFAULT_GRAPH_VERSION = 'v23.0';
 export const DEFAULT_META_APP_ID = '979754104796418';
-export const DEFAULT_SCOPES = [
-  'public_profile',
+export const DEFAULT_SCOPES = ['public_profile'];
+export const ADVANCED_CONNECTOR_SCOPES = [
   'pages_show_list',
   'pages_read_engagement',
   'pages_manage_metadata',
@@ -173,6 +173,10 @@ export async function verifySignedState(state, secret, { now = Date.now(), ttlMs
   return payload;
 }
 
+export function loginConfigIdFromEnv(env = {}) {
+  return clean(env.META_LOGIN_CONFIG_ID || env.FACEBOOK_LOGIN_CONFIG_ID || '', 120);
+}
+
 export function buildAuthUrl({ request, env, client = '', workflow = '', returnTo = '' }) {
   const appId = appIdFromEnv(env);
   const version = graphVersion(env);
@@ -184,7 +188,7 @@ export function buildAuthUrl({ request, env, client = '', workflow = '', returnT
   url.searchParams.set('auth_type', 'rerequest');
   url.searchParams.set('display', 'page');
 
-  const loginConfigId = clean(env.META_LOGIN_CONFIG_ID || env.FACEBOOK_LOGIN_CONFIG_ID || '', 120);
+  const loginConfigId = loginConfigIdFromEnv(env);
   if (loginConfigId) {
     url.searchParams.set('config_id', loginConfigId);
   } else {

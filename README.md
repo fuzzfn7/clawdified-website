@@ -49,8 +49,8 @@ The connector health endpoint returns `ok: true` only when these are configured:
 Optional:
 
 - `META_GRAPH_VERSION` — defaults to `v23.0`.
-- `META_SCOPES` — comma/space-separated scopes. Defaults to public profile, Page, Instagram, messaging, and business-management connector scopes.
-- `META_LOGIN_CONFIG_ID` — optional Facebook Login for Business configuration ID if Meta requires the business-login configuration instead of explicit scope query params.
+- `META_SCOPES` — comma/space-separated scopes. Defaults to `public_profile` only so the Meta OAuth dialog remains valid before advanced Page/Instagram permissions are approved. After Meta App Review/business configuration, set this explicitly if using scope-based login.
+- `META_LOGIN_CONFIG_ID` — optional Facebook Login for Business configuration ID. Use this when Meta requires a business-login configuration for Page/Instagram permissions instead of explicit scope query params.
 - `META_REDIRECT_URI` — override callback URL if Meta uses a non-default route.
 - `SOCIAL_CONNECTOR_BASE_URL` — override public origin if needed.
 

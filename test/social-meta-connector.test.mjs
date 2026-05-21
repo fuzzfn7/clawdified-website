@@ -3,11 +3,13 @@ import assert from 'node:assert/strict';
 
 import {
   buildAgentPackage,
+  buildAuthUrl,
   createSignedState,
   decryptJson,
   encryptJson,
   readiness,
   redactTokens,
+  scopesFromEnv,
   verifySignedState,
 } from '../functions/api/social/meta/_shared.mjs';
 
@@ -22,6 +24,32 @@ const completeEnv = {
     put() {},
   },
 };
+
+test('default OAuth scope is Meta-dialog safe until advanced permissions are explicitly configured', () => {
+  assert.deepEqual(scopesFromEnv({}), ['public_profile']);
+
+  const request = new Request('https://clawdified.com/api/social/meta/start?return_to=/connect/social/');
+  const { url } = buildAuthUrl({ request, env: completeEnv, returnTo: '/connect/social/' });
+  assert.equal(url.searchParams.get('scope'), 'public_profile');
+  assert.equal(url.searchParams.has('config_id'), false);
+  assert.equal(url.searchParams.get('scope').includes('pages_show_list'), false);
+});
+
+test('OAuth supports explicit advanced scopes or Facebook Login for Business config', () => {
+  const request = new Request('https://clawdified.com/api/social/meta/start');
+  const advanced = buildAuthUrl({
+    request,
+    env: { ...completeEnv, META_SCOPES: 'public_profile pages_show_list instagram_basic' },
+  });
+  assert.equal(advanced.url.searchParams.get('scope'), 'public_profile,pages_show_list,instagram_basic');
+
+  const businessLogin = buildAuthUrl({
+    request,
+    env: { ...completeEnv, META_LOGIN_CONFIG_ID: '1234567890' },
+  });
+  assert.equal(businessLogin.url.searchParams.get('config_id'), '1234567890');
+  assert.equal(businessLogin.url.searchParams.has('scope'), false);
+});
 
 test('readiness reports exact missing connector setup without secret values', () => {
   const result = readiness({}, { requireAdmin: true });
