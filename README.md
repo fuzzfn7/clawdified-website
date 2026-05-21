@@ -101,7 +101,7 @@ Optional:
 Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
 
 - Cloudflare Pages project: `clawdifiedweb`
-- Latest shared connections dashboard deployment from `main` was manually deployed with Wrangler and verified on both `clawdified.com` and the Pages preview URL `https://f233b715.clawdifiedweb.pages.dev`.
+- Latest shared connections dashboard deployment from `main` was manually deployed with Wrangler and verified on both `clawdified.com` and the latest Pages preview URL.
 - Live unified admin registry route: `https://clawdified.com/api/admin/connections` — returns connector metadata plus safe Gmail/Meta rows after admin auth and rejects unauthenticated requests with `401`.
 - Live unified admin package route pattern: `https://clawdified.com/api/admin/connections/{service}/{connection_id}?include=agent_package` — dispatches to service-specific handoff package builders for Gmail and Meta.
 - Live social connector page: `https://clawdified.com/connect/social/`
