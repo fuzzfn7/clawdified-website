@@ -88,10 +88,14 @@ Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
 
 - Cloudflare Pages project: `clawdifiedweb`
 - OAuth-scope fix production deployment verified from source `25d5c6a` (`fix: default Meta OAuth to safe public scope`) as Cloudflare deployment `874d925a-4e08-48e3-b4a7-fd18d9a9de54`.
-- Live connector page: `https://clawdified.com/connect/social/`
+- Live social connector page: `https://clawdified.com/connect/social/`
 - Meta app redirect URI is saved under Facebook Login settings: `https://clawdified.com/api/social/meta/callback`
-- Live health endpoint now returns `ok: true`; `META_APP_SECRET` is present in Cloudflare production and visible to Pages Functions after redeploy.
-- Cloudflare production has these configured: `META_APP_ID`, `META_APP_SECRET`, `META_GRAPH_VERSION`, `META_REDIRECT_URI`, `SOCIAL_CONNECTOR_ADMIN_TOKEN`, `SOCIAL_CONNECTOR_BASE_URL`, `SOCIAL_CONNECTOR_ENCRYPTION_KEY`, `SOCIAL_CONNECTOR_STATE_SECRET`, and `SOCIAL_CONNECTOR_KV`.
+- Live Meta health endpoint now returns `ok: true`; `META_APP_SECRET` is present in Cloudflare production and visible to Pages Functions after redeploy.
+- Live Gmail connector page: `https://clawdified.com/connect/gmail/`
+- Google OAuth client redirect URIs include `https://clawdified.com/api/oauth/google/callback` and the earlier `https://app.clawdified.com/api/oauth/google/callback`.
+- Live Gmail health endpoint returns `ok: true`; `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, shared state/encryption/admin secrets, and `SOCIAL_CONNECTOR_KV` are visible to Pages Functions.
+- Live `/api/oauth/google/start` returns a Google OAuth 302 using the `clawdified.com` callback and the requested `openid`, `email`, `profile`, `gmail.send`, and `gmail.modify` scopes.
+- Cloudflare production has these configured: `META_APP_ID`, `META_APP_SECRET`, `META_GRAPH_VERSION`, `META_REDIRECT_URI`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `SOCIAL_CONNECTOR_ADMIN_TOKEN`, `SOCIAL_CONNECTOR_BASE_URL`, `SOCIAL_CONNECTOR_ENCRYPTION_KEY`, `SOCIAL_CONNECTOR_STATE_SECRET`, and `SOCIAL_CONNECTOR_KV`.
 - Meta Publish screen is not publishable yet: business portfolio `Wesley Taylor` is unverified, and the final Publish button is disabled.
 - Default OAuth now requests `public_profile` only; production `/api/social/meta/start` no longer sends the Page/Instagram/business scopes that Meta rejected as invalid for the current app/use-case.
 - Full Facebook Page + Instagram connector permissions still require Meta Business Login/App Review setup via either explicit `META_SCOPES` after approval or `META_LOGIN_CONFIG_ID`.
