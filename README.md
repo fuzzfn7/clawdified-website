@@ -6,7 +6,7 @@ Canonical local source for `clawdified.com` Cloudflare Pages static site and Pag
 
 The Meta/Facebook + Instagram social connector has been added under:
 
-- Public client page: `/connect/social/`
+- Public client page: `/connect/social/` — intentionally minimal: brand, one-sentence description, one `Connect Facebook + Instagram` button, and tiny legal links. No public token/package explanation, client/workflow form, step grid, or route list.
 - OAuth start route: `/api/social/meta/start`
 - OAuth callback route: `/api/social/meta/callback`
 - Protected admin package route: `/api/social/meta/connections/{connection_id}?include=agent_package`
