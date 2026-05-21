@@ -378,16 +378,21 @@ test('admin email-password login sets a session cookie accepted by connection AP
 
 test('admin dashboard and connector page expose the intended non-technical flow', () => {
   const dashboard = readFileSync(new URL('../admin/connections/index.html', import.meta.url), 'utf8');
-  assert.match(dashboard, /Client connections/i);
+  assert.match(dashboard, /Client API connections/i);
   assert.match(dashboard, /Sign in/i);
+  assert.match(dashboard, /Facebook \+ Instagram/i);
   assert.match(dashboard, /Copy agent package/i);
   assert.match(dashboard, /\/api\/admin\/login/);
   assert.match(dashboard, /\/api\/admin\/session/);
   assert.match(dashboard, /\/api\/admin\/logout/);
   assert.match(dashboard, /\/api\/oauth\/google\/connections/);
+  assert.match(dashboard, /\/api\/social\/meta\/connections/);
+  assert.match(dashboard, /\/connect\/social\//);
   assert.equal(dashboard.includes('sessionStorage'), false, 'dashboard should use the HttpOnly admin session cookie, not local/session storage for secrets');
   assert.equal(dashboard.includes('adminToken'), false, 'dashboard should no longer ask for a raw bearer token by default');
   assert.equal(dashboard.includes('refresh_token'), false, 'dashboard should not print raw token field labels by default');
+  assert.equal(dashboard.includes('page_access_token'), false, 'dashboard should not print raw Meta page token field labels by default');
+  assert.equal(dashboard.includes('user_access_token'), false, 'dashboard should not print raw Meta user token field labels by default');
 
   const connector = readFileSync(new URL('../connect/gmail/index.html', import.meta.url), 'utf8');
   assert.match(connector, /client/);

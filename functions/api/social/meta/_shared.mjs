@@ -1,3 +1,5 @@
+import { verifyAdminSessionFromRequest } from '../../admin/_auth.mjs';
+
 const JSON_HEADERS = {
   'Content-Type': 'application/json; charset=utf-8',
   'Cache-Control': 'no-store',
@@ -458,6 +460,123 @@ export function redactTokens(value) {
   return redacted;
 }
 
+function arrayValue(value) {
+  return Array.isArray(value) ? value.filter(Boolean) : [];
+}
+
+function packageScopes(packageData = {}) {
+  return arrayValue(packageData?.oauth?.granted_scopes)
+    .concat(arrayValue(packageData?.required_for_outreach_agent?.granted_scopes))
+    .filter(Boolean);
+}
+
+function cleanList(values = [], maxItems = 5) {
+  return [...new Set(arrayValue(values).map((item) => clean(item, 180)).filter(Boolean))].slice(0, maxItems);
+}
+
+export function summarizeAgentPackage(packageData = {}, { origin = '' } = {}) {
+  const connectionId = clean(packageData.connection_id || '', 120);
+  const pages = arrayValue(packageData.pages).filter((page) => page && !page.error);
+  const businesses = arrayValue(packageData.businesses).filter((business) => business && !business.error);
+  const pageNames = cleanList(pages.map((page) => page.facebook_page_name || page.name || ''));
+  const instagramUsernames = cleanList(pages.map((page) => page.instagram_username || page.instagram_profile?.username || ''));
+  const businessNames = cleanList(businesses.map((business) => business.name || ''));
+  const scopes = [...new Set(packageScopes(packageData))];
+  const userTokenStored = Boolean(
+    packageData?.required_for_outreach_agent?.user_token_present
+      || packageData?.oauth?.user_access_token,
+  );
+  const pageTokensStored = Boolean(
+    packageData?.required_for_outreach_agent?.page_tokens_present
+      || pages.some((page) => page.page_access_token),
+  );
+  const pageIdsPresent = Boolean(
+    packageData?.required_for_outreach_agent?.page_ids_present
+      || pages.some((page) => page.facebook_page_id),
+  );
+  const instagramIdsPresent = Boolean(
+    packageData?.required_for_outreach_agent?.instagram_ids_present
+      || pages.some((page) => page.instagram_business_account_id),
+  );
+  const readyForAgent = Boolean(connectionId && userTokenStored && pageTokensStored && pageIdsPresent);
+  const detailPath = `/api/social/meta/connections/${encodeURIComponent(connectionId)}?include=agent_package`;
+  const facebookUserName = clean(packageData?.facebook_user?.name || packageData?.facebook_user?.id || '', 180);
+  const primaryAccount = pageNames[0] || instagramUsernames[0] || facebookUserName || '';
+
+  return {
+    connection_id: connectionId,
+    service: 'meta',
+    service_label: 'Facebook + Instagram',
+    status: readyForAgent ? 'connected' : 'needs_attention',
+    client_name: clean(packageData?.client?.name || packageData?.client_name || '', 160),
+    workflow: clean(packageData?.client?.workflow || '', 500),
+    connected_account: primaryAccount,
+    facebook_user_name: facebookUserName,
+    facebook_pages_count: pages.length,
+    instagram_accounts_count: pages.filter((page) => page.instagram_business_account_id).length,
+    businesses_count: businesses.length,
+    facebook_page_names: pageNames,
+    instagram_usernames: instagramUsernames,
+    business_names: businessNames,
+    created_at: clean(packageData.created_at || '', 80),
+    user_token_stored: userTokenStored,
+    page_tokens_stored: pageTokensStored,
+    page_ids_present: pageIdsPresent,
+    instagram_ids_present: instagramIdsPresent,
+    granted_scopes_count: scopes.length,
+    ready_for_agent: readyForAgent,
+    detail_url: origin && connectionId ? `${origin}${detailPath}` : detailPath,
+  };
+}
+
+export function buildAgentHandoff(packageData = {}, { origin = '' } = {}) {
+  const summary = summarizeAgentPackage(packageData, { origin });
+  const scopes = [...new Set(packageScopes(packageData))];
+  return {
+    handoff_type: 'clawdified.meta_social_agent_connection.v1',
+    service: 'facebook_instagram',
+    connection_id: summary.connection_id,
+    client_name: summary.client_name,
+    workflow: summary.workflow,
+    connected_account: summary.connected_account,
+    created_at: summary.created_at,
+    status: {
+      ready_for_social_agent: summary.ready_for_agent,
+      user_token_present: summary.user_token_stored,
+      page_tokens_present: summary.page_tokens_stored,
+      page_ids_present: summary.page_ids_present,
+      instagram_ids_present: summary.instagram_ids_present,
+    },
+    meta: {
+      app_id: packageData?.meta_app?.app_id || '',
+      graph_version: packageData?.meta_app?.graph_version || DEFAULT_GRAPH_VERSION,
+      redirect_uri: packageData?.meta_app?.redirect_uri || '',
+      app_secret_source: 'META_APP_SECRET',
+    },
+    oauth: {
+      auth_type: 'meta_oauth_long_lived_user_token_and_page_tokens',
+      user_access_token: packageData?.oauth?.user_access_token || '',
+      token_type: packageData?.oauth?.token_type || 'bearer',
+      expires_at: packageData?.oauth?.expires_at || null,
+      granted_scopes: scopes,
+    },
+    facebook_user: packageData?.facebook_user || null,
+    businesses: packageData?.businesses || [],
+    pages: packageData?.pages || [],
+    clawdified: {
+      dashboard_detail_url: summary.detail_url,
+      connector: 'https://clawdified.com/connect/social/',
+    },
+    agent_instructions: [
+      'This is a Clawdified Meta OAuth connection package for the named client/business.',
+      'Use page_access_token values for Facebook Page and linked Instagram Graph API calls; use the endpoint map on each page object.',
+      'Use user_access_token only server-side for approved Graph API operations and token/debug flows.',
+      'Never expose user_access_token, page_access_token, app secrets, or this raw package to public/client-visible pages.',
+      'Meta may still require App Review, business verification, advanced permission approval, and webhook subscription approval before broad third-party production use.',
+    ],
+  };
+}
+
 async function aesKeyFromSecret(secret) {
   const digest = await crypto.subtle.digest('SHA-256', textEncoder.encode(secret));
   return crypto.subtle.importKey('raw', digest, { name: 'AES-GCM' }, false, ['encrypt', 'decrypt']);
@@ -531,13 +650,56 @@ export async function readConnection({ env, connectionId, includeSecrets = false
   };
 }
 
-export function authorizedAdmin(request, env = {}) {
+export async function listConnections({ env, origin = '', limit = 100, cursor = '' } = {}) {
+  if (!hasKv(env)) throw new Error('SOCIAL_CONNECTOR_KV binding is not configured');
+  if (typeof env.SOCIAL_CONNECTOR_KV.list !== 'function') {
+    throw new Error('SOCIAL_CONNECTOR_KV list support is not configured');
+  }
+
+  const safeLimit = Math.min(Math.max(Number(limit) || 100, 1), 200);
+  const listOptions = { prefix: CONNECTION_KEY_PREFIX, limit: safeLimit };
+  const safeCursor = clean(cursor, 500);
+  if (safeCursor) listOptions.cursor = safeCursor;
+  const listed = await env.SOCIAL_CONNECTOR_KV.list(listOptions);
+  const connections = [];
+
+  for (const key of listed.keys || []) {
+    const keyName = clean(key?.name || '', 300);
+    if (!keyName.startsWith(CONNECTION_KEY_PREFIX)) continue;
+    const raw = await env.SOCIAL_CONNECTOR_KV.get(keyName);
+    if (!raw) continue;
+    try {
+      const record = JSON.parse(raw);
+      const publicPackage = record.public_agent_package || {};
+      const summary = summarizeAgentPackage({
+        ...publicPackage,
+        connection_id: record.connection_id || keyName.slice(CONNECTION_KEY_PREFIX.length),
+        created_at: record.created_at || publicPackage.created_at || key?.metadata?.created_at || '',
+      }, { origin });
+      connections.push(summary);
+    } catch (_err) {
+      // Skip malformed records rather than breaking the whole dashboard.
+    }
+  }
+
+  connections.sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+  return {
+    ok: true,
+    service: 'meta',
+    connections,
+    cursor: listed.cursor || '',
+    list_complete: listed.list_complete !== false,
+  };
+}
+
+export async function authorizedAdmin(request, env = {}) {
   const configured = adminTokenFromEnv(env);
-  if (!configured) return false;
   const header = clean(request.headers.get('Authorization') || '', 5000);
   const bearer = header.match(/^Bearer\s+(.+)$/i)?.[1] || '';
   const queryToken = clean(new URL(request.url).searchParams.get('admin_token') || '', 5000);
-  return safeEqual(bearer || queryToken, configured);
+  if (configured && safeEqual(bearer || queryToken, configured)) return true;
+  const session = await verifyAdminSessionFromRequest(request, env);
+  return Boolean(session.ok);
 }
 
 export function renderSuccessPage({ connectionId, publicPackage, returnTo = '' }) {

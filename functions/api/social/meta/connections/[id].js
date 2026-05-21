@@ -1,5 +1,6 @@
 import {
   authorizedAdmin,
+  buildAgentHandoff,
   clean,
   json,
   readConnection,
@@ -17,7 +18,7 @@ export async function onRequestGet(context) {
     }, 503);
   }
 
-  if (!authorizedAdmin(request, env)) {
+  if (!(await authorizedAdmin(request, env))) {
     return json({ ok: false, error: 'Unauthorized.' }, 401, {
       'WWW-Authenticate': 'Bearer realm="clawdified-social-connector"',
     });
@@ -33,9 +34,10 @@ export async function onRequestGet(context) {
 
   return json({
     ...record,
+    agent_handoff: includeSecrets ? buildAgentHandoff(record.agent_package, { origin: new URL(request.url).origin }) : null,
     includes_sensitive_tokens: includeSecrets,
     warning: includeSecrets
       ? 'This response contains OAuth/page tokens. Do not paste it into public chats, browser UIs, or client-visible docs.'
-      : 'Tokens are redacted. Add ?include=agent_package with the admin bearer token to retrieve the full server-side package.',
+      : 'Tokens are redacted. Add ?include=agent_package with an admin session or bearer token to retrieve the full server-side package.',
   });
 }

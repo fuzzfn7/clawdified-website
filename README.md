@@ -9,13 +9,14 @@ The Meta/Facebook + Instagram social connector has been added under:
 - Public client page: `/connect/social/` — intentionally minimal: brand, one-sentence description, one `Connect Facebook + Instagram` button, and tiny legal links. No public token/package explanation, client/workflow form, step grid, or route list.
 - OAuth start route: `/api/social/meta/start`
 - OAuth callback route: `/api/social/meta/callback`
+- Protected admin list route: `/api/social/meta/connections`
 - Protected admin package route: `/api/social/meta/connections/{connection_id}?include=agent_package`
 - Health/readiness route: `/api/social/meta/health`
 
 The Gmail outbound/inbox connector has been added under:
 
 - Public client page: `/connect/gmail/` — intentionally minimal: brand, one-sentence description, one `Connect Gmail` button, and tiny legal links. No public token/package explanation, workflow form, route list, or Google API jargon.
-- Private admin dashboard: `/admin/connections/` — simple email/password sign-in backed by an HttpOnly admin session cookie, safe connection summaries, client invite links, and intentional copy actions for agent-ready Gmail handoff packages.
+- Private admin dashboard: `/admin/connections/` — simple email/password sign-in backed by an HttpOnly admin session cookie. This is the shared private API/OAuth console for Gmail and Facebook/Instagram connection summaries, client invite links, and intentional copy actions for agent-ready handoff packages.
 - Admin login/session routes: `/api/admin/login`, `/api/admin/session`, `/api/admin/logout`
 - OAuth start route: `/api/oauth/google/start`
 - OAuth callback route: `/api/oauth/google/callback`
@@ -52,9 +53,11 @@ After authorization, the callback exchanges the Meta OAuth code, discovers Faceb
 - Graph endpoint map for Page, conversations, messages, feed, media, and subscribed apps
 - Business IDs/verification status when Meta grants business access
 
-Public Meta success pages show a connection ID and redacted metadata. Gmail client success pages deliberately show only a simple thank-you/connected message; Wesley retrieves Gmail connection summaries and agent handoff packages from `/admin/connections/`. Full tokens are returned only from protected admin endpoints using a signed admin session cookie or the fallback `SOCIAL_CONNECTOR_ADMIN_TOKEN` / `GMAIL_CONNECTOR_ADMIN_TOKEN` bearer token.
+Public Meta success pages show a connection ID and redacted metadata. Gmail client success pages deliberately show only a simple thank-you/connected message; Wesley retrieves Gmail and Meta connection summaries plus agent handoff packages from `/admin/connections/`. Full tokens are returned only from protected admin endpoints using a signed admin session cookie or the fallback `SOCIAL_CONNECTOR_ADMIN_TOKEN` / `GMAIL_CONNECTOR_ADMIN_TOKEN` bearer token.
 
 Gmail agent handoff packages are intentionally self-describing for non-technical operation. Wesley can copy the package from the dashboard and paste it into the approved client agent/runtime. The agent should use the included connection ID, connected email, Gmail endpoints, granted scopes, OAuth refresh credential, and the server-side Clawdified `GOOGLE_CLIENT_SECRET` to mint fresh Gmail access tokens; Wesley should not manually handle Google token exchange details.
+
+Meta social handoff packages follow the same private-operator pattern. Once the Facebook app is published/approved and a client authorizes Facebook + Instagram, `/admin/connections/` lists the connection, safe Page/Instagram/business summaries, and a copy-ready package containing Graph endpoints, granted scopes, user/page credentials, and the server-side `META_APP_SECRET` source note.
 
 ## Required Cloudflare Pages configuration
 
@@ -95,13 +98,13 @@ Optional:
 Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
 
 - Cloudflare Pages project: `clawdifiedweb`
-- Latest Gmail admin dashboard deployment from `main` was manually deployed with Wrangler and verified on both `clawdified.com` and the Pages preview URL.
+- Latest shared connections dashboard deployment from `main` was manually deployed with Wrangler and verified on both `clawdified.com` and the Pages preview URL.
 - Live social connector page: `https://clawdified.com/connect/social/`
 - Meta app redirect URI is saved under Facebook Login settings: `https://clawdified.com/api/social/meta/callback`
 - Live Meta health endpoint now returns `ok: true`; `META_APP_SECRET` is present in Cloudflare production and visible to Pages Functions after redeploy.
 - Live Gmail connector page: `https://clawdified.com/connect/gmail/`
 - Live private Gmail admin dashboard page: `https://clawdified.com/admin/connections/`
-- Live Gmail admin dashboard now uses `/api/admin/login` + an HttpOnly session cookie. The protected list/package endpoints still reject unauthenticated requests with `401` and also preserve bearer-token compatibility for server-side/agent retrieval.
+- Live admin dashboard now uses `/api/admin/login` + an HttpOnly session cookie. Gmail and Meta protected list/package endpoints reject unauthenticated requests with `401` and preserve bearer-token compatibility for server-side/agent retrieval.
 - Google OAuth client redirect URIs include `https://clawdified.com/api/oauth/google/callback` and the earlier `https://app.clawdified.com/api/oauth/google/callback`.
 - Live Gmail health endpoint returns `ok: true`; `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, shared state/encryption/admin secrets, and `SOCIAL_CONNECTOR_KV` are visible to Pages Functions.
 - Live `/api/oauth/google/start` returns a Google OAuth 302 using the `clawdified.com` callback and the requested `openid`, `email`, `profile`, `gmail.send`, and `gmail.modify` scopes.
@@ -126,6 +129,7 @@ node --test test/social-meta-connector.test.mjs test/gmail-google-connector.test
 node --check functions/api/social/meta/start.js
 node --check functions/api/social/meta/callback.js
 node --check functions/api/social/meta/health.js
+node --check functions/api/social/meta/connections/index.js
 node --check 'functions/api/social/meta/connections/[id].js'
 node --check functions/api/admin/login.js
 node --check functions/api/admin/session.js

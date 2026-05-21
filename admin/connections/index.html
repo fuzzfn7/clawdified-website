@@ -117,6 +117,12 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   background:rgba(8,7,5,.55);border:1px solid var(--line);
   border-radius:12px;padding:10px 12px;overflow-wrap:anywhere;
 }
+.service-strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.service-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:12px}
+.service-chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.service-chip.meta::before{background:#8ab4ff}
+.service-select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 52%,calc(100% - 12px) 52%;background-size:6px 6px;background-repeat:no-repeat}
+.service-error{border:1px solid rgba(255,141,125,.24);border-radius:16px;padding:12px 14px;background:rgba(255,141,125,.045);color:var(--red);font-size:13px;margin-bottom:12px}
 
 /* === Stats === */
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:26px 0 8px}
@@ -200,7 +206,8 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
 <nav class="top" aria-label="Page navigation">
   <a class="brand" href="/"><span class="dot" aria-hidden="true"></span>CLAWDIFIED</a>
   <div class="top-right" id="topRight">
-    <a class="back" href="/connect/gmail/">Client Gmail page</a>
+    <a class="back" href="/connect/gmail/">Gmail page</a>
+    <a class="back" href="/connect/social/">Facebook + Instagram page</a>
     <span class="who hide" id="whoLabel"></span>
     <button class="button ghost hide" id="signOutButton" type="button">Sign out</button>
   </div>
@@ -235,13 +242,24 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   <section class="hero">
     <div class="card">
       <div class="eyebrow">Private admin</div>
-      <h1>Client connections</h1>
-      <p class="lead">Connected Gmail accounts, client invite links, and a copy-ready agent handoff package — without making clients share passwords or technical details.</p>
-      <p class="note" style="margin-top:14px">Rows show safe summaries only. The sensitive package is copied intentionally from a button and should go only to the client's approved agent runtime.</p>
+      <h1>Client API connections</h1>
+      <p class="lead">One private place for client OAuth/API access — Gmail now, Facebook + Instagram next, and more connectors later without asking clients for passwords.</p>
+      <p class="note" style="margin-top:14px">Rows show safe summaries only. Sensitive agent packages are copied intentionally from a button and should go only to the approved client agent runtime.</p>
+      <div class="service-strip" aria-label="Connected service types">
+        <span class="service-chip">Gmail</span>
+        <span class="service-chip meta">Facebook + Instagram</span>
+      </div>
     </div>
     <div class="card invite-card">
       <div class="eyebrow">New invite</div>
-      <h2 style="margin-top:6px">Send a client to Gmail connect</h2>
+      <h2 style="margin-top:6px">Send a client to connect an account</h2>
+      <label class="field">
+        <span>Service</span>
+        <select class="input service-select" id="serviceName">
+          <option value="gmail">Gmail</option>
+          <option value="meta">Facebook + Instagram</option>
+        </select>
+      </label>
       <label class="field">
         <span>Client / business name</span>
         <input class="input" id="clientName" placeholder="Acme Roofing" autocomplete="off" />
@@ -267,8 +285,8 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
 
   <div class="toolbar">
     <div class="left">
-      <div class="eyebrow">Gmail</div>
-      <div class="status" id="statusLine" role="status" aria-live="polite">Loading connections…</div>
+      <div class="eyebrow">All connections</div>
+      <div class="status" id="statusLine" role="status" aria-live="polite">Loading client connections…</div>
     </div>
     <button class="button secondary" id="refreshButton" type="button">Refresh</button>
   </div>
@@ -286,7 +304,23 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   const ROUTE_SESSION     = '/api/admin/session';
   const ROUTE_LOGIN       = '/api/admin/login';
   const ROUTE_LOGOUT      = '/api/admin/logout';
-  const ROUTE_CONNECTIONS = '/api/oauth/google/connections';
+  const ROUTE_GMAIL_CONNECTIONS = '/api/oauth/google/connections';
+  const ROUTE_META_CONNECTIONS  = '/api/social/meta/connections';
+
+  const SERVICES = {
+    gmail: {
+      label: 'Gmail',
+      connector: '/connect/gmail/',
+      route: ROUTE_GMAIL_CONNECTIONS,
+      packageLabel: 'Gmail agent package',
+    },
+    meta: {
+      label: 'Facebook + Instagram',
+      connector: '/connect/social/',
+      route: ROUTE_META_CONNECTIONS,
+      packageLabel: 'Meta agent package',
+    },
+  };
 
   // --- Elements ---
   const loginView    = document.getElementById('loginView');
@@ -306,6 +340,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   const readyCount     = document.getElementById('readyCount');
   const needsCount     = document.getElementById('needsCount');
   const latestDate     = document.getElementById('latestDate');
+  const serviceName    = document.getElementById('serviceName');
   const clientName     = document.getElementById('clientName');
   const workflowName   = document.getElementById('workflowName');
   const copyInviteButton = document.getElementById('copyInviteButton');
@@ -314,6 +349,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
 
   const jsonHeaders = { Accept: 'application/json' };
   let lastRows = [];
+  let serviceErrors = [];
 
   // --- Utilities ---
   const safeText = (v, fallback = '—') => {
@@ -395,7 +431,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
       }
       loginPassword.value = '';
       showDashboard(data.email || email);
-      setStatus('Loading connections…', 'working');
+      setStatus('Loading client connections…', 'working');
       loadConnections();
     } catch (err) {
       setLoginError(err && err.message ? err.message : 'Could not sign in.');
@@ -415,6 +451,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
       });
     } catch (_) { /* clear UI either way */ }
     lastRows = [];
+    serviceErrors = [];
     renderRows(lastRows, { initial: true });
     showLogin();
     signOutButton.disabled = false;
@@ -429,33 +466,77 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
     latestDate.textContent = rows[0]?.created_at ? shortDate(rows[0].created_at) : '—';
   }
 
+  function serviceLabel(row) {
+    const service = SERVICES[row.service] || SERVICES.gmail;
+    return row.service_label || service.label;
+  }
+
+  function rowIdentity(row) {
+    if (row.service === 'meta') {
+      const pageNames = Array.isArray(row.facebook_page_names) ? row.facebook_page_names : [];
+      const igNames = Array.isArray(row.instagram_usernames) ? row.instagram_usernames.map((name) => `@${name}`) : [];
+      return safeText(pageNames.concat(igNames)[0] || row.connected_account || row.facebook_user_name, 'No Page/Instagram asset yet');
+    }
+    return safeText(row.connected_email, 'No email found');
+  }
+
+  function credentialLabel(row) {
+    if (row.service === 'meta') {
+      const pageTokens = !!row.page_tokens_stored;
+      const userToken = !!row.user_token_stored;
+      if (pageTokens) return 'Page token stored';
+      if (userToken) return 'User token stored';
+      return 'Credential missing';
+    }
+    return `Credential ${row['refresh' + '_token_stored'] ? 'stored' : 'missing'}`;
+  }
+
+  function detailPills(row) {
+    if (row.service === 'meta') {
+      const pageCount = Number(row.facebook_pages_count) || 0;
+      const igCount = Number(row.instagram_accounts_count) || 0;
+      const scopes = Number(row.granted_scopes_count) || 0;
+      return [
+        `<span class="pill muted">${pageCount} Page${pageCount === 1 ? '' : 's'}</span>`,
+        `<span class="pill muted">${igCount} Instagram</span>`,
+        `<span class="pill muted">${scopes} scope${scopes === 1 ? '' : 's'}</span>`,
+      ].join('');
+    }
+    const scopes = Number(row.granted_scopes_count) || 0;
+    return `<span class="pill muted">${scopes} scope${scopes === 1 ? '' : 's'}</span>`;
+  }
+
+  function errorBlock() {
+    if (!serviceErrors.length) return '';
+    return `<div class="service-error">${escapeHtml(serviceErrors.join(' · '))}</div>`;
+  }
+
   function renderRows(rows, opts = {}) {
     updateStats(rows);
-    if (opts.initial && !rows.length) {
-      listEl.innerHTML = '<div class="empty"><strong>No connections yet</strong>Send a client invite link from the card above. Connections show up here as soon as a client finishes the Gmail flow.</div>';
-      return;
-    }
     if (!rows.length) {
-      listEl.innerHTML = '<div class="empty"><strong>Still no connections</strong>Share the invite link with your client, then refresh.</div>';
+      const emptyText = opts.initial
+        ? 'Send a client invite link from the card above. Gmail and Facebook/Instagram connections show up here as soon as a client finishes OAuth.'
+        : 'Share an invite link with your client, then refresh.';
+      listEl.innerHTML = `${errorBlock()}<div class="empty"><strong>No connections yet</strong>${escapeHtml(emptyText)}</div>`;
       return;
     }
-    listEl.innerHTML = rows.map((row) => {
-      const credentialStored = row['refresh' + '_token_stored'];
+    listEl.innerHTML = `${errorBlock()}${rows.map((row) => {
       const ready = !!row.ready_for_agent;
-      const scopes = Number(row.granted_scopes_count) || 0;
+      const service = row.service || 'gmail';
       return `
-      <article class="connection" data-id="${escapeHtml(row.connection_id || '')}">
+      <article class="connection" data-service="${escapeHtml(service)}" data-id="${escapeHtml(row.connection_id || '')}">
         <div class="who">
+          <div class="service-chip ${service === 'meta' ? 'meta' : ''}">${escapeHtml(serviceLabel(row))}</div>
           <h2>${escapeHtml(safeText(row.client_name, 'Unlabeled client'))}</h2>
           <div class="workflow">${escapeHtml(safeText(row.workflow, 'No workflow label'))}</div>
           <div class="id">${escapeHtml(safeText(row.connection_id))}</div>
         </div>
         <div class="meta">
-          <div class="email">${escapeHtml(safeText(row.connected_email, 'No email found'))}</div>
+          <div class="email">${escapeHtml(rowIdentity(row))}</div>
           <div class="pills">
             <span class="pill ${ready ? 'ready' : 'warn'}">${ready ? 'Ready for agent' : 'Needs attention'}</span>
-            <span class="pill ${credentialStored ? '' : 'warn'}">Credential ${credentialStored ? 'stored' : 'missing'}</span>
-            <span class="pill muted">${scopes} scope${scopes === 1 ? '' : 's'}</span>
+            <span class="pill ${credentialLabel(row).includes('missing') ? 'warn' : ''}">${escapeHtml(credentialLabel(row))}</span>
+            ${detailPills(row)}
           </div>
           <div class="when">Connected ${escapeHtml(shortDate(row.created_at))}</div>
         </div>
@@ -465,24 +546,45 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
         </div>
       </article>
     `;
-    }).join('');
+    }).join('')}`;
+  }
+
+  async function fetchConnectionsForService(serviceKey) {
+    const service = SERVICES[serviceKey];
+    const res = await fetch(service.route, { headers: jsonHeaders, credentials: 'same-origin' });
+    if (res.status === 401 || res.status === 403) {
+      const err = new Error('Session expired. Sign in again.');
+      err.auth = true;
+      throw err;
+    }
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(`${service.label}: ${data.error || `HTTP ${res.status}`}`);
+    return (data.connections || []).map((row) => ({ ...row, service: row.service || serviceKey, service_label: row.service_label || service.label }));
   }
 
   async function loadConnections() {
     refreshButton.disabled = true;
-    setStatus('Loading connections…', 'working');
+    setStatus('Loading client connections…', 'working');
     try {
-      const res = await fetch(ROUTE_CONNECTIONS, { headers: jsonHeaders, credentials: 'same-origin' });
-      if (res.status === 401 || res.status === 403) {
-        showLogin();
-        setLoginError('Session expired. Sign in again.');
-        return;
+      serviceErrors = [];
+      const results = await Promise.allSettled(Object.keys(SERVICES).map(fetchConnectionsForService));
+      const rows = [];
+      for (const result of results) {
+        if (result.status === 'fulfilled') {
+          rows.push(...result.value);
+        } else if (result.reason?.auth) {
+          showLogin();
+          setLoginError('Session expired. Sign in again.');
+          return;
+        } else {
+          serviceErrors.push(result.reason?.message || 'One connector could not load.');
+        }
       }
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
-      lastRows = data.connections || [];
+      rows.sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+      lastRows = rows;
       renderRows(lastRows, { initial: true });
-      setStatus(`Loaded ${lastRows.length} connection${lastRows.length === 1 ? '' : 's'}.`, 'good');
+      const warning = serviceErrors.length ? ` (${serviceErrors.length} connector warning${serviceErrors.length === 1 ? '' : 's'})` : '';
+      setStatus(`Loaded ${lastRows.length} connection${lastRows.length === 1 ? '' : 's'}${warning}.`, serviceErrors.length ? 'bad' : 'good');
     } catch (err) {
       renderRows([], { initial: true });
       setStatus(err.message || 'Could not load connections.', 'bad');
@@ -491,9 +593,10 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
     }
   }
 
-  async function copyAgentPackage(connectionId) {
-    setStatus('Preparing agent package…', 'working');
-    const url = `${ROUTE_CONNECTIONS}/${encodeURIComponent(connectionId)}?include=agent_package`;
+  async function copyAgentPackage(serviceKey, connectionId) {
+    const service = SERVICES[serviceKey] || SERVICES.gmail;
+    setStatus(`Preparing ${service.packageLabel}…`, 'working');
+    const url = `${service.route}/${encodeURIComponent(connectionId)}?include=agent_package`;
     const res = await fetch(url, { headers: jsonHeaders, credentials: 'same-origin' });
     if (res.status === 401 || res.status === 403) {
       showLogin();
@@ -504,12 +607,13 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
     if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
     const packageForAgent = data.agent_handoff || data.agent_package;
     await copyText(JSON.stringify(packageForAgent, null, 2));
-    setStatus('Agent package copied. Paste it only into the approved client agent runtime.', 'good');
+    setStatus(`${service.packageLabel} copied. Paste it only into the approved client agent runtime.`, 'good');
   }
 
   // --- Invite link ---
   function buildInviteUrl() {
-    const url = new URL('/connect/gmail/', window.location.origin);
+    const selected = SERVICES[serviceName.value] || SERVICES.gmail;
+    const url = new URL(selected.connector, window.location.origin);
     const client = clientName.value.trim();
     const workflow = workflowName.value.trim();
     if (client) url.searchParams.set('client', client);
@@ -531,6 +635,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
     if (!button) return;
     const row = button.closest('.connection');
     const connectionId = row?.dataset?.id;
+    const serviceKey = row?.dataset?.service || 'gmail';
     if (!connectionId) return;
     button.disabled = true;
     try {
@@ -538,7 +643,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
         await copyText(connectionId);
         setStatus('Connection ID copied.', 'good');
       } else if (button.dataset.action === 'copy-package') {
-        await copyAgentPackage(connectionId);
+        await copyAgentPackage(serviceKey, connectionId);
       }
     } catch (err) {
       setStatus(err.message || 'Copy failed.', 'bad');
@@ -556,6 +661,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
     }
   });
 
+  serviceName.addEventListener('input', updateInvitePreview);
   clientName.addEventListener('input', updateInvitePreview);
   workflowName.addEventListener('input', updateInvitePreview);
   refreshButton.addEventListener('click', loadConnections);
