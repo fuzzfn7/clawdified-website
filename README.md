@@ -59,7 +59,7 @@ Optional:
 Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
 
 - Cloudflare Pages project: `clawdifiedweb`
-- Production deployment source: `cd23db5` (`feat: add Meta social connector`), redeployed as `b9b15a41-9f81-44f3-b5e4-f583977f43d5` after Cloudflare secret setup.
+- Minimal UI production deployment verified from source `0539675` (`feat: simplify Meta connector UI`) as Cloudflare deployment `83235832-187b-4cec-bcdc-37c6fb89e6b9`.
 - Live connector page: `https://clawdified.com/connect/social/`
 - Meta app redirect URI is saved under Facebook Login settings: `https://clawdified.com/api/social/meta/callback`
 - Live health endpoint now returns `ok: true`; `META_APP_SECRET` is present in Cloudflare production and visible to Pages Functions after redeploy.
