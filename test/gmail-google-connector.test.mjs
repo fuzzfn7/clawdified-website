@@ -17,11 +17,17 @@ import {
   summarizeAgentPackage,
   verifySignedState,
 } from '../functions/api/oauth/google/_shared.mjs';
+import { onRequestPost as loginRequest } from '../functions/api/admin/login.js';
+import { onRequestGet as sessionRequest } from '../functions/api/admin/session.js';
+import { onRequestPost as logoutRequest } from '../functions/api/admin/logout.js';
 import { onRequestGet as listConnectionsRequest } from '../functions/api/oauth/google/connections/index.js';
 
 const completeEnv = {
   GOOGLE_CLIENT_ID: 'google-client-id.apps.googleusercontent.com',
   GOOGLE_CLIENT_SECRET: 'google-secret',
+  CLAWDIFIED_ADMIN_EMAIL: 'wesley@clawdified.com',
+  CLAWDIFIED_ADMIN_PASSWORD: 'admin-password',
+  CLAWDIFIED_ADMIN_SESSION_SECRET: 'session-secret',
   SOCIAL_CONNECTOR_STATE_SECRET: 'state-secret',
   SOCIAL_CONNECTOR_ENCRYPTION_KEY: 'encryption-secret',
   SOCIAL_CONNECTOR_ADMIN_TOKEN: 'admin-secret',
@@ -294,13 +300,93 @@ test('connections list route requires admin token and returns safe rows', async 
   assert.equal(JSON.stringify(body).includes('refresh-token'), false);
 });
 
+test('admin email-password login sets a session cookie accepted by connection APIs', async () => {
+  const publicPackage = redactTokens(sampleAgentPackage());
+  const env = {
+    ...completeEnv,
+    SOCIAL_CONNECTOR_KV: {
+      async list() {
+        return { keys: [{ name: 'gmail-google-connection:gmail_conn_123' }], list_complete: true };
+      },
+      async get() {
+        return JSON.stringify({
+          ok: true,
+          connection_id: 'gmail_conn_123',
+          created_at: '2026-05-21T20:00:00.000Z',
+          public_agent_package: publicPackage,
+        });
+      },
+      async put() {},
+    },
+  };
+
+  const badLogin = await loginRequest({
+    request: new Request('https://clawdified.com/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'wesley@clawdified.com', password: 'wrong' }),
+    }),
+    env,
+  });
+  assert.equal(badLogin.status, 401);
+
+  const goodLogin = await loginRequest({
+    request: new Request('https://clawdified.com/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'wesley@clawdified.com', password: 'admin-password' }),
+    }),
+    env,
+  });
+  assert.equal(goodLogin.status, 200);
+  const loginBody = await goodLogin.json();
+  assert.equal(loginBody.authenticated, true);
+  assert.equal(loginBody.email, 'wesley@clawdified.com');
+  const cookie = goodLogin.headers.get('Set-Cookie');
+  assert.match(cookie, /clawdified_admin_session=/);
+  assert.match(cookie, /HttpOnly/);
+  assert.match(cookie, /SameSite=Strict/);
+  const cookieHeader = cookie.split(';')[0];
+
+  const session = await sessionRequest({
+    request: new Request('https://clawdified.com/api/admin/session', {
+      headers: { Cookie: cookieHeader },
+    }),
+    env,
+  });
+  const sessionBody = await session.json();
+  assert.equal(sessionBody.authenticated, true);
+  assert.equal(sessionBody.email, 'wesley@clawdified.com');
+
+  const allowed = await listConnectionsRequest({
+    request: new Request('https://clawdified.com/api/oauth/google/connections', {
+      headers: { Cookie: cookieHeader },
+    }),
+    env,
+  });
+  const body = await allowed.json();
+  assert.equal(allowed.status, 200);
+  assert.equal(body.connections[0].connected_email, 'owner@example.com');
+
+  const logout = await logoutRequest({
+    request: new Request('https://clawdified.com/api/admin/logout', { method: 'POST' }),
+    env,
+  });
+  assert.equal(logout.status, 200);
+  assert.match(logout.headers.get('Set-Cookie'), /Max-Age=0/);
+});
+
 test('admin dashboard and connector page expose the intended non-technical flow', () => {
   const dashboard = readFileSync(new URL('../admin/connections/index.html', import.meta.url), 'utf8');
   assert.match(dashboard, /Client connections/i);
+  assert.match(dashboard, /Sign in/i);
   assert.match(dashboard, /Copy agent package/i);
+  assert.match(dashboard, /\/api\/admin\/login/);
+  assert.match(dashboard, /\/api\/admin\/session/);
+  assert.match(dashboard, /\/api\/admin\/logout/);
   assert.match(dashboard, /\/api\/oauth\/google\/connections/);
-  assert.match(dashboard, /Authorization/);
-  assert.match(dashboard, /sessionStorage/);
+  assert.equal(dashboard.includes('sessionStorage'), false, 'dashboard should use the HttpOnly admin session cookie, not local/session storage for secrets');
+  assert.equal(dashboard.includes('adminToken'), false, 'dashboard should no longer ask for a raw bearer token by default');
   assert.equal(dashboard.includes('refresh_token'), false, 'dashboard should not print raw token field labels by default');
 
   const connector = readFileSync(new URL('../connect/gmail/index.html', import.meta.url), 'utf8');

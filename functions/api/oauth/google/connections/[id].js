@@ -18,7 +18,7 @@ export async function onRequestGet(context) {
     }, 503);
   }
 
-  if (!authorizedAdmin(request, env)) {
+  if (!(await authorizedAdmin(request, env))) {
     return json({ ok: false, error: 'Unauthorized.' }, 401, {
       'WWW-Authenticate': 'Bearer realm="clawdified-gmail-connector"',
     });

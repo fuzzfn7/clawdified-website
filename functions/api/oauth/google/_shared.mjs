@@ -1,3 +1,5 @@
+import { verifyAdminSessionFromRequest } from '../../admin/_auth.mjs';
+
 const JSON_HEADERS = {
   'Content-Type': 'application/json; charset=utf-8',
   'Cache-Control': 'no-store',
@@ -596,13 +598,14 @@ export async function listConnections({ env, origin = '', limit = 100, cursor = 
   };
 }
 
-export function authorizedAdmin(request, env = {}) {
+export async function authorizedAdmin(request, env = {}) {
   const configured = adminTokenFromEnv(env);
-  if (!configured) return false;
   const header = clean(request.headers.get('Authorization') || '', 5000);
   const bearer = header.match(/^Bearer\s+(.+)$/i)?.[1] || '';
   const queryToken = clean(new URL(request.url).searchParams.get('admin_token') || '', 5000);
-  return safeEqual(bearer || queryToken, configured);
+  if (configured && safeEqual(bearer || queryToken, configured)) return true;
+  const session = await verifyAdminSessionFromRequest(request, env);
+  return Boolean(session.ok);
 }
 
 export function renderSuccessPage({ publicPackage, returnTo = '' }) {

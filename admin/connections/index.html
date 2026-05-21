@@ -7,46 +7,255 @@
 <title>Client connections | Clawdified</title>
 <meta name="description" content="Private Clawdified admin view for connected client OAuth accounts." />
 <style>
-:root{color-scheme:dark;--bg:#0f0e0a;--panel:#17140e;--panel2:#211b12;--ink:#f8edda;--muted:rgba(248,237,218,.68);--faint:rgba(248,237,218,.46);--line:rgba(248,237,218,.13);--gold:#f1b45b;--orange:#d48553;--green:#7ad99d;--red:#ff8d7d;--sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--serif:Georgia,serif}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% -10%,rgba(241,180,91,.16),transparent 34rem),radial-gradient(circle at 80% 0%,rgba(212,133,83,.12),transparent 28rem),var(--bg);color:var(--ink);font-family:var(--sans)}
-a{color:inherit}.top{display:flex;justify-content:space-between;align-items:center;padding:22px 26px;border-bottom:1px solid var(--line);background:rgba(15,14,10,.76);backdrop-filter:blur(16px);position:sticky;top:0;z-index:3}.brand{font-weight:900;letter-spacing:.05em;text-decoration:none;font-size:14px}.back{color:var(--muted);text-decoration:none;font-size:13px}.back:hover{color:var(--ink)}
-main{max-width:1180px;margin:0 auto;padding:42px 22px 70px}.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:22px;align-items:stretch}.card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(33,27,18,.9),rgba(23,20,14,.92));border-radius:28px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.22)}.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:.18em;font-size:12px;font-weight:900}h1{font-family:var(--serif);font-weight:500;letter-spacing:-.04em;line-height:.95;font-size:clamp(44px,7vw,84px);margin:12px 0 16px}.lead{color:var(--muted);line-height:1.55;font-size:16px;max-width:720px}.note{color:var(--faint);font-size:13px;line-height:1.5}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.input{width:100%;border:1px solid var(--line);background:rgba(8,7,5,.82);border-radius:16px;color:var(--ink);padding:13px 14px;font:inherit;outline:none}.input:focus{border-color:rgba(241,180,91,.58);box-shadow:0 0 0 4px rgba(241,180,91,.08)}.button{border:0;cursor:pointer;border-radius:999px;padding:12px 16px;font:inherit;font-size:14px;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--orange));color:#1a1008;box-shadow:0 14px 36px rgba(212,133,83,.2)}.button.secondary{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}.button.danger{background:transparent;color:var(--red);border:1px solid rgba(255,141,125,.35);box-shadow:none}.button:disabled{opacity:.52;cursor:not-allowed}.stack{display:grid;gap:12px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0}.stat{border:1px solid var(--line);background:rgba(255,255,255,.035);border-radius:20px;padding:16px}.stat b{display:block;font-size:26px;color:var(--gold)}.stat span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:26px 0 14px;flex-wrap:wrap}.status{font-size:13px;color:var(--faint);min-height:1.4em}.status.good{color:var(--green)}.status.bad{color:var(--red)}.table{display:grid;gap:12px}.connection{border:1px solid var(--line);background:rgba(23,20,14,.82);border-radius:22px;padding:18px;display:grid;grid-template-columns:minmax(220px,1.1fr) minmax(230px,1fr) auto;gap:16px;align-items:center}.connection h2{font-size:18px;margin:0 0 6px}.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 9px;color:var(--muted);font-size:12px;margin:3px 4px 3px 0}.pill.ready{color:var(--green);border-color:rgba(122,217,157,.28)}.pill.warn{color:var(--red);border-color:rgba(255,141,125,.3)}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--faint);overflow-wrap:anywhere}.empty{border:1px dashed var(--line);border-radius:22px;padding:28px;text-align:center;color:var(--muted);background:rgba(255,255,255,.025)}.hide{display:none!important}@media(max-width:920px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.connection{grid-template-columns:1fr}.connection .row{justify-content:flex-start}}@media(max-width:560px){main{padding-inline:16px}.top{padding-inline:16px}.grid{grid-template-columns:1fr}.card{padding:20px}}
+:root{
+  color-scheme:dark;
+  --bg:#0f0e0a;--panel:#17140e;--panel2:#211b12;
+  --ink:#f8edda;--muted:rgba(248,237,218,.68);--faint:rgba(248,237,218,.46);
+  --line:rgba(248,237,218,.13);--line-strong:rgba(248,237,218,.22);
+  --gold:#f1b45b;--orange:#d48553;--green:#7ad99d;--red:#ff8d7d;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --serif:Georgia,"Playfair Display","Times New Roman",serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100vh}
+body{
+  background:
+    radial-gradient(circle at 18% -8%,rgba(241,180,91,.18),transparent 32rem),
+    radial-gradient(circle at 82% 4%,rgba(212,133,83,.13),transparent 28rem),
+    var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+button{font:inherit}
+
+/* === Shell === */
+.top{display:flex;justify-content:space-between;align-items:center;gap:14px;
+  padding:18px 26px;border-bottom:1px solid var(--line);
+  background:rgba(15,14,10,.78);backdrop-filter:blur(16px);
+  position:sticky;top:0;z-index:5}
+.brand{font-weight:900;letter-spacing:.06em;font-size:13px;text-decoration:none}
+.brand .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--orange));
+  margin-right:8px;vertical-align:1px;box-shadow:0 0 0 3px rgba(241,180,91,.12)}
+.top-right{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--muted)}
+.top-right .who{font-family:var(--mono);font-size:12px;color:var(--faint)}
+.back{color:var(--muted);text-decoration:none;font-size:13px}
+.back:hover{color:var(--ink)}
+
+main{max-width:1180px;margin:0 auto;padding:42px 22px 80px}
+
+/* === Cards === */
+.card{border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(33,27,18,.92),rgba(23,20,14,.94));
+  border-radius:24px;padding:24px;
+  box-shadow:0 24px 70px rgba(0,0,0,.28)}
+.card.flat{box-shadow:none}
+.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:.2em;
+  font-size:11px;font-weight:900}
+h1{font-family:var(--serif);font-weight:500;letter-spacing:-.035em;
+  line-height:.95;font-size:clamp(40px,6.4vw,72px);margin:14px 0 14px}
+h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-spacing:-.005em}
+.lead{color:var(--muted);line-height:1.55;font-size:16px;max-width:680px;margin:0}
+.note{color:var(--faint);font-size:13px;line-height:1.5;margin:0}
+.mono{font-family:var(--mono);font-size:12px;color:var(--faint)}
+
+/* === Form atoms === */
+.field{display:grid;gap:6px}
+.field>span{color:var(--faint);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.input{
+  width:100%;border:1px solid var(--line);background:rgba(8,7,5,.78);
+  border-radius:14px;color:var(--ink);padding:13px 14px;
+  font:inherit;outline:none;transition:border-color .15s, box-shadow .15s;
+}
+.input::placeholder{color:rgba(248,237,218,.32)}
+.input:focus{border-color:rgba(241,180,91,.62);box-shadow:0 0 0 4px rgba(241,180,91,.10)}
+.button{
+  border:0;cursor:pointer;border-radius:999px;padding:12px 18px;
+  font-size:14px;font-weight:800;letter-spacing:.01em;
+  background:linear-gradient(135deg,var(--gold),var(--orange));color:#1a1008;
+  box-shadow:0 14px 36px rgba(212,133,83,.22);
+  transition:transform .12s, box-shadow .12s, opacity .12s;
+}
+.button:hover{transform:translateY(-1px);box-shadow:0 18px 40px rgba(212,133,83,.28)}
+.button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.button.secondary{background:transparent;color:var(--ink);
+  border:1px solid var(--line);box-shadow:none}
+.button.secondary:hover{border-color:var(--line-strong);background:rgba(255,255,255,.03)}
+.button.ghost{background:transparent;color:var(--muted);border:0;box-shadow:none;padding:8px 12px}
+.button.ghost:hover{color:var(--ink)}
+.button.danger{background:transparent;color:var(--red);
+  border:1px solid rgba(255,141,125,.32);box-shadow:none}
+.button.danger:hover{background:rgba(255,141,125,.06)}
+.button:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.button.full{width:100%;justify-content:center;display:inline-flex;align-items:center;gap:8px}
+
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stack{display:grid;gap:14px}
+
+/* === Login screen === */
+.login-wrap{min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;padding:42px 22px}
+.login-card{width:100%;max-width:420px;padding:30px}
+.login-card .eyebrow{margin-bottom:4px}
+.login-card h1{font-size:clamp(34px,5vw,42px);margin:6px 0 6px;letter-spacing:-.02em}
+.login-card .note{margin-bottom:18px}
+.login-form{display:grid;gap:14px;margin-top:10px}
+.login-error{
+  min-height:1.4em;font-size:13px;color:var(--red);
+}
+.login-error:empty{display:none}
+
+/* === Hero/dashboard === */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.85fr);gap:20px;align-items:stretch}
+.invite-card{display:grid;gap:12px}
+.invite-card .row{align-items:stretch}
+.invite-preview{
+  font-family:var(--mono);font-size:12px;color:var(--muted);
+  background:rgba(8,7,5,.55);border:1px solid var(--line);
+  border-radius:12px;padding:10px 12px;overflow-wrap:anywhere;
+}
+
+/* === Stats === */
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:26px 0 8px}
+.stat{border:1px solid var(--line);background:rgba(255,255,255,.035);
+  border-radius:18px;padding:16px}
+.stat b{display:block;font-family:var(--serif);font-weight:500;
+  font-size:30px;color:var(--gold);letter-spacing:-.02em;line-height:1}
+.stat span{display:block;margin-top:6px;font-size:11px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.14em}
+
+/* === Toolbar === */
+.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;
+  margin:30px 0 14px;flex-wrap:wrap}
+.toolbar .left{display:grid;gap:4px}
+.status{font-size:13px;color:var(--faint);min-height:1.4em}
+.status.good{color:var(--green)}
+.status.bad{color:var(--red)}
+.status.working{color:var(--muted)}
+
+/* === Connections list === */
+.table{display:grid;gap:12px}
+.connection{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(23,20,14,.86),rgba(23,20,14,.78));
+  border-radius:20px;padding:18px 20px;
+  display:grid;grid-template-columns:minmax(220px,1.15fr) minmax(220px,1fr) auto;
+  gap:18px;align-items:center;
+  transition:border-color .15s, transform .15s;
+}
+.connection:hover{border-color:var(--line-strong)}
+.connection .who{display:grid;gap:4px;min-width:0}
+.connection .id{font-family:var(--mono);font-size:11px;color:var(--faint);overflow-wrap:anywhere}
+.connection .workflow{color:var(--muted);font-size:13px}
+.connection .meta{display:grid;gap:6px;min-width:0}
+.connection .email{font-weight:700;font-size:14px;overflow-wrap:anywhere}
+.connection .pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.connection .when{color:var(--faint);font-size:12px;margin-top:2px}
+.connection .actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+
+.pill{display:inline-flex;align-items:center;gap:6px;
+  border:1px solid var(--line);border-radius:999px;padding:5px 10px;
+  color:var(--muted);font-size:11.5px;letter-spacing:.02em}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:.7}
+.pill.ready{color:var(--green);border-color:rgba(122,217,157,.32)}
+.pill.ready::before{background:var(--green);opacity:1}
+.pill.warn{color:var(--red);border-color:rgba(255,141,125,.32)}
+.pill.warn::before{background:var(--red);opacity:1}
+.pill.muted::before{opacity:.5}
+
+.empty{border:1px dashed var(--line);border-radius:20px;padding:32px;
+  text-align:center;color:var(--muted);background:rgba(255,255,255,.025);
+  font-size:14px}
+.empty strong{display:block;color:var(--ink);font-family:var(--serif);
+  font-weight:500;font-size:22px;letter-spacing:-.01em;margin-bottom:6px}
+
+.skeleton{
+  height:84px;border-radius:20px;border:1px solid var(--line);
+  background:linear-gradient(90deg,rgba(255,255,255,.02),rgba(255,255,255,.05),rgba(255,255,255,.02));
+  background-size:200% 100%;animation:shimmer 1.4s linear infinite;
+}
+@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+
+.hide{display:none!important}
+
+@media(max-width:920px){
+  .hero{grid-template-columns:1fr}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .connection{grid-template-columns:1fr;gap:14px}
+  .connection .actions{justify-content:flex-start}
+}
+@media(max-width:560px){
+  main{padding:30px 16px 60px}
+  .top{padding:16px}
+  .grid{grid-template-columns:1fr}
+  .card{padding:20px;border-radius:20px}
+  .login-card{padding:24px}
+}
 </style>
 </head>
 <body>
 <nav class="top" aria-label="Page navigation">
-  <a class="brand" href="/">CLAWDIFIED</a>
-  <a class="back" href="/connect/gmail/">Client Gmail page</a>
+  <a class="brand" href="/"><span class="dot" aria-hidden="true"></span>CLAWDIFIED</a>
+  <div class="top-right" id="topRight">
+    <a class="back" href="/connect/gmail/">Client Gmail page</a>
+    <span class="who hide" id="whoLabel"></span>
+    <button class="button ghost hide" id="signOutButton" type="button">Sign out</button>
+  </div>
 </nav>
-<main>
+
+<!-- === Login screen === -->
+<section id="loginView" class="login-wrap" aria-labelledby="loginHeading">
+  <div class="card login-card">
+    <div class="eyebrow">Private admin</div>
+    <h1 id="loginHeading">Sign in</h1>
+    <p class="note">Operator access only. Use the email and password issued to you.</p>
+    <form class="login-form" id="loginForm" autocomplete="on" novalidate>
+      <label class="field">
+        <span>Email</span>
+        <input class="input" id="loginEmail" type="email" name="email"
+               autocomplete="username" required placeholder="you@clawdified.com" />
+      </label>
+      <label class="field">
+        <span>Password</span>
+        <input class="input" id="loginPassword" type="password" name="password"
+               autocomplete="current-password" required placeholder="••••••••" />
+      </label>
+      <div class="login-error" id="loginError" role="alert" aria-live="polite"></div>
+      <button class="button full" id="loginSubmit" type="submit">Sign in</button>
+      <p class="note" style="margin-top:4px">Posts to <span class="mono">/api/admin/login</span>. Session cookie only.</p>
+    </form>
+  </div>
+</section>
+
+<!-- === Dashboard === -->
+<main id="dashboardView" class="hide" aria-busy="false">
   <section class="hero">
     <div class="card">
       <div class="eyebrow">Private admin</div>
       <h1>Client connections</h1>
-      <p class="lead">See connected Gmail accounts, generate client invite links, and copy an agent-ready handoff package without making the client share passwords or technical details.</p>
-      <p class="note">Rows show safe summaries only. The sensitive package is copied intentionally from a button and should go only to the client’s approved agent/runtime.</p>
+      <p class="lead">Connected Gmail accounts, client invite links, and a copy-ready agent handoff package — without making clients share passwords or technical details.</p>
+      <p class="note" style="margin-top:14px">Rows show safe summaries only. The sensitive package is copied intentionally from a button and should go only to the client's approved agent runtime.</p>
     </div>
-    <div class="card stack">
-      <label>
-        <span class="note">Admin token</span>
-        <input class="input" id="adminToken" type="password" autocomplete="off" placeholder="Paste admin token" />
+    <div class="card invite-card">
+      <div class="eyebrow">New invite</div>
+      <h2 style="margin-top:6px">Send a client to Gmail connect</h2>
+      <label class="field">
+        <span>Client / business name</span>
+        <input class="input" id="clientName" placeholder="Acme Roofing" autocomplete="off" />
       </label>
+      <label class="field">
+        <span>Workflow label</span>
+        <input class="input" id="workflowName" placeholder="cold outbound" autocomplete="off" />
+      </label>
+      <div class="invite-preview" id="invitePreview">/connect/gmail/</div>
       <div class="row">
-        <button class="button" id="loadButton" type="button">Load connections</button>
-        <button class="button secondary" id="forgetButton" type="button">Forget token</button>
+        <button class="button" id="copyInviteButton" type="button">Copy invite link</button>
+        <a class="button secondary" id="openInviteLink" href="/connect/gmail/" target="_blank" rel="noopener">Preview</a>
       </div>
-      <p class="note">Stored in this browser session only. Do not send this token to clients.</p>
     </div>
-  </section>
-
-  <section class="card" style="margin-top:22px">
-    <div class="eyebrow">Invite link</div>
-    <div class="row" style="margin-top:12px">
-      <input class="input" id="clientName" style="flex:1 1 260px" placeholder="Client/business name, e.g. Acme Roofing" />
-      <input class="input" id="workflowName" style="flex:1 1 260px" placeholder="Workflow, e.g. cold outbound" />
-      <button class="button secondary" id="copyInviteButton" type="button">Copy invite link</button>
-    </div>
-    <p class="note" id="invitePreview">Invite links open the same simple client page, then attach this label to the stored connection.</p>
   </section>
 
   <section class="grid" aria-label="Connection summary">
@@ -57,187 +266,304 @@ main{max-width:1180px;margin:0 auto;padding:42px 22px 70px}.hero{display:grid;gr
   </section>
 
   <div class="toolbar">
-    <div>
+    <div class="left">
       <div class="eyebrow">Gmail</div>
-      <div class="status" id="statusLine" role="status" aria-live="polite">Paste the admin token and load connections.</div>
+      <div class="status" id="statusLine" role="status" aria-live="polite">Loading connections…</div>
     </div>
     <button class="button secondary" id="refreshButton" type="button">Refresh</button>
   </div>
+
   <section class="table" id="connectionsList" aria-live="polite">
-    <div class="empty">No connections loaded yet.</div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
   </section>
 </main>
+
 <script>
-const tokenInput = document.getElementById('adminToken');
-const loadButton = document.getElementById('loadButton');
-const forgetButton = document.getElementById('forgetButton');
-const refreshButton = document.getElementById('refreshButton');
-const statusLine = document.getElementById('statusLine');
-const listEl = document.getElementById('connectionsList');
-const totalCount = document.getElementById('totalCount');
-const readyCount = document.getElementById('readyCount');
-const needsCount = document.getElementById('needsCount');
-const latestDate = document.getElementById('latestDate');
-const clientName = document.getElementById('clientName');
-const workflowName = document.getElementById('workflowName');
-const copyInviteButton = document.getElementById('copyInviteButton');
-const invitePreview = document.getElementById('invitePreview');
-const storageKey = 'clawdified_gmail_admin_token';
-let lastRows = [];
+(() => {
+  // --- Routes (kept visible for tests) ---
+  const ROUTE_SESSION     = '/api/admin/session';
+  const ROUTE_LOGIN       = '/api/admin/login';
+  const ROUTE_LOGOUT      = '/api/admin/logout';
+  const ROUTE_CONNECTIONS = '/api/oauth/google/connections';
 
-function setStatus(text, kind = '') {
-  statusLine.textContent = text;
-  statusLine.className = `status ${kind}`.trim();
-}
+  // --- Elements ---
+  const loginView    = document.getElementById('loginView');
+  const dashboard    = document.getElementById('dashboardView');
+  const loginForm    = document.getElementById('loginForm');
+  const loginEmail   = document.getElementById('loginEmail');
+  const loginPassword= document.getElementById('loginPassword');
+  const loginError   = document.getElementById('loginError');
+  const loginSubmit  = document.getElementById('loginSubmit');
+  const whoLabel     = document.getElementById('whoLabel');
+  const signOutButton= document.getElementById('signOutButton');
 
-function safeText(value, fallback = '—') {
-  const text = String(value || '').trim();
-  return text || fallback;
-}
+  const refreshButton  = document.getElementById('refreshButton');
+  const statusLine     = document.getElementById('statusLine');
+  const listEl         = document.getElementById('connectionsList');
+  const totalCount     = document.getElementById('totalCount');
+  const readyCount     = document.getElementById('readyCount');
+  const needsCount     = document.getElementById('needsCount');
+  const latestDate     = document.getElementById('latestDate');
+  const clientName     = document.getElementById('clientName');
+  const workflowName   = document.getElementById('workflowName');
+  const copyInviteButton = document.getElementById('copyInviteButton');
+  const openInviteLink = document.getElementById('openInviteLink');
+  const invitePreview  = document.getElementById('invitePreview');
 
-function shortDate(value) {
-  if (!value) return '—';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return date.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
-}
+  const jsonHeaders = { Accept: 'application/json' };
+  let lastRows = [];
 
-function authHeaders() {
-  const token = tokenInput.value.trim();
-  if (!token) throw new Error('Paste the admin token first.');
-  sessionStorage.setItem(storageKey, token);
-  return { Authorization: `Bearer ${token}`, Accept: 'application/json' };
-}
+  // --- Utilities ---
+  const safeText = (v, fallback = '—') => {
+    const s = String(v || '').trim();
+    return s || fallback;
+  };
+  const shortDate = (v) => {
+    if (!v) return '—';
+    const d = new Date(v);
+    if (Number.isNaN(d.getTime())) return v;
+    return d.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  };
+  const escapeHtml = (s) =>
+    String(s).replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
+  const copyText = (text) => navigator.clipboard.writeText(text);
 
-async function copyText(text) {
-  await navigator.clipboard.writeText(text);
-}
+  const setStatus = (text, kind = '') => {
+    statusLine.textContent = text;
+    statusLine.className = `status ${kind}`.trim();
+  };
+  const setLoginError = (msg) => { loginError.textContent = msg || ''; };
 
-function updateStats(rows) {
-  const ready = rows.filter((row) => row.ready_for_agent).length;
-  totalCount.textContent = String(rows.length);
-  readyCount.textContent = String(ready);
-  needsCount.textContent = String(rows.length - ready);
-  latestDate.textContent = rows[0]?.created_at ? shortDate(rows[0].created_at) : '—';
-}
-
-function renderRows(rows) {
-  updateStats(rows);
-  if (!rows.length) {
-    listEl.innerHTML = '<div class="empty">No Gmail connections yet. Send a client invite link, then refresh after they connect.</div>';
-    return;
-  }
-  listEl.innerHTML = rows.map((row) => {
-    const credentialStored = row['refresh' + '_token_stored'];
-    return `
-    <article class="connection" data-id="${row.connection_id}">
-      <div>
-        <h2>${safeText(row.client_name, 'Unlabeled client')}</h2>
-        <div class="mono">${safeText(row.connection_id)}</div>
-        <div class="note">${safeText(row.workflow, 'No workflow label')}</div>
-      </div>
-      <div>
-        <div><strong>${safeText(row.connected_email, 'No email found')}</strong></div>
-        <span class="pill ${row.ready_for_agent ? 'ready' : 'warn'}">${row.ready_for_agent ? 'Ready for agent' : 'Needs attention'}</span>
-        <span class="pill">Credential ${credentialStored ? 'stored' : 'missing'}</span>
-        <span class="pill">${row.granted_scopes_count || 0} scopes</span>
-        <div class="note">${shortDate(row.created_at)}</div>
-      </div>
-      <div class="row">
-        <button class="button secondary" data-action="copy-id" type="button">Copy ID</button>
-        <button class="button" data-action="copy-package" type="button">Copy agent package</button>
-      </div>
-    </article>
-  `;
-  }).join('');
-}
-
-async function loadConnections() {
-  loadButton.disabled = true;
-  refreshButton.disabled = true;
-  setStatus('Loading connections…');
-  try {
-    const res = await fetch('/api/oauth/google/connections', { headers: authHeaders() });
-    const data = await res.json();
-    if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
-    lastRows = data.connections || [];
-    renderRows(lastRows);
-    setStatus(`Loaded ${lastRows.length} connection${lastRows.length === 1 ? '' : 's'}.`, 'good');
-  } catch (err) {
-    renderRows([]);
-    setStatus(err.message || 'Could not load connections.', 'bad');
-  } finally {
-    loadButton.disabled = false;
-    refreshButton.disabled = false;
-  }
-}
-
-async function copyAgentPackage(connectionId) {
-  setStatus('Preparing agent package…');
-  const res = await fetch(`/api/oauth/google/connections/${encodeURIComponent(connectionId)}?include=agent_package`, { headers: authHeaders() });
-  const data = await res.json();
-  if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
-  const packageForAgent = data.agent_handoff || data.agent_package;
-  await copyText(JSON.stringify(packageForAgent, null, 2));
-  setStatus('Agent package copied. Paste it only into the approved client agent/runtime.', 'good');
-}
-
-function buildInviteUrl() {
-  const url = new URL('/connect/gmail/', window.location.origin);
-  const client = clientName.value.trim();
-  const workflow = workflowName.value.trim();
-  if (client) url.searchParams.set('client', client);
-  if (workflow) url.searchParams.set('workflow', workflow);
-  return url.toString();
-}
-
-function updateInvitePreview() {
-  invitePreview.textContent = buildInviteUrl();
-}
-
-listEl.addEventListener('click', async (event) => {
-  const button = event.target.closest('button[data-action]');
-  if (!button) return;
-  const row = button.closest('.connection');
-  const connectionId = row?.dataset?.id;
-  if (!connectionId) return;
-  try {
-    if (button.dataset.action === 'copy-id') {
-      await copyText(connectionId);
-      setStatus('Connection ID copied.', 'good');
-    } else if (button.dataset.action === 'copy-package') {
-      await copyAgentPackage(connectionId);
+  // --- View switching ---
+  const showLogin = (email = '') => {
+    dashboard.classList.add('hide');
+    loginView.classList.remove('hide');
+    whoLabel.classList.add('hide');
+    signOutButton.classList.add('hide');
+    if (email) loginEmail.value = email;
+    setTimeout(() => loginEmail.focus(), 30);
+  };
+  const showDashboard = (email) => {
+    loginView.classList.add('hide');
+    dashboard.classList.remove('hide');
+    if (email) {
+      whoLabel.textContent = email;
+      whoLabel.classList.remove('hide');
     }
-  } catch (err) {
-    setStatus(err.message || 'Copy failed.', 'bad');
+    signOutButton.classList.remove('hide');
+  };
+
+  // --- Auth ---
+  async function checkSession() {
+    try {
+      const res = await fetch(ROUTE_SESSION, { headers: jsonHeaders, credentials: 'same-origin' });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data && data.authenticated) {
+        showDashboard(data.email || '');
+        loadConnections();
+        return;
+      }
+    } catch (_) { /* fall through to login */ }
+    showLogin();
   }
-});
 
-copyInviteButton.addEventListener('click', async () => {
-  try {
-    const invite = buildInviteUrl();
-    await copyText(invite);
-    setStatus('Invite link copied.', 'good');
-  } catch (err) {
-    setStatus(err.message || 'Could not copy invite link.', 'bad');
+  async function submitLogin(event) {
+    event.preventDefault();
+    setLoginError('');
+    const email = loginEmail.value.trim();
+    const password = loginPassword.value;
+    if (!email || !password) {
+      setLoginError('Email and password are required.');
+      return;
+    }
+    loginSubmit.disabled = true;
+    const originalLabel = loginSubmit.textContent;
+    loginSubmit.textContent = 'Signing in…';
+    try {
+      const res = await fetch(ROUTE_LOGIN, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { ...jsonHeaders, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data || !data.authenticated) {
+        setLoginError(data && data.error ? data.error : 'Incorrect email or password.');
+        return;
+      }
+      loginPassword.value = '';
+      showDashboard(data.email || email);
+      setStatus('Loading connections…', 'working');
+      loadConnections();
+    } catch (err) {
+      setLoginError(err && err.message ? err.message : 'Could not sign in.');
+    } finally {
+      loginSubmit.disabled = false;
+      loginSubmit.textContent = originalLabel;
+    }
   }
-});
 
-clientName.addEventListener('input', updateInvitePreview);
-workflowName.addEventListener('input', updateInvitePreview);
-loadButton.addEventListener('click', loadConnections);
-refreshButton.addEventListener('click', loadConnections);
-forgetButton.addEventListener('click', () => {
-  sessionStorage.removeItem(storageKey);
-  tokenInput.value = '';
-  lastRows = [];
-  renderRows(lastRows);
-  setStatus('Admin token forgotten for this browser session.');
-});
+  async function signOut() {
+    signOutButton.disabled = true;
+    try {
+      await fetch(ROUTE_LOGOUT, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: jsonHeaders,
+      });
+    } catch (_) { /* clear UI either way */ }
+    lastRows = [];
+    renderRows(lastRows, { initial: true });
+    showLogin();
+    signOutButton.disabled = false;
+  }
 
-const saved = sessionStorage.getItem(storageKey);
-if (saved) tokenInput.value = saved;
-updateInvitePreview();
+  // --- Connections ---
+  function updateStats(rows) {
+    const ready = rows.filter((r) => r.ready_for_agent).length;
+    totalCount.textContent = String(rows.length);
+    readyCount.textContent = String(ready);
+    needsCount.textContent = String(rows.length - ready);
+    latestDate.textContent = rows[0]?.created_at ? shortDate(rows[0].created_at) : '—';
+  }
+
+  function renderRows(rows, opts = {}) {
+    updateStats(rows);
+    if (opts.initial && !rows.length) {
+      listEl.innerHTML = '<div class="empty"><strong>No connections yet</strong>Send a client invite link from the card above. Connections show up here as soon as a client finishes the Gmail flow.</div>';
+      return;
+    }
+    if (!rows.length) {
+      listEl.innerHTML = '<div class="empty"><strong>Still no connections</strong>Share the invite link with your client, then refresh.</div>';
+      return;
+    }
+    listEl.innerHTML = rows.map((row) => {
+      const credentialStored = row['refresh' + '_token_stored'];
+      const ready = !!row.ready_for_agent;
+      const scopes = Number(row.granted_scopes_count) || 0;
+      return `
+      <article class="connection" data-id="${escapeHtml(row.connection_id || '')}">
+        <div class="who">
+          <h2>${escapeHtml(safeText(row.client_name, 'Unlabeled client'))}</h2>
+          <div class="workflow">${escapeHtml(safeText(row.workflow, 'No workflow label'))}</div>
+          <div class="id">${escapeHtml(safeText(row.connection_id))}</div>
+        </div>
+        <div class="meta">
+          <div class="email">${escapeHtml(safeText(row.connected_email, 'No email found'))}</div>
+          <div class="pills">
+            <span class="pill ${ready ? 'ready' : 'warn'}">${ready ? 'Ready for agent' : 'Needs attention'}</span>
+            <span class="pill ${credentialStored ? '' : 'warn'}">Credential ${credentialStored ? 'stored' : 'missing'}</span>
+            <span class="pill muted">${scopes} scope${scopes === 1 ? '' : 's'}</span>
+          </div>
+          <div class="when">Connected ${escapeHtml(shortDate(row.created_at))}</div>
+        </div>
+        <div class="actions">
+          <button class="button secondary" data-action="copy-id" type="button">Copy ID</button>
+          <button class="button" data-action="copy-package" type="button">Copy agent package</button>
+        </div>
+      </article>
+    `;
+    }).join('');
+  }
+
+  async function loadConnections() {
+    refreshButton.disabled = true;
+    setStatus('Loading connections…', 'working');
+    try {
+      const res = await fetch(ROUTE_CONNECTIONS, { headers: jsonHeaders, credentials: 'same-origin' });
+      if (res.status === 401 || res.status === 403) {
+        showLogin();
+        setLoginError('Session expired. Sign in again.');
+        return;
+      }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      lastRows = data.connections || [];
+      renderRows(lastRows, { initial: true });
+      setStatus(`Loaded ${lastRows.length} connection${lastRows.length === 1 ? '' : 's'}.`, 'good');
+    } catch (err) {
+      renderRows([], { initial: true });
+      setStatus(err.message || 'Could not load connections.', 'bad');
+    } finally {
+      refreshButton.disabled = false;
+    }
+  }
+
+  async function copyAgentPackage(connectionId) {
+    setStatus('Preparing agent package…', 'working');
+    const url = `${ROUTE_CONNECTIONS}/${encodeURIComponent(connectionId)}?include=agent_package`;
+    const res = await fetch(url, { headers: jsonHeaders, credentials: 'same-origin' });
+    if (res.status === 401 || res.status === 403) {
+      showLogin();
+      setLoginError('Session expired. Sign in again.');
+      throw new Error('Not signed in.');
+    }
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    const packageForAgent = data.agent_handoff || data.agent_package;
+    await copyText(JSON.stringify(packageForAgent, null, 2));
+    setStatus('Agent package copied. Paste it only into the approved client agent runtime.', 'good');
+  }
+
+  // --- Invite link ---
+  function buildInviteUrl() {
+    const url = new URL('/connect/gmail/', window.location.origin);
+    const client = clientName.value.trim();
+    const workflow = workflowName.value.trim();
+    if (client) url.searchParams.set('client', client);
+    if (workflow) url.searchParams.set('workflow', workflow);
+    return url.toString();
+  }
+  function updateInvitePreview() {
+    const built = buildInviteUrl();
+    invitePreview.textContent = built;
+    openInviteLink.setAttribute('href', built);
+  }
+
+  // --- Events ---
+  loginForm.addEventListener('submit', submitLogin);
+  signOutButton.addEventListener('click', signOut);
+
+  listEl.addEventListener('click', async (event) => {
+    const button = event.target.closest('button[data-action]');
+    if (!button) return;
+    const row = button.closest('.connection');
+    const connectionId = row?.dataset?.id;
+    if (!connectionId) return;
+    button.disabled = true;
+    try {
+      if (button.dataset.action === 'copy-id') {
+        await copyText(connectionId);
+        setStatus('Connection ID copied.', 'good');
+      } else if (button.dataset.action === 'copy-package') {
+        await copyAgentPackage(connectionId);
+      }
+    } catch (err) {
+      setStatus(err.message || 'Copy failed.', 'bad');
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  copyInviteButton.addEventListener('click', async () => {
+    try {
+      await copyText(buildInviteUrl());
+      setStatus('Invite link copied.', 'good');
+    } catch (err) {
+      setStatus(err.message || 'Could not copy invite link.', 'bad');
+    }
+  });
+
+  clientName.addEventListener('input', updateInvitePreview);
+  workflowName.addEventListener('input', updateInvitePreview);
+  refreshButton.addEventListener('click', loadConnections);
+
+  // --- Boot ---
+  updateInvitePreview();
+  checkSession();
+})();
 </script>
 </body>
 </html>

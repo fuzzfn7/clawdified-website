@@ -15,7 +15,8 @@ The Meta/Facebook + Instagram social connector has been added under:
 The Gmail outbound/inbox connector has been added under:
 
 - Public client page: `/connect/gmail/` — intentionally minimal: brand, one-sentence description, one `Connect Gmail` button, and tiny legal links. No public token/package explanation, workflow form, route list, or Google API jargon.
-- Private admin dashboard: `/admin/connections/` — paste the admin bearer token locally, view safe connection summaries, generate client invite links, and copy an agent-ready Gmail handoff package intentionally.
+- Private admin dashboard: `/admin/connections/` — simple email/password sign-in backed by an HttpOnly admin session cookie, safe connection summaries, client invite links, and intentional copy actions for agent-ready Gmail handoff packages.
+- Admin login/session routes: `/api/admin/login`, `/api/admin/session`, `/api/admin/logout`
 - OAuth start route: `/api/oauth/google/start`
 - OAuth callback route: `/api/oauth/google/callback`
 - Protected admin list route: `/api/oauth/google/connections`
@@ -51,7 +52,7 @@ After authorization, the callback exchanges the Meta OAuth code, discovers Faceb
 - Graph endpoint map for Page, conversations, messages, feed, media, and subscribed apps
 - Business IDs/verification status when Meta grants business access
 
-Public Meta success pages show a connection ID and redacted metadata. Gmail client success pages deliberately show only a simple thank-you/connected message; Wesley retrieves Gmail connection summaries and agent handoff packages from `/admin/connections/`. Full tokens are returned only from protected admin endpoints using `SOCIAL_CONNECTOR_ADMIN_TOKEN` or `GMAIL_CONNECTOR_ADMIN_TOKEN`.
+Public Meta success pages show a connection ID and redacted metadata. Gmail client success pages deliberately show only a simple thank-you/connected message; Wesley retrieves Gmail connection summaries and agent handoff packages from `/admin/connections/`. Full tokens are returned only from protected admin endpoints using a signed admin session cookie or the fallback `SOCIAL_CONNECTOR_ADMIN_TOKEN` / `GMAIL_CONNECTOR_ADMIN_TOKEN` bearer token.
 
 Gmail agent handoff packages are intentionally self-describing for non-technical operation. Wesley can copy the package from the dashboard and paste it into the approved client agent/runtime. The agent should use the included connection ID, connected email, Gmail endpoints, granted scopes, OAuth refresh credential, and the server-side Clawdified `GOOGLE_CLIENT_SECRET` to mint fresh Gmail access tokens; Wesley should not manually handle Google token exchange details.
 
@@ -75,7 +76,10 @@ Gmail connector:
 - `GOOGLE_REDIRECT_URI` — optional override. Use `https://clawdified.com/api/oauth/google/callback` for the current Pages deployment.
 - `GMAIL_CONNECTOR_STATE_SECRET` — optional Gmail-specific state HMAC secret; falls back to `SOCIAL_CONNECTOR_STATE_SECRET`.
 - `GMAIL_CONNECTOR_ENCRYPTION_KEY` — optional Gmail-specific encryption key; falls back to `SOCIAL_CONNECTOR_ENCRYPTION_KEY`.
-- `GMAIL_CONNECTOR_ADMIN_TOKEN` — optional Gmail-specific admin token; falls back to `SOCIAL_CONNECTOR_ADMIN_TOKEN`.
+- `GMAIL_CONNECTOR_ADMIN_TOKEN` — optional Gmail-specific admin bearer token; falls back to `SOCIAL_CONNECTOR_ADMIN_TOKEN`. Also acts as the dashboard password fallback when no explicit admin password secret is set.
+- `CLAWDIFIED_ADMIN_EMAIL` — optional dashboard login email. If absent, any valid email label is accepted and the password secret controls access.
+- `CLAWDIFIED_ADMIN_PASSWORD` — optional dashboard login password. If absent, the dashboard uses the configured Gmail/social admin bearer token as the password fallback.
+- `CLAWDIFIED_ADMIN_SESSION_SECRET` — optional signing secret for the HttpOnly dashboard session cookie; falls back to the connector state/encryption/admin secret chain.
 - `SOCIAL_CONNECTOR_KV` — reused Cloudflare KV binding for encrypted connection records.
 
 Optional:
@@ -97,7 +101,7 @@ Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
 - Live Meta health endpoint now returns `ok: true`; `META_APP_SECRET` is present in Cloudflare production and visible to Pages Functions after redeploy.
 - Live Gmail connector page: `https://clawdified.com/connect/gmail/`
 - Live private Gmail admin dashboard page: `https://clawdified.com/admin/connections/`
-- Live Gmail admin list endpoint requires the admin bearer token; unauthenticated requests return `401`.
+- Live Gmail admin dashboard now uses `/api/admin/login` + an HttpOnly session cookie. The protected list/package endpoints still reject unauthenticated requests with `401` and also preserve bearer-token compatibility for server-side/agent retrieval.
 - Google OAuth client redirect URIs include `https://clawdified.com/api/oauth/google/callback` and the earlier `https://app.clawdified.com/api/oauth/google/callback`.
 - Live Gmail health endpoint returns `ok: true`; `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, shared state/encryption/admin secrets, and `SOCIAL_CONNECTOR_KV` are visible to Pages Functions.
 - Live `/api/oauth/google/start` returns a Google OAuth 302 using the `clawdified.com` callback and the requested `openid`, `email`, `profile`, `gmail.send`, and `gmail.modify` scopes.
@@ -123,6 +127,10 @@ node --check functions/api/social/meta/start.js
 node --check functions/api/social/meta/callback.js
 node --check functions/api/social/meta/health.js
 node --check 'functions/api/social/meta/connections/[id].js'
+node --check functions/api/admin/login.js
+node --check functions/api/admin/session.js
+node --check functions/api/admin/logout.js
+node --check functions/api/admin/_auth.mjs
 node --check functions/api/oauth/google/_shared.mjs
 node --check functions/api/oauth/google/start.js
 node --check functions/api/oauth/google/callback.js
