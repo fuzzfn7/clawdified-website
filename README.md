@@ -2,6 +2,13 @@
 
 Canonical local source for `clawdified.com` Cloudflare Pages static site and Pages Functions.
 
+## Current live agent showroom status
+
+- `/agents/` is the public agent systems showroom.
+- Lead Growth embeds the actual public-safe Lead Growth UI at `/agents/lead-growth/`.
+- SEO & Competitor Intelligence embeds the fresh-input, client-facing preview UI at `/agents/seo-competitor/`. It must open blank for each visitor, collect website/service area/search terms, then populate site read, search coverage, competitors, first fixes, and evidence-style rows. Do not revert it to a preloaded named-client dashboard.
+- Workflow & Proposal Automation is still a preview flow, not a full embedded real UI.
+
 ## Current connector status
 
 The Meta/Facebook + Instagram social connector has been added under:
@@ -13,12 +20,31 @@ The Meta/Facebook + Instagram social connector has been added under:
 - Protected admin package route: `/api/social/meta/connections/{connection_id}?include=agent_package`
 - Health/readiness route: `/api/social/meta/health`
 
+The Slack workspace connector has been added under:
+
+- Public client page: `/connect/slack/` — intentionally minimal: brand, one-sentence description, one `Connect Slack` button, and tiny legal links. No public token/package explanation or Slack API jargon.
+- OAuth start route: `/api/slack/start`
+- OAuth callback route: `/api/slack/callback`
+- Protected admin list route: `/api/slack/connections`
+- Protected admin package route: `/api/slack/connections/{connection_id}?include=agent_package`
+- Health/readiness route: `/api/slack/health`
+
+The HubSpot CRM connector has been added under:
+
+- Public client page: `/connect/hubspot/` — intentionally minimal: brand, one-sentence description, one `Connect HubSpot` button, and tiny legal links. No public token/package explanation or CRM API jargon.
+- OAuth start route: `/api/hubspot/start`
+- OAuth callback route: `/api/hubspot/callback`
+- Protected admin list route: `/api/hubspot/connections`
+- Protected admin package route: `/api/hubspot/connections/{connection_id}?include=agent_package`
+- Health/readiness route: `/api/hubspot/health`
+
 The Gmail outbound/inbox connector has been added under:
 
 - Public client page: `/connect/gmail/` — intentionally minimal: brand, one-sentence description, one `Connect Gmail` button, and tiny legal links. No public token/package explanation, workflow form, route list, or Google API jargon.
-- Private admin dashboard: `/admin/connections/` — simple email/password sign-in backed by an HttpOnly admin session cookie. This is the shared private API/OAuth console for Gmail, Facebook/Instagram, future API/OAuth connector summaries, client-specific invite pages, and intentional copy actions for agent-ready handoff packages.
+- Private admin dashboard: `/admin/connections/` — simple email/password sign-in backed by an HttpOnly admin session cookie. This is the shared private API/OAuth console for Gmail, Facebook/Instagram, Slack, HubSpot, future API/OAuth connector summaries, client-specific invite pages, and intentional copy actions for agent-ready handoff packages.
 - Admin login/session routes: `/api/admin/login`, `/api/admin/session`, `/api/admin/logout`
 - Client invite create/list route: `/api/admin/client-invites` — protected route the admin dashboard uses after a discovery call to create a client-specific connector page with the required software tools.
+- Connector request route: `/api/admin/connector-requests` — protected route the admin dashboard uses when a client needs an unsupported software/API connector. It stores the request in KV and can notify `CONNECTOR_BUILDER_WEBHOOK_URL` when configured; it does not expose secrets or blindly deploy code.
 - Public client invite data route: `/api/client-invites/{invite_id}` — safe, no-secret route used by `/connect/client/?invite={invite_id}` to render only the required connector buttons for that client.
 - Public client connector page: `/connect/client/?invite={invite_id}` — branded page sent to the client after Wesley chooses the required connector services in admin.
 - Unified registry/list route: `/api/admin/connections` — one protected endpoint that returns connector metadata plus safe rows across every registered service.
@@ -48,7 +74,7 @@ Google OAuth app:
 
 A client should not share passwords, API keys, or add Wesley as a Facebook/Instagram admin. After discovery, Wesley creates a client invite in `/admin/connections/`, selects the software connectors that workflow needs, and sends the generated `/connect/client/?invite={invite_id}` link. The client sees only those required tools, then each tool sends them through its official OAuth/provider authorization screen.
 
-The client invite page is a routing layer, not a magic universal login. Each supported app still needs a connector adapter in the registry; unknown/random APIs should become an API-key/private-app/custom endpoint connector before they appear on the invite page.
+The client invite page is a routing layer, not a magic universal login. Each supported app still needs a connector adapter in the registry. When a client needs an unsupported/random API, Wesley can submit a connector request from `/admin/connections/`; that stores the app/auth/API needs for the connector-builder workflow and optional Hermes webhook, then the connector still gets built/tested/deployed as code before it appears on invites.
 
 After authorization, the callback exchanges the provider OAuth code, preserves the invite ID in OAuth state, discovers the account/assets, and stores an agent-ready package server-side. That package includes:
 
@@ -66,6 +92,10 @@ Public Meta success pages show a connection ID and redacted metadata. Gmail clie
 Gmail agent handoff packages are intentionally self-describing for non-technical operation. Wesley can copy the package from the dashboard and paste it into the approved client agent/runtime. The agent should use the included connection ID, connected email, Gmail endpoints, granted scopes, OAuth refresh credential, and the server-side Clawdified `GOOGLE_CLIENT_SECRET` to mint fresh Gmail access tokens; Wesley should not manually handle Google token exchange details.
 
 Meta social handoff packages follow the same private-operator pattern. Once the Facebook app is published/approved and a client authorizes Facebook + Instagram, `/admin/connections/` lists the connection, safe Page/Instagram/business summaries, and a copy-ready package containing Graph endpoints, granted scopes, user/page credentials, and the server-side `META_APP_SECRET` source note.
+
+Slack handoff packages follow the same pattern for workspace alerts/approvals. Once a Slack app is configured and the client authorizes it, `/admin/connections/` lists the workspace/team summary and copy-ready package containing the bot token, scopes, team metadata, and Slack endpoint map.
+
+HubSpot handoff packages follow the same pattern for CRM workflows. Once a HubSpot app is configured and the client authorizes it, `/admin/connections/` lists the portal summary and copy-ready package containing refresh/access credentials, granted CRM scopes, portal metadata, and HubSpot endpoint map.
 
 ## Required Cloudflare Pages configuration
 
@@ -93,6 +123,24 @@ Gmail connector:
 - `CLAWDIFIED_ADMIN_SESSION_SECRET` — optional signing secret for the HttpOnly dashboard session cookie; falls back to the connector state/encryption/admin secret chain.
 - `SOCIAL_CONNECTOR_KV` — reused Cloudflare KV binding for encrypted connection records.
 
+Slack connector:
+
+- `SLACK_CLIENT_ID` — Slack app OAuth client ID.
+- `SLACK_CLIENT_SECRET` — Slack app OAuth client secret. Secret; do not commit or show in UI.
+- `SLACK_REDIRECT_URI` — optional override. Use `https://clawdified.com/api/slack/callback` for the current Pages deployment.
+- `SLACK_SCOPES` / `SLACK_BOT_SCOPES` — optional comma/space-separated bot scopes. Defaults to `chat:write`, `channels:read`, `groups:read`, `users:read`.
+- `SLACK_CONNECTOR_STATE_SECRET`, `SLACK_CONNECTOR_ENCRYPTION_KEY`, `SLACK_CONNECTOR_ADMIN_TOKEN` — optional Slack-specific overrides; otherwise shared social connector state/encryption/admin secrets are used.
+- `SOCIAL_CONNECTOR_KV` — reused Cloudflare KV binding for encrypted connection records.
+
+HubSpot connector:
+
+- `HUBSPOT_CLIENT_ID` — HubSpot app OAuth client ID.
+- `HUBSPOT_CLIENT_SECRET` — HubSpot app OAuth client secret. Secret; do not commit or show in UI.
+- `HUBSPOT_REDIRECT_URI` — optional override. Use `https://clawdified.com/api/hubspot/callback` for the current Pages deployment.
+- `HUBSPOT_SCOPES` — optional comma/space-separated scopes. Defaults to `crm.objects.contacts.read`, `crm.objects.contacts.write`, `crm.objects.companies.read`.
+- `HUBSPOT_CONNECTOR_STATE_SECRET`, `HUBSPOT_CONNECTOR_ENCRYPTION_KEY`, `HUBSPOT_CONNECTOR_ADMIN_TOKEN` — optional HubSpot-specific overrides; otherwise shared social connector state/encryption/admin secrets are used.
+- `SOCIAL_CONNECTOR_KV` — reused Cloudflare KV binding for encrypted connection records.
+
 Optional:
 
 - `META_GRAPH_VERSION` — defaults to `v23.0`.
@@ -100,6 +148,8 @@ Optional:
 - `META_LOGIN_CONFIG_ID` — optional Facebook Login for Business configuration ID. Use this when Meta requires a business-login configuration for Page/Instagram permissions instead of explicit scope query params.
 - `META_REDIRECT_URI` — override callback URL if Meta uses a non-default route.
 - `SOCIAL_CONNECTOR_BASE_URL` — override public origin if needed.
+- `CONNECTOR_BUILDER_WEBHOOK_URL` — optional Hermes/webhook endpoint to notify when the admin dashboard stores a new unsupported connector request.
+- `CONNECTOR_BUILDER_WEBHOOK_TOKEN` — optional bearer token sent only server-to-server to the connector-builder webhook; never shown in dashboard responses.
 
 ## Current production verification — 2026-05-21
 
@@ -129,16 +179,20 @@ Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
 - Do not expose tokens in client-visible pages or browser console logs.
 - Do not send clients through `/connect/social/` unless `/api/social/meta/health` returns `ok: true`.
 - Do not send clients through `/connect/gmail/` unless `/api/oauth/google/health` returns `ok: true`.
+- Do not send clients through `/connect/slack/` unless `/api/slack/health` returns `ok: true`.
+- Do not send clients through `/connect/hubspot/` unless `/api/hubspot/health` returns `ok: true`.
+- A connector request saved from the dashboard is a build request, not a guarantee that the app is available to clients; the connector still needs tests, code review, provider credentials, and deployment.
 - Gmail `gmail.modify` is a restricted Google scope. Google may require app verification and a security assessment before broad third-party production use.
 - Publishing the Cloudflare code is separate from Meta app live mode / App Review and Google OAuth app verification. Both platforms may still require business verification, permission/scope review, screencasts, and valid use-case documentation before third-party production use.
 
 ## Verification commands
 
 ```bash
-node --test test/social-meta-connector.test.mjs test/gmail-google-connector.test.mjs test/admin-connections-registry.test.mjs test/client-invite-workflow.test.mjs
+node --test test/*.mjs
 node --check functions/api/admin/client-invites/index.js
 node --check functions/api/admin/client-invites/_shared.mjs
 node --check 'functions/api/client-invites/[id].js'
+node --check functions/api/admin/connector-requests/index.js
 node --check functions/api/admin/connections/index.js
 node --check 'functions/api/admin/connections/[service]/[id].js'
 node --check functions/api/admin/connections/_registry.mjs
@@ -147,6 +201,18 @@ node --check functions/api/social/meta/callback.js
 node --check functions/api/social/meta/health.js
 node --check functions/api/social/meta/connections/index.js
 node --check 'functions/api/social/meta/connections/[id].js'
+node --check functions/api/slack/_shared.mjs
+node --check functions/api/slack/start.js
+node --check functions/api/slack/callback.js
+node --check functions/api/slack/health.js
+node --check functions/api/slack/connections/index.js
+node --check 'functions/api/slack/connections/[id].js'
+node --check functions/api/hubspot/_shared.mjs
+node --check functions/api/hubspot/start.js
+node --check functions/api/hubspot/callback.js
+node --check functions/api/hubspot/health.js
+node --check functions/api/hubspot/connections/index.js
+node --check 'functions/api/hubspot/connections/[id].js'
 node --check functions/api/admin/login.js
 node --check functions/api/admin/session.js
 node --check functions/api/admin/logout.js

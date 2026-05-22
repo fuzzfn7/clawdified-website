@@ -17,6 +17,20 @@ import {
   readConnection as readMetaConnection,
   readiness as metaReadiness,
 } from '../../social/meta/_shared.mjs';
+import {
+  adminTokenFromEnv as slackAdminTokenFromEnv,
+  buildAgentHandoff as buildSlackAgentHandoff,
+  listConnections as listSlackConnections,
+  readConnection as readSlackConnection,
+  readiness as slackReadiness,
+} from '../../slack/_shared.mjs';
+import {
+  adminTokenFromEnv as hubSpotAdminTokenFromEnv,
+  buildAgentHandoff as buildHubSpotAgentHandoff,
+  listConnections as listHubSpotConnections,
+  readConnection as readHubSpotConnection,
+  readiness as hubSpotReadiness,
+} from '../../hubspot/_shared.mjs';
 
 export { clean, json };
 
@@ -42,6 +56,8 @@ function adminTokensFromEnv(env = {}) {
     env.ADMIN_TOKEN,
     gmailAdminTokenFromEnv(env),
     metaAdminTokenFromEnv(env),
+    slackAdminTokenFromEnv(env),
+    hubSpotAdminTokenFromEnv(env),
   ]);
 }
 
@@ -87,6 +103,36 @@ const CONNECTORS = [
     readConnection: readMetaConnection,
     readiness: metaReadiness,
     buildAgentHandoff: buildMetaAgentHandoff,
+  },
+  {
+    service: 'slack',
+    label: 'Slack',
+    kind: 'oauth',
+    provider: 'slack',
+    connectorPath: '/connect/slack/',
+    healthPath: '/api/slack/health',
+    legacyListPath: '/api/slack/connections',
+    legacyDetailPathTemplate: '/api/slack/connections/{connection_id}?include=agent_package',
+    packageLabel: 'Slack agent package',
+    listConnections: listSlackConnections,
+    readConnection: readSlackConnection,
+    readiness: slackReadiness,
+    buildAgentHandoff: buildSlackAgentHandoff,
+  },
+  {
+    service: 'hubspot',
+    label: 'HubSpot',
+    kind: 'oauth',
+    provider: 'hubspot',
+    connectorPath: '/connect/hubspot/',
+    healthPath: '/api/hubspot/health',
+    legacyListPath: '/api/hubspot/connections',
+    legacyDetailPathTemplate: '/api/hubspot/connections/{connection_id}?include=agent_package',
+    packageLabel: 'HubSpot agent package',
+    listConnections: listHubSpotConnections,
+    readConnection: readHubSpotConnection,
+    readiness: hubSpotReadiness,
+    buildAgentHandoff: buildHubSpotAgentHandoff,
   },
 ];
 

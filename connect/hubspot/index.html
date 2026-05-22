@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Connect HubSpot | Clawdified</title>
+<meta name="description" content="Securely authorize the HubSpot portal Clawdified will use for CRM contacts, companies, and workflow sync." />
+<link rel="canonical" href="https://clawdified.com/connect/hubspot/" />
+<style>
+:root{color-scheme:dark;--bg:#0f0e0a;--ink:#f8edda;--muted:rgba(248,237,218,.66);--faint:rgba(248,237,218,.42);--gold:#f1b45b;--orange:#d48553;--red:#ff8d7d;--sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--serif:Georgia,serif}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:radial-gradient(circle at 50% -10%,rgba(241,180,91,.16),transparent 36rem),var(--bg);color:var(--ink);font-family:var(--sans);display:flex;flex-direction:column;min-height:100vh}a{color:inherit}.top{display:flex;justify-content:space-between;align-items:center;padding:22px 26px}.brand{font-weight:900;letter-spacing:.04em;text-decoration:none;font-size:14px}.back{color:var(--muted);text-decoration:none;font-size:13px}.back:hover{color:var(--ink)}main{flex:1;display:flex;align-items:center;justify-content:center;padding:32px 22px}.card{width:100%;max-width:460px;text-align:center}h1{font-family:var(--serif);font-weight:500;font-size:clamp(34px,6vw,46px);line-height:1.04;letter-spacing:-.03em;margin:0 0 18px}.lead{font-size:16px;color:var(--muted);line-height:1.55;margin:0 0 28px}.button{display:inline-flex;align-items:center;justify-content:center;border:0;cursor:pointer;border-radius:999px;padding:14px 24px;font:inherit;font-weight:800;font-size:15px;background:linear-gradient(135deg,var(--gold),var(--orange));color:#190f07;box-shadow:0 14px 36px rgba(212,133,83,.22);transition:transform .15s ease, box-shadow .15s ease}.button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 18px 42px rgba(212,133,83,.3)}.button:disabled{cursor:not-allowed;opacity:.5;box-shadow:none}.status{margin-top:14px;font-size:12px;color:var(--faint);letter-spacing:.02em;min-height:1.2em}.status.bad{color:var(--red)}footer{padding:24px 22px 28px;text-align:center;font-size:12px;color:var(--faint)}footer a{color:var(--muted);text-decoration:none;margin:0 8px}footer a:hover{color:var(--ink)}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="Page navigation">
+  <a class="brand" href="/">CLAWDIFIED</a>
+  <a class="back" href="/">Back</a>
+</nav>
+<main>
+  <div class="card">
+    <h1>Connect HubSpot</h1>
+    <p class="lead">Securely authorize the HubSpot portal Clawdified will use for CRM contacts, companies, and workflow sync — no password sharing.</p>
+    <button class="button" id="connectButton" type="button" disabled>Connect HubSpot</button>
+    <div class="status" id="statusLine" role="status" aria-live="polite">Checking connector…</div>
+  </div>
+</main>
+<footer><a href="/privacy">Privacy</a>·<a href="/terms">Terms</a>·<a href="/data-deletion">Data Deletion</a></footer>
+<script>
+const button = document.getElementById('connectButton');
+const statusLine = document.getElementById('statusLine');
+function setStatus(ok, text) {
+  button.disabled = !ok;
+  statusLine.textContent = text;
+  statusLine.classList.toggle('bad', !ok);
+}
+async function checkHealth() {
+  try {
+    const res = await fetch('/api/hubspot/health', { headers: { Accept: 'application/json' } });
+    const data = await res.json();
+    setStatus(!!data.ok, data.ok ? '' : 'Connector unavailable');
+  } catch (err) {
+    setStatus(false, 'Connector unavailable');
+  }
+}
+button.addEventListener('click', () => {
+  if (button.disabled) return;
+  const current = new URLSearchParams(window.location.search);
+  const params = new URLSearchParams();
+  params.set('return_to', current.get('return_to') || '/connect/hubspot/');
+  ['client', 'business', 'workflow', 'notes', 'invite'].forEach((key) => {
+    const value = current.get(key);
+    if (value) params.set(key, value);
+  });
+  window.location.href = `/api/hubspot/start?${params.toString()}`;
+});
+checkHealth();
+</script>
+</body>
+</html>

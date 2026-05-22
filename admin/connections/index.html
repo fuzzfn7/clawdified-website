@@ -121,6 +121,8 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
 .service-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:12px}
 .service-chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold)}
 .service-chip.meta::before{background:#8ab4ff}
+.service-chip.slack::before{background:#56d364}
+.service-chip.hubspot::before{background:#ff7a59}
 .service-select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 52%,calc(100% - 12px) 52%;background-size:6px 6px;background-repeat:no-repeat}
 .connector-checklist{display:grid;gap:8px}
 .connector-option{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:rgba(8,7,5,.46);border-radius:14px;padding:11px 12px;color:var(--muted);cursor:pointer}
@@ -129,6 +131,13 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
 .connector-option b{display:block;color:var(--ink);font-size:13px}
 .connector-option span{display:block;color:var(--faint);font-size:12px;text-transform:none;letter-spacing:0}
 .service-error{border:1px solid rgba(255,141,125,.24);border-radius:16px;padding:12px 14px;background:rgba(255,141,125,.045);color:var(--red);font-size:13px;margin-bottom:12px}
+.request-card{margin:20px 0 2px;display:grid;gap:14px}
+.request-form{display:grid;gap:12px;margin-top:4px}
+.request-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+textarea.input{min-height:110px;resize:vertical}
+.request-status{font-size:13px;color:var(--faint);min-height:1.4em}
+.request-status.good{color:var(--green)}
+.request-status.bad{color:var(--red)}
 
 /* === Stats === */
 .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:26px 0 8px}
@@ -196,6 +205,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
 @media(max-width:920px){
   .hero{grid-template-columns:1fr}
   .grid{grid-template-columns:repeat(2,1fr)}
+  .request-grid{grid-template-columns:1fr}
   .connection{grid-template-columns:1fr;gap:14px}
   .connection .actions{justify-content:flex-start}
 }
@@ -214,6 +224,8 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   <div class="top-right" id="topRight">
     <a class="back" href="/connect/gmail/">Gmail page</a>
     <a class="back" href="/connect/social/">Facebook + Instagram page</a>
+    <a class="back" href="/connect/slack/">Slack page</a>
+    <a class="back" href="/connect/hubspot/">HubSpot page</a>
     <span class="who hide" id="whoLabel"></span>
     <button class="button ghost hide" id="signOutButton" type="button">Sign out</button>
   </div>
@@ -249,11 +261,13 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
     <div class="card">
       <div class="eyebrow">Private admin</div>
       <h1>Client API connections</h1>
-      <p class="lead">One private place for client OAuth/API access — Gmail and Facebook + Instagram now, with the same registry ready for the next OAuth or API connector.</p>
+      <p class="lead">One private place for client OAuth/API access — Gmail, Facebook + Instagram, Slack, and HubSpot now, with a connector request agent for the next API your client needs.</p>
       <p class="note" style="margin-top:14px">Rows show safe summaries only. Sensitive agent packages are copied intentionally from a button and should go only to the approved client agent runtime.</p>
       <div class="service-strip" id="serviceStrip" aria-label="Connected service types">
         <span class="service-chip">Gmail</span>
         <span class="service-chip meta">Facebook + Instagram</span>
+        <span class="service-chip slack">Slack</span>
+        <span class="service-chip hubspot">HubSpot</span>
       </div>
     </div>
     <div class="card invite-card">
@@ -264,6 +278,8 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
         <div class="connector-checklist" id="connectorChecklist" aria-label="Software connectors">
           <label class="connector-option"><span><b>Gmail</b><span>Email send/reply access</span></span><input type="checkbox" name="connectors" value="gmail" checked /></label>
           <label class="connector-option"><span><b>Facebook + Instagram</b><span>Meta Page/social access</span></span><input type="checkbox" name="connectors" value="meta" /></label>
+          <label class="connector-option"><span><b>Slack</b><span>Workspace alerts and approvals</span></span><input type="checkbox" name="connectors" value="slack" /></label>
+          <label class="connector-option"><span><b>HubSpot</b><span>CRM contacts and companies</span></span><input type="checkbox" name="connectors" value="hubspot" /></label>
         </div>
       </div>
       <label class="field">
@@ -280,6 +296,56 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
         <a class="button secondary" id="openInviteLink" href="/connect/gmail/" target="_blank" rel="noopener">Preview</a>
       </div>
     </div>
+  </section>
+
+  <section class="card request-card" aria-labelledby="connectorRequestHeading">
+    <div>
+      <div class="eyebrow">Connector request agent</div>
+      <h2 id="connectorRequestHeading" style="margin-top:6px">Need another app?</h2>
+      <p class="note">After a client call, drop the software/auth/API notes here. The request is stored for the connector-builder workflow and can notify a Hermes webhook when configured.</p>
+    </div>
+    <form class="request-form" id="connectorRequestForm" autocomplete="off">
+      <div class="request-grid">
+        <label class="field">
+          <span>Client / business</span>
+          <input class="input" id="requestClientName" placeholder="Acme Roofing" />
+        </label>
+        <label class="field">
+          <span>Software / API</span>
+          <input class="input" id="requestSoftwareName" placeholder="CompanyCam" required />
+        </label>
+        <label class="field">
+          <span>Auth type</span>
+          <select class="input service-select" id="requestAuthType">
+            <option value="oauth">OAuth</option>
+            <option value="api_key">API key</option>
+            <option value="private_app">Private app token</option>
+            <option value="webhook">Webhook</option>
+            <option value="unknown">Need to confirm</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>API base URL</span>
+          <input class="input" id="requestApiBaseUrl" placeholder="https://api.example.com/v1" />
+        </label>
+        <label class="field">
+          <span>Docs URL</span>
+          <input class="input" id="requestDocsUrl" placeholder="https://docs.example.com" />
+        </label>
+        <label class="field">
+          <span>Workflow label</span>
+          <input class="input" id="requestWorkflowName" placeholder="field report automation" />
+        </label>
+      </div>
+      <label class="field">
+        <span>Connection needs</span>
+        <textarea class="input" id="requestNeeds" placeholder="Example: CompanyCam — read projects/photos, match notes to estimates, create report-ready handoff package."></textarea>
+      </label>
+      <div class="row">
+        <button class="button" id="submitConnectorRequest" type="submit">Send connector request</button>
+        <div class="request-status" id="connectorRequestStatus" role="status" aria-live="polite"></div>
+      </div>
+    </form>
   </section>
 
   <section class="grid" aria-label="Connection summary">
@@ -312,6 +378,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   const ROUTE_LOGOUT      = '/api/admin/logout';
   const ROUTE_ADMIN_CONNECTIONS = '/api/admin/connections';
   const ROUTE_CLIENT_INVITES = '/api/admin/client-invites';
+  const ROUTE_CONNECTOR_REQUESTS = '/api/admin/connector-requests';
   const ROUTE_GMAIL_CONNECTIONS = '/api/oauth/google/connections'; // legacy compatibility
   const ROUTE_META_CONNECTIONS  = '/api/social/meta/connections';  // legacy compatibility
 
@@ -328,6 +395,20 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
       connector: '/connect/social/',
       detailPathTemplate: '/api/admin/connections/meta/{connection_id}?include=agent_package',
       packageLabel: 'Meta agent package',
+      serviceKind: 'oauth',
+    },
+    slack: {
+      label: 'Slack',
+      connector: '/connect/slack/',
+      detailPathTemplate: '/api/admin/connections/slack/{connection_id}?include=agent_package',
+      packageLabel: 'Slack agent package',
+      serviceKind: 'oauth',
+    },
+    hubspot: {
+      label: 'HubSpot',
+      connector: '/connect/hubspot/',
+      detailPathTemplate: '/api/admin/connections/hubspot/{connection_id}?include=agent_package',
+      packageLabel: 'HubSpot agent package',
       serviceKind: 'oauth',
     },
   };
@@ -358,6 +439,16 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   const invitePreview  = document.getElementById('invitePreview');
   const serviceStrip   = document.getElementById('serviceStrip');
   const connectorChecklist = document.getElementById('connectorChecklist');
+  const connectorRequestForm = document.getElementById('connectorRequestForm');
+  const requestClientName = document.getElementById('requestClientName');
+  const requestSoftwareName = document.getElementById('requestSoftwareName');
+  const requestAuthType = document.getElementById('requestAuthType');
+  const requestApiBaseUrl = document.getElementById('requestApiBaseUrl');
+  const requestDocsUrl = document.getElementById('requestDocsUrl');
+  const requestWorkflowName = document.getElementById('requestWorkflowName');
+  const requestNeeds = document.getElementById('requestNeeds');
+  const submitConnectorRequest = document.getElementById('submitConnectorRequest');
+  const connectorRequestStatus = document.getElementById('connectorRequestStatus');
 
   const jsonHeaders = { Accept: 'application/json' };
   let lastRows = [];
@@ -385,7 +476,12 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   };
   const setLoginError = (msg) => { loginError.textContent = msg || ''; };
 
-  const serviceChipClass = (serviceKey) => serviceKey === 'meta' ? 'meta' : '';
+  const serviceChipClass = (serviceKey) => {
+    if (serviceKey === 'meta') return 'meta';
+    if (serviceKey === 'slack') return 'slack';
+    if (serviceKey === 'hubspot') return 'hubspot';
+    return '';
+  };
 
   function mergeConnectorRegistry(connectors = []) {
     const next = { ...DEFAULT_SERVICE_CONFIG };
@@ -704,9 +800,70 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
     return lastCreatedInvite;
   }
 
+  function setConnectorRequestStatus(message, kind = '') {
+    connectorRequestStatus.textContent = message || '';
+    connectorRequestStatus.className = `request-status ${kind}`.trim();
+  }
+
+  function connectorRequestPayload() {
+    return {
+      client_name: (requestClientName.value.trim() || clientName.value.trim()),
+      workflow: (requestWorkflowName.value.trim() || workflowName.value.trim()),
+      software_name: requestSoftwareName.value.trim(),
+      auth_type: requestAuthType.value,
+      api_base_url: requestApiBaseUrl.value.trim(),
+      docs_url: requestDocsUrl.value.trim(),
+      needs: requestNeeds.value.trim(),
+    };
+  }
+
+  async function submitConnectorRequestForm(event) {
+    event.preventDefault();
+    const payload = connectorRequestPayload();
+    if (!payload.client_name) {
+      setConnectorRequestStatus('Add the client/business name first.', 'bad');
+      return;
+    }
+    if (!payload.software_name) {
+      setConnectorRequestStatus('Add the software/API name first.', 'bad');
+      return;
+    }
+    submitConnectorRequest.disabled = true;
+    const originalLabel = submitConnectorRequest.textContent;
+    submitConnectorRequest.textContent = 'Sending…';
+    setConnectorRequestStatus('Saving connector request…');
+    try {
+      const res = await fetch(ROUTE_CONNECTOR_REQUESTS, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { ...jsonHeaders, 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (res.status === 401 || res.status === 403) {
+        showLogin();
+        setLoginError('Session expired. Sign in again.');
+        throw new Error('Not signed in.');
+      }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      const hookNote = data.webhook_dispatched ? ' Builder webhook notified.' : ' Saved for builder workflow.';
+      setConnectorRequestStatus(`Connector request saved: ${data.request?.request_id || payload.software_name}.${hookNote}`, 'good');
+      requestSoftwareName.value = '';
+      requestApiBaseUrl.value = '';
+      requestDocsUrl.value = '';
+      requestNeeds.value = '';
+    } catch (err) {
+      setConnectorRequestStatus(err.message || 'Could not save connector request.', 'bad');
+    } finally {
+      submitConnectorRequest.disabled = false;
+      submitConnectorRequest.textContent = originalLabel;
+    }
+  }
+
   // --- Events ---
   loginForm.addEventListener('submit', submitLogin);
   signOutButton.addEventListener('click', signOut);
+  connectorRequestForm.addEventListener('submit', submitConnectorRequestForm);
 
   listEl.addEventListener('click', async (event) => {
     const button = event.target.closest('button[data-action]');

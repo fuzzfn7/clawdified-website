@@ -164,7 +164,9 @@ test('unified admin connections endpoint is protected and aggregates all connect
   assert.equal(body.ok, true);
   assert.equal(body.registry_version, 1);
   assert.equal(body.includes_sensitive_tokens, false);
-  assert.deepEqual(body.connectors.map((connector) => connector.service), ['gmail', 'meta']);
+  assert.deepEqual(body.connectors.map((connector) => connector.service), ['gmail', 'meta', 'slack', 'hubspot']);
+  assert.equal(body.connectors.find((connector) => connector.service === 'slack').connector_path, '/connect/slack/');
+  assert.equal(body.connectors.find((connector) => connector.service === 'hubspot').connector_path, '/connect/hubspot/');
   assert.equal(body.connectors[0].detail_path_template, '/api/admin/connections/gmail/{connection_id}?include=agent_package');
   assert.equal(body.connections.length, 2);
   assert.equal(body.connections[0].service, 'meta');
