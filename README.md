@@ -151,27 +151,28 @@ Optional:
 - `CONNECTOR_BUILDER_WEBHOOK_URL` — optional Hermes/webhook endpoint to notify when the admin dashboard stores a new unsupported connector request.
 - `CONNECTOR_BUILDER_WEBHOOK_TOKEN` — optional bearer token sent only server-to-server to the connector-builder webhook; never shown in dashboard responses.
 
-## Current production verification — 2026-05-21
+## Current production verification — 2026-05-22
 
-Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
+Verified with Cloudflare/Wrangler smoke checks:
 
 - Cloudflare Pages project: `clawdifiedweb`
-- Latest shared connections dashboard deployment from `main` was manually deployed with Wrangler and verified on both `clawdified.com` and the latest Pages preview URL.
-- Live unified admin registry route: `https://clawdified.com/api/admin/connections` — returns connector metadata plus safe Gmail/Meta rows after admin auth and rejects unauthenticated requests with `401`.
-- Live unified admin package route pattern: `https://clawdified.com/api/admin/connections/{service}/{connection_id}?include=agent_package` — dispatches to service-specific handoff package builders for Gmail and Meta.
-- Live social connector page: `https://clawdified.com/connect/social/`
+- Latest Slack/HubSpot/connector-request deployment was manually deployed with Wrangler from commit `faab108`.
+- Latest Pages preview URL from that deployment: `https://e2fb399e.clawdifiedweb.pages.dev`
+- Live admin dashboard page: `https://clawdified.com/admin/connections/` — returns `200` and includes the Slack/HubSpot connector catalog plus the connector request agent panel.
+- Live Slack connector page: `https://clawdified.com/connect/slack/` — returns `200`.
+- Live HubSpot connector page: `https://clawdified.com/connect/hubspot/` — returns `200`.
+- Live `/api/admin/connections` rejects unauthenticated requests with `401`.
+- Live `/api/admin/connector-requests` rejects unauthenticated requests with `401`.
+- Live `/api/slack/health` is deployed but returns `503` until production `SLACK_CLIENT_ID` and `SLACK_CLIENT_SECRET` are configured. Shared state/encryption/KV config is present.
+- Live `/api/hubspot/health` is deployed but returns `503` until production `HUBSPOT_CLIENT_ID` and `HUBSPOT_CLIENT_SECRET` are configured. Shared state/encryption/KV config is present.
+- Existing live social connector page remains: `https://clawdified.com/connect/social/`
+- Existing live Gmail connector page remains: `https://clawdified.com/connect/gmail/`
+- Live private admin dashboard still uses `/api/admin/login` + an HttpOnly session cookie. Protected list/package endpoints preserve bearer-token compatibility for server-side/agent retrieval.
 - Meta app redirect URI is saved under Facebook Login settings: `https://clawdified.com/api/social/meta/callback`
-- Live Meta health endpoint now returns `ok: true`; `META_APP_SECRET` is present in Cloudflare production and visible to Pages Functions after redeploy.
-- Live Gmail connector page: `https://clawdified.com/connect/gmail/`
-- Live private Gmail admin dashboard page: `https://clawdified.com/admin/connections/`
-- Live admin dashboard now uses `/api/admin/login` + an HttpOnly session cookie. Gmail and Meta protected list/package endpoints reject unauthenticated requests with `401` and preserve bearer-token compatibility for server-side/agent retrieval.
 - Google OAuth client redirect URIs include `https://clawdified.com/api/oauth/google/callback` and the earlier `https://app.clawdified.com/api/oauth/google/callback`.
-- Live Gmail health endpoint returns `ok: true`; `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, shared state/encryption/admin secrets, and `SOCIAL_CONNECTOR_KV` are visible to Pages Functions.
-- Live `/api/oauth/google/start` returns a Google OAuth 302 using the `clawdified.com` callback and the requested `openid`, `email`, `profile`, `gmail.send`, and `gmail.modify` scopes.
-- Cloudflare production has these configured: `META_APP_ID`, `META_APP_SECRET`, `META_GRAPH_VERSION`, `META_REDIRECT_URI`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `SOCIAL_CONNECTOR_ADMIN_TOKEN`, `SOCIAL_CONNECTOR_BASE_URL`, `SOCIAL_CONNECTOR_ENCRYPTION_KEY`, `SOCIAL_CONNECTOR_STATE_SECRET`, and `SOCIAL_CONNECTOR_KV`.
+- Cloudflare production has these shared/existing connector values configured: `META_APP_ID`, `META_APP_SECRET`, `META_GRAPH_VERSION`, `META_REDIRECT_URI`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `SOCIAL_CONNECTOR_ADMIN_TOKEN`, `SOCIAL_CONNECTOR_BASE_URL`, `SOCIAL_CONNECTOR_ENCRYPTION_KEY`, `SOCIAL_CONNECTOR_STATE_SECRET`, and `SOCIAL_CONNECTOR_KV`.
 - Meta Publish screen is not publishable yet: business portfolio `Wesley Taylor` is unverified, and the final Publish button is disabled.
-- Default OAuth now requests `public_profile` only; production `/api/social/meta/start` no longer sends the Page/Instagram/business scopes that Meta rejected as invalid for the current app/use-case.
-- Full Facebook Page + Instagram connector permissions still require Meta Business Login/App Review setup via either explicit `META_SCOPES` after approval or `META_LOGIN_CONFIG_ID`.
+- Default Meta OAuth still requests `public_profile` only; full Facebook Page + Instagram connector permissions still require Meta Business Login/App Review setup via either explicit `META_SCOPES` after approval or `META_LOGIN_CONFIG_ID`.
 
 ## Safety rules
 
