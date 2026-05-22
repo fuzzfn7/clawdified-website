@@ -24,6 +24,7 @@ export async function onRequestGet(context) {
     env,
     client: url.searchParams.get('client') || url.searchParams.get('business') || '',
     workflow: url.searchParams.get('workflow') || url.searchParams.get('notes') || '',
+    invite: url.searchParams.get('invite') || url.searchParams.get('invite_id') || '',
     returnTo: url.searchParams.get('return_to') || '/connect/gmail/',
   });
 

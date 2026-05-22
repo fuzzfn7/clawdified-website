@@ -122,6 +122,12 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
 .service-chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold)}
 .service-chip.meta::before{background:#8ab4ff}
 .service-select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 52%,calc(100% - 12px) 52%;background-size:6px 6px;background-repeat:no-repeat}
+.connector-checklist{display:grid;gap:8px}
+.connector-option{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:rgba(8,7,5,.46);border-radius:14px;padding:11px 12px;color:var(--muted);cursor:pointer}
+.connector-option:hover{border-color:var(--line-strong);color:var(--ink)}
+.connector-option input{accent-color:var(--gold);width:16px;height:16px}
+.connector-option b{display:block;color:var(--ink);font-size:13px}
+.connector-option span{display:block;color:var(--faint);font-size:12px;text-transform:none;letter-spacing:0}
 .service-error{border:1px solid rgba(255,141,125,.24);border-radius:16px;padding:12px 14px;background:rgba(255,141,125,.045);color:var(--red);font-size:13px;margin-bottom:12px}
 
 /* === Stats === */
@@ -252,14 +258,14 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
     </div>
     <div class="card invite-card">
       <div class="eyebrow">New invite</div>
-      <h2 style="margin-top:6px">Send a client to connect an account</h2>
-      <label class="field">
-        <span>Service</span>
-        <select class="input service-select" id="serviceName">
-          <option value="gmail">Gmail</option>
-          <option value="meta">Facebook + Instagram</option>
-        </select>
-      </label>
+      <h2 style="margin-top:6px">Create client connector page</h2>
+      <div class="field">
+        <span>Software connectors this client needs</span>
+        <div class="connector-checklist" id="connectorChecklist" aria-label="Software connectors">
+          <label class="connector-option"><span><b>Gmail</b><span>Email send/reply access</span></span><input type="checkbox" name="connectors" value="gmail" checked /></label>
+          <label class="connector-option"><span><b>Facebook + Instagram</b><span>Meta Page/social access</span></span><input type="checkbox" name="connectors" value="meta" /></label>
+        </div>
+      </div>
       <label class="field">
         <span>Client / business name</span>
         <input class="input" id="clientName" placeholder="Acme Roofing" autocomplete="off" />
@@ -270,7 +276,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
       </label>
       <div class="invite-preview" id="invitePreview">/connect/gmail/</div>
       <div class="row">
-        <button class="button" id="copyInviteButton" type="button">Copy invite link</button>
+        <button class="button" id="copyInviteButton" type="button">Create client connector page</button>
         <a class="button secondary" id="openInviteLink" href="/connect/gmail/" target="_blank" rel="noopener">Preview</a>
       </div>
     </div>
@@ -305,6 +311,7 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   const ROUTE_LOGIN       = '/api/admin/login';
   const ROUTE_LOGOUT      = '/api/admin/logout';
   const ROUTE_ADMIN_CONNECTIONS = '/api/admin/connections';
+  const ROUTE_CLIENT_INVITES = '/api/admin/client-invites';
   const ROUTE_GMAIL_CONNECTIONS = '/api/oauth/google/connections'; // legacy compatibility
   const ROUTE_META_CONNECTIONS  = '/api/social/meta/connections';  // legacy compatibility
 
@@ -344,17 +351,18 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   const readyCount     = document.getElementById('readyCount');
   const needsCount     = document.getElementById('needsCount');
   const latestDate     = document.getElementById('latestDate');
-  const serviceName    = document.getElementById('serviceName');
   const clientName     = document.getElementById('clientName');
   const workflowName   = document.getElementById('workflowName');
   const copyInviteButton = document.getElementById('copyInviteButton');
   const openInviteLink = document.getElementById('openInviteLink');
   const invitePreview  = document.getElementById('invitePreview');
   const serviceStrip   = document.getElementById('serviceStrip');
+  const connectorChecklist = document.getElementById('connectorChecklist');
 
   const jsonHeaders = { Accept: 'application/json' };
   let lastRows = [];
   let serviceErrors = [];
+  let lastCreatedInvite = null;
 
   // --- Utilities ---
   const safeText = (v, fallback = '—') => {
@@ -396,15 +404,28 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
       };
     }
     SERVICES = next;
-    renderServiceOptions();
+    renderConnectorChecklist();
     renderServiceStrip();
   }
 
-  function renderServiceOptions() {
-    const current = serviceName.value;
+  function selectedConnectorKeys() {
+    if (!connectorChecklist) return [];
+    return Array.from(connectorChecklist.querySelectorAll('input[name="connectors"]:checked'))
+      .map((input) => input.value)
+      .filter((key) => SERVICES[key]?.connector);
+  }
+
+  function renderConnectorChecklist() {
+    if (!connectorChecklist) return;
     const entries = Object.entries(SERVICES).filter(([, service]) => service.connector);
-    serviceName.innerHTML = entries.map(([key, service]) => `<option value="${escapeHtml(key)}">${escapeHtml(service.label)}</option>`).join('');
-    if (SERVICES[current]?.connector) serviceName.value = current;
+    const existing = new Set(selectedConnectorKeys());
+    const checked = existing.size ? existing : new Set(entries.slice(0, 1).map(([key]) => key));
+    connectorChecklist.innerHTML = entries.map(([key, service]) => `
+      <label class="connector-option">
+        <span><b>${escapeHtml(service.label)}</b><span>${escapeHtml(service.serviceKind || 'connector')}</span></span>
+        <input type="checkbox" name="connectors" value="${escapeHtml(key)}" ${checked.has(key) ? 'checked' : ''} />
+      </label>
+    `).join('');
   }
 
   function renderServiceStrip() {
@@ -632,19 +653,55 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   }
 
   // --- Invite link ---
-  function buildInviteUrl() {
-    const selected = SERVICES[serviceName.value] || SERVICES.gmail;
-    const url = new URL(selected.connector, window.location.origin);
-    const client = clientName.value.trim();
-    const workflow = workflowName.value.trim();
-    if (client) url.searchParams.set('client', client);
-    if (workflow) url.searchParams.set('workflow', workflow);
-    return url.toString();
+  function invitePayload() {
+    return {
+      client_name: clientName.value.trim(),
+      workflow: workflowName.value.trim(),
+      connectors: selectedConnectorKeys(),
+    };
   }
+
+  function buildInviteUrl() {
+    return lastCreatedInvite?.connect_url || 'Create a client connector page to generate a private link.';
+  }
+
   function updateInvitePreview() {
     const built = buildInviteUrl();
     invitePreview.textContent = built;
-    openInviteLink.setAttribute('href', built);
+    if (lastCreatedInvite?.connect_url) {
+      openInviteLink.setAttribute('href', lastCreatedInvite.connect_url);
+      openInviteLink.removeAttribute('aria-disabled');
+    } else {
+      openInviteLink.setAttribute('href', '#');
+      openInviteLink.setAttribute('aria-disabled', 'true');
+    }
+  }
+
+  function resetInvitePreview() {
+    lastCreatedInvite = null;
+    updateInvitePreview();
+  }
+
+  async function createClientInvite() {
+    const payload = invitePayload();
+    if (!payload.client_name) throw new Error('Add the client/business name first.');
+    if (!payload.connectors.length) throw new Error('Select at least one software connector.');
+    const res = await fetch(ROUTE_CLIENT_INVITES, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { ...jsonHeaders, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (res.status === 401 || res.status === 403) {
+      showLogin();
+      setLoginError('Session expired. Sign in again.');
+      throw new Error('Not signed in.');
+    }
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok || !data.invite?.connect_url) throw new Error(data.error || `HTTP ${res.status}`);
+    lastCreatedInvite = data.invite;
+    updateInvitePreview();
+    return lastCreatedInvite;
   }
 
   // --- Events ---
@@ -674,17 +731,24 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
   });
 
   copyInviteButton.addEventListener('click', async () => {
+    copyInviteButton.disabled = true;
+    const originalLabel = copyInviteButton.textContent;
+    copyInviteButton.textContent = 'Creating…';
     try {
-      await copyText(buildInviteUrl());
-      setStatus('Invite link copied.', 'good');
+      const invite = await createClientInvite();
+      await copyText(invite.connect_url);
+      setStatus('Client connector page created and link copied.', 'good');
     } catch (err) {
-      setStatus(err.message || 'Could not copy invite link.', 'bad');
+      setStatus(err.message || 'Could not create invite link.', 'bad');
+    } finally {
+      copyInviteButton.disabled = false;
+      copyInviteButton.textContent = originalLabel;
     }
   });
 
-  serviceName.addEventListener('input', updateInvitePreview);
-  clientName.addEventListener('input', updateInvitePreview);
-  workflowName.addEventListener('input', updateInvitePreview);
+  connectorChecklist.addEventListener('change', resetInvitePreview);
+  clientName.addEventListener('input', resetInvitePreview);
+  workflowName.addEventListener('input', resetInvitePreview);
   refreshButton.addEventListener('click', loadConnections);
 
   // --- Boot ---

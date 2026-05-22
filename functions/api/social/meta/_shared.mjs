@@ -179,7 +179,7 @@ export function loginConfigIdFromEnv(env = {}) {
   return clean(env.META_LOGIN_CONFIG_ID || env.FACEBOOK_LOGIN_CONFIG_ID || '', 120);
 }
 
-export function buildAuthUrl({ request, env, client = '', workflow = '', returnTo = '' }) {
+export function buildAuthUrl({ request, env, client = '', workflow = '', invite = '', returnTo = '' }) {
   const appId = appIdFromEnv(env);
   const version = graphVersion(env);
   const redirectUri = callbackUrl(request, env);
@@ -204,6 +204,7 @@ export function buildAuthUrl({ request, env, client = '', workflow = '', returnT
       nonce: crypto.randomUUID(),
       client: clean(client, 160),
       workflow: clean(workflow, 500),
+      invite_id: clean(invite, 120),
       return_to: sanitizeReturnTo(returnTo),
       redirect_uri: redirectUri,
       graph_version: version,
@@ -411,6 +412,7 @@ export function buildAgentPackage({ connectionId, client, tokenPayload, assets, 
     client: {
       name: client?.client || '',
       workflow: client?.workflow || '',
+      invite_id: client?.invite_id || '',
     },
     meta_app: {
       app_id: appIdFromEnv(env),
@@ -502,12 +504,14 @@ export function summarizeAgentPackage(packageData = {}, { origin = '' } = {}) {
   const detailPath = `/api/social/meta/connections/${encodeURIComponent(connectionId)}?include=agent_package`;
   const facebookUserName = clean(packageData?.facebook_user?.name || packageData?.facebook_user?.id || '', 180);
   const primaryAccount = pageNames[0] || instagramUsernames[0] || facebookUserName || '';
+  const inviteId = clean(packageData?.client?.invite_id || packageData?.invite_id || '', 120);
 
   return {
     connection_id: connectionId,
     service: 'meta',
     service_label: 'Facebook + Instagram',
     status: readyForAgent ? 'connected' : 'needs_attention',
+    invite_id: inviteId,
     client_name: clean(packageData?.client?.name || packageData?.client_name || '', 160),
     workflow: clean(packageData?.client?.workflow || '', 500),
     connected_account: primaryAccount,
@@ -536,6 +540,7 @@ export function buildAgentHandoff(packageData = {}, { origin = '' } = {}) {
     handoff_type: 'clawdified.meta_social_agent_connection.v1',
     service: 'facebook_instagram',
     connection_id: summary.connection_id,
+    invite_id: summary.invite_id,
     client_name: summary.client_name,
     workflow: summary.workflow,
     connected_account: summary.connected_account,
@@ -624,6 +629,7 @@ export async function persistConnection({ env, connectionId, publicPackage, full
   await env.SOCIAL_CONNECTOR_KV.put(connectionStorageKey(connectionId), JSON.stringify(record), {
     metadata: {
       client: clean(fullAgentPackage?.client?.name || '', 120),
+      invite: clean(fullAgentPackage?.client?.invite_id || '', 120),
       created_at: record.created_at,
     },
   });

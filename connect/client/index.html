@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" data-client-invite-page>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Connect required tools | Clawdified</title>
+<meta name="description" content="A private Clawdified client connector page for authorizing the software tools your agent needs." />
+<meta name="robots" content="noindex,nofollow" />
+<style>
+:root{color-scheme:dark;--bg:#0f0e0a;--panel:#17140e;--ink:#f8edda;--muted:rgba(248,237,218,.68);--faint:rgba(248,237,218,.45);--line:rgba(248,237,218,.13);--gold:#f1b45b;--orange:#d48553;--green:#7ad99d;--red:#ff8d7d;--sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--serif:Georgia,"Playfair Display",serif;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+*{box-sizing:border-box}html,body{min-height:100%;margin:0}body{background:radial-gradient(circle at 50% -12%,rgba(241,180,91,.18),transparent 34rem),var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}a{color:inherit}.top{display:flex;justify-content:space-between;align-items:center;padding:22px 26px}.brand{font-weight:900;letter-spacing:.06em;text-decoration:none;font-size:13px}.brand::before{content:"";display:inline-block;width:7px;height:7px;border-radius:999px;background:linear-gradient(135deg,var(--gold),var(--orange));margin-right:8px;vertical-align:1px}.back{color:var(--muted);text-decoration:none;font-size:13px}.back:hover{color:var(--ink)}main{width:min(920px,100%);margin:0 auto;padding:48px 22px 80px}.shell{display:grid;gap:20px}.hero{border:1px solid var(--line);background:linear-gradient(180deg,rgba(33,27,18,.9),rgba(23,20,14,.94));border-radius:28px;padding:clamp(24px,5vw,42px);box-shadow:0 28px 80px rgba(0,0,0,.28)}.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:.2em;font-size:11px;font-weight:900}h1{font-family:var(--serif);font-weight:500;letter-spacing:-.035em;line-height:.98;font-size:clamp(42px,7vw,72px);margin:12px 0 14px}.lead{color:var(--muted);line-height:1.58;font-size:17px;max-width:650px;margin:0}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}.pill{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:12px}.grid{display:grid;gap:12px}.connector{border:1px solid var(--line);background:rgba(23,20,14,.82);border-radius:22px;padding:20px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center}.connector h2{margin:0 0 5px;font-size:18px;letter-spacing:-.01em}.connector p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}.button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:0;border-radius:999px;padding:12px 18px;background:linear-gradient(135deg,var(--gold),var(--orange));color:#1a1008;font-weight:850;font-size:14px;box-shadow:0 14px 36px rgba(212,133,83,.22);white-space:nowrap}.button.secondary{background:transparent;color:var(--muted);border:1px solid var(--line);box-shadow:none}.status{font-size:13px;color:var(--faint);min-height:1.4em}.status.bad{color:var(--red)}.status.good{color:var(--green)}.empty{border:1px dashed var(--line);border-radius:22px;padding:26px;text-align:center;color:var(--muted)}footer{padding:0 22px 28px;text-align:center;font-size:12px;color:var(--faint)}footer a{color:var(--muted);text-decoration:none;margin:0 8px}@media(max-width:680px){main{padding-top:24px}.connector{grid-template-columns:1fr}.button{width:100%}.top{padding:18px}}
+</style>
+</head>
+<body>
+<nav class="top" aria-label="Page navigation">
+  <a class="brand" href="/">CLAWDIFIED</a>
+  <a class="back" href="/">Back</a>
+</nav>
+<main>
+  <section class="shell" aria-live="polite">
+    <div class="hero">
+      <div class="eyebrow">Client connector</div>
+      <h1 id="pageTitle">Connect required tools</h1>
+      <p class="lead" id="pageLead">Loading your private Clawdified connector page…</p>
+      <div class="meta" id="inviteMeta"></div>
+    </div>
+    <div class="status" id="statusLine">Checking invite…</div>
+    <section class="grid" id="connectorList" aria-label="Required software connectors"></section>
+  </section>
+</main>
+<footer><a href="/privacy">Privacy</a>·<a href="/terms">Terms</a>·<a href="/data-deletion">Data Deletion</a></footer>
+<script>
+const pageTitle = document.getElementById('pageTitle');
+const pageLead = document.getElementById('pageLead');
+const inviteMeta = document.getElementById('inviteMeta');
+const statusLine = document.getElementById('statusLine');
+const connectorList = document.getElementById('connectorList');
+
+const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (char) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[char]);
+const inviteIdFromUrl = () => new URLSearchParams(window.location.search).get('invite') || '';
+
+function setStatus(text, kind = '') {
+  statusLine.textContent = text;
+  statusLine.className = `status ${kind}`.trim();
+}
+
+function connectorCopy(connector) {
+  if (connector.service === 'gmail') return 'Authorize the Gmail inbox your Clawdified agent can use for approved email work.';
+  if (connector.service === 'meta') return 'Authorize the Facebook Page / Instagram assets your Clawdified agent can use.';
+  return 'Authorize this software tool for the approved Clawdified workflow.';
+}
+
+function renderInvite(data) {
+  const invite = data.invite || {};
+  const connectors = data.connectors || [];
+  pageTitle.textContent = invite.client_name ? `${invite.client_name}: connect required tools` : 'Connect required tools';
+  pageLead.textContent = invite.workflow
+    ? `Clawdified needs the tools below for: ${invite.workflow}. Connect each one using the official provider screen — no password sharing.`
+    : 'Connect each required software tool using the official provider screen — no password sharing.';
+  inviteMeta.innerHTML = [
+    invite.invite_id ? `<span class="pill">Invite ${escapeHtml(invite.invite_id)}</span>` : '',
+    invite.connector_services?.length ? `<span class="pill">${invite.connector_services.length} required connector${invite.connector_services.length === 1 ? '' : 's'}</span>` : '',
+  ].filter(Boolean).join('');
+
+  if (!connectors.length) {
+    connectorList.innerHTML = '<div class="empty">No required connectors were found for this invite. Ask Clawdified for a fresh link.</div>';
+    setStatus('No connectors configured for this invite.', 'bad');
+    return;
+  }
+
+  connectorList.innerHTML = connectors.map((connector) => {
+    const connected = connector.connection_status === 'connected';
+    return `
+      <article class="connector" data-service="${escapeHtml(connector.service)}">
+        <div>
+          <h2>${escapeHtml(connector.service_label || connector.label || connector.service)}</h2>
+          <p>${escapeHtml(connected ? `Connected${connector.connected_account ? `: ${connector.connected_account}` : ''}` : connectorCopy(connector))}</p>
+        </div>
+        <a class="button ${connected ? 'secondary' : ''}" href="${escapeHtml(connector.connect_url)}">${connected ? 'Reconnect' : `Connect ${escapeHtml(connector.service_label || connector.service)}`}</a>
+      </article>`;
+  }).join('');
+  const done = connectors.filter((connector) => connector.connection_status === 'connected').length;
+  setStatus(done ? `${done}/${connectors.length} connector${connectors.length === 1 ? '' : 's'} connected.` : 'Choose a connector to start.', done === connectors.length ? 'good' : '');
+}
+
+async function loadInvite() {
+  const invite = inviteIdFromUrl();
+  if (!invite) {
+    pageLead.textContent = 'This link is missing an invite ID. Ask Clawdified for a fresh client connector link.';
+    connectorList.innerHTML = '';
+    setStatus('Missing invite ID.', 'bad');
+    return;
+  }
+  try {
+    const res = await fetch(`/api/client-invites/${encodeURIComponent(invite)}`, { headers: { Accept: 'application/json' } });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) throw new Error(data.error || `HTTP ${res.status}`);
+    renderInvite(data);
+  } catch (err) {
+    pageLead.textContent = 'This client connector link could not be loaded. Ask Clawdified for a fresh link.';
+    connectorList.innerHTML = '';
+    setStatus(err.message || 'Could not load invite.', 'bad');
+  }
+}
+
+loadInvite();
+</script>
+</body>
+</html>

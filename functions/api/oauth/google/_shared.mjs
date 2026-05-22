@@ -209,7 +209,7 @@ export function sanitizeReturnTo(value) {
   return '';
 }
 
-export function buildAuthUrl({ request, env, client = '', workflow = '', returnTo = '' }) {
+export function buildAuthUrl({ request, env, client = '', workflow = '', invite = '', returnTo = '' }) {
   const redirectUri = callbackUrl(request, env);
   const scopes = scopesFromEnv(env);
   const url = new URL('https://accounts.google.com/o/oauth2/v2/auth');
@@ -228,6 +228,7 @@ export function buildAuthUrl({ request, env, client = '', workflow = '', returnT
       nonce: crypto.randomUUID(),
       client: clean(client, 160),
       workflow: clean(workflow, 500),
+      invite_id: clean(invite, 120),
       return_to: sanitizeReturnTo(returnTo),
       redirect_uri: redirectUri,
       scopes,
@@ -325,6 +326,7 @@ export function buildAgentPackage({ connectionId, client, tokenPayload, account,
     client: {
       name: client?.client || '',
       workflow: client?.workflow || '',
+      invite_id: client?.invite_id || '',
     },
     google_oauth: {
       client_id: clientIdFromEnv(env),
@@ -395,6 +397,7 @@ export function summarizeAgentPackage(packageData = {}, { origin = '' } = {}) {
   const connectionId = clean(packageData.connection_id || '', 120);
   const clientName = clean(packageData?.client?.name || packageData?.client_name || '', 160);
   const workflow = clean(packageData?.client?.workflow || '', 500);
+  const inviteId = clean(packageData?.client?.invite_id || packageData?.invite_id || '', 120);
   const connectedEmail = clean(
     packageData?.gmail_profile?.emailAddress
       || packageData?.google_account?.email
@@ -421,6 +424,7 @@ export function summarizeAgentPackage(packageData = {}, { origin = '' } = {}) {
     connection_id: connectionId,
     service: 'gmail',
     status: readyForAgent ? 'connected' : 'needs_attention',
+    invite_id: inviteId,
     client_name: clientName,
     workflow,
     connected_email: connectedEmail,
@@ -441,6 +445,7 @@ export function buildAgentHandoff(packageData = {}, { origin = '' } = {}) {
     handoff_type: 'clawdified.gmail_agent_connection.v1',
     service: 'gmail',
     connection_id: summary.connection_id,
+    invite_id: summary.invite_id,
     client_name: summary.client_name,
     workflow: summary.workflow,
     connected_email: summary.connected_email,
@@ -529,6 +534,7 @@ export async function persistConnection({ env, connectionId, publicPackage, full
     metadata: {
       email: clean(fullAgentPackage?.gmail_profile?.emailAddress || fullAgentPackage?.google_account?.email || '', 120),
       client: clean(fullAgentPackage?.client?.name || '', 120),
+      invite: clean(fullAgentPackage?.client?.invite_id || '', 120),
       created_at: record.created_at,
       connector: 'gmail',
     },

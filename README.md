@@ -16,11 +16,14 @@ The Meta/Facebook + Instagram social connector has been added under:
 The Gmail outbound/inbox connector has been added under:
 
 - Public client page: `/connect/gmail/` — intentionally minimal: brand, one-sentence description, one `Connect Gmail` button, and tiny legal links. No public token/package explanation, workflow form, route list, or Google API jargon.
-- Private admin dashboard: `/admin/connections/` — simple email/password sign-in backed by an HttpOnly admin session cookie. This is the shared private API/OAuth console for Gmail, Facebook/Instagram, and future API/OAuth connector summaries, client invite links, and intentional copy actions for agent-ready handoff packages.
+- Private admin dashboard: `/admin/connections/` — simple email/password sign-in backed by an HttpOnly admin session cookie. This is the shared private API/OAuth console for Gmail, Facebook/Instagram, future API/OAuth connector summaries, client-specific invite pages, and intentional copy actions for agent-ready handoff packages.
 - Admin login/session routes: `/api/admin/login`, `/api/admin/session`, `/api/admin/logout`
+- Client invite create/list route: `/api/admin/client-invites` — protected route the admin dashboard uses after a discovery call to create a client-specific connector page with the required software tools.
+- Public client invite data route: `/api/client-invites/{invite_id}` — safe, no-secret route used by `/connect/client/?invite={invite_id}` to render only the required connector buttons for that client.
+- Public client connector page: `/connect/client/?invite={invite_id}` — branded page sent to the client after Wesley chooses the required connector services in admin.
 - Unified registry/list route: `/api/admin/connections` — one protected endpoint that returns connector metadata plus safe rows across every registered service.
 - Unified registry/package route: `/api/admin/connections/{service}/{connection_id}?include=agent_package` — one protected detail pattern that dispatches to the service-specific package builder. Existing Gmail/Meta list/detail routes remain for compatibility.
-- New connector extension point: add the service descriptor/list/read/handoff functions to `functions/api/admin/connections/_registry.mjs`, then the dashboard invite selector, rows, and copy-package action pick it up from the registry response.
+- New connector extension point: add the service descriptor/list/read/handoff functions to `functions/api/admin/connections/_registry.mjs`, then the dashboard connector checklist, client invite page, rows, and copy-package action pick it up from the registry response.
 - OAuth start route: `/api/oauth/google/start`
 - OAuth callback route: `/api/oauth/google/callback`
 - Protected admin list route: `/api/oauth/google/connections`
@@ -43,9 +46,11 @@ Google OAuth app:
 
 ## What the connector is meant to do
 
-A client should not share passwords, API keys, or add Wesley as a Facebook/Instagram admin. They should open the connector page, authorize through Meta, and select the Facebook Page / Instagram professional assets Clawdified can use.
+A client should not share passwords, API keys, or add Wesley as a Facebook/Instagram admin. After discovery, Wesley creates a client invite in `/admin/connections/`, selects the software connectors that workflow needs, and sends the generated `/connect/client/?invite={invite_id}` link. The client sees only those required tools, then each tool sends them through its official OAuth/provider authorization screen.
 
-After authorization, the callback exchanges the Meta OAuth code, discovers Facebook Pages and linked Instagram accounts, and stores an agent-ready package server-side. That package includes:
+The client invite page is a routing layer, not a magic universal login. Each supported app still needs a connector adapter in the registry; unknown/random APIs should become an API-key/private-app/custom endpoint connector before they appear on the invite page.
+
+After authorization, the callback exchanges the provider OAuth code, preserves the invite ID in OAuth state, discovers the account/assets, and stores an agent-ready package server-side. That package includes:
 
 - Meta App ID and Graph API version
 - Granted scopes from `debug_token`
@@ -130,7 +135,10 @@ Verified in Chrome/Meta Developer dashboard and Cloudflare/Wrangler:
 ## Verification commands
 
 ```bash
-node --test test/social-meta-connector.test.mjs test/gmail-google-connector.test.mjs test/admin-connections-registry.test.mjs
+node --test test/social-meta-connector.test.mjs test/gmail-google-connector.test.mjs test/admin-connections-registry.test.mjs test/client-invite-workflow.test.mjs
+node --check functions/api/admin/client-invites/index.js
+node --check functions/api/admin/client-invites/_shared.mjs
+node --check 'functions/api/client-invites/[id].js'
 node --check functions/api/admin/connections/index.js
 node --check 'functions/api/admin/connections/[service]/[id].js'
 node --check functions/api/admin/connections/_registry.mjs
