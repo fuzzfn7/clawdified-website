@@ -4,112 +4,1031 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>SEO & Competitor Intelligence Preview | Clawdified</title>
-<meta name="description" content="A public-safe Clawdified SEO and competitor intelligence preview. Enter a website and see search gaps, competitors, first fixes, and evidence-style proof in a client-facing UI." />
+<meta name="description" content="A public-safe Clawdified SEO and competitor intelligence preview. Enter a website and see search gaps, competitors, first fixes, and evidence-style proof in a client-facing operator workspace." />
 <link rel="canonical" href="https://clawdified.com/agents/seo-competitor/" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0a0807;--bg2:#0f0c0a;--panel:#14110d;--panel2:#1b1711;--panel3:#211b15;
-  --line:rgba(244,236,220,.095);--line2:rgba(244,236,220,.16);--line3:rgba(244,236,220,.24);
-  --text:#f4ecdc;--muted:rgba(244,236,220,.64);--faint:rgba(244,236,220,.38);--dim:rgba(244,236,220,.18);
-  --amber:#f5a623;--amber2:#e8932c;--gold:#d4af37;--orange:#ff6b35;--green:#6fb39a;--red:#d85f5f;
-  --amber-bg:rgba(245,166,35,.10);--amber-line:rgba(245,166,35,.34);--green-bg:rgba(111,179,154,.10);--red-bg:rgba(216,95,95,.11);
-  --sans:'Inter Tight',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;--mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --accent-h:26;
+  --accent:oklch(0.62 0.16 var(--accent-h));
+  --accent-soft:oklch(0.965 0.04 var(--accent-h));
+  --accent-border:oklch(0.86 0.08 var(--accent-h));
+  --accent-fg:oklch(0.44 0.18 var(--accent-h));
+
+  --bg:oklch(0.985 0.003 250);
+  --surface:#ffffff;
+  --surface-2:oklch(0.975 0.003 250);
+  --surface-3:oklch(0.96 0.004 250);
+  --rail:oklch(0.22 0.012 250);
+  --rail-fg:oklch(0.78 0.012 250);
+  --rail-fg-active:oklch(0.98 0.005 250);
+
+  --border:oklch(0.92 0.004 250);
+  --border-strong:oklch(0.86 0.005 250);
+  --hairline:oklch(0.94 0.003 250);
+
+  --fg:oklch(0.22 0.012 250);
+  --fg-2:oklch(0.42 0.012 250);
+  --fg-3:oklch(0.58 0.012 250);
+  --fg-muted:oklch(0.72 0.008 250);
+
+  --ok:oklch(0.55 0.13 155);
+  --ok-soft:oklch(0.96 0.04 155);
+  --warn:oklch(0.65 0.13 75);
+  --warn-soft:oklch(0.97 0.05 75);
+  --err:oklch(0.55 0.16 25);
+  --err-soft:oklch(0.97 0.04 25);
+
+  --row-h:40px;
+  --radius:6px;
+  --radius-lg:10px;
+
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
 }
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}body{min-height:100vh;overflow:hidden}button,input,textarea{font:inherit}button{cursor:pointer}a{color:inherit}.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}.shell{display:grid;grid-template-columns:248px minmax(0,1fr);height:100vh;min-height:720px;background:radial-gradient(900px 520px at 65% -10%,rgba(245,166,35,.08),transparent 64%),var(--bg)}
-.sidebar{border-right:1px solid var(--line);background:linear-gradient(180deg,var(--bg2),#0b0907);display:flex;flex-direction:column;min-width:0}.brand{height:62px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 15px}.mark{width:31px;height:31px;border-radius:9px;border:1px solid var(--amber-line);display:grid;place-items:center;background:var(--amber-bg);color:var(--amber)}.brand b{font-size:14px}.brand span{display:block;margin-top:2px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}.workspace{margin:12px 10px 6px;padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.018);display:flex;align-items:center;gap:10px}.ws-avatar{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(180deg,var(--amber),#c77f12);color:#1a1208;font-weight:700}.ws-meta{min-width:0;flex:1}.ws-name{font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ws-sub{font-size:11px;color:var(--muted);margin-top:2px}.nav{padding:10px 8px;display:grid;gap:2px}.nav-label{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);padding:10px 10px 5px}.nav-btn{border:0;background:transparent;color:var(--muted);border-radius:9px;padding:9px 11px;display:flex;align-items:center;gap:10px;text-align:left}.nav-btn:hover{background:var(--panel);color:var(--text)}.nav-btn.on{background:var(--panel2);color:var(--text);box-shadow:inset 2px 0 0 var(--amber)}.nav-btn[disabled]{opacity:.42;cursor:not-allowed}.nav-btn .dot{width:7px;height:7px;border-radius:50%;background:var(--dim)}.nav-btn.on .dot{background:var(--amber)}.history{border-top:1px solid var(--line);margin-top:6px;flex:1;min-height:0;display:flex;flex-direction:column}.history-head{padding:13px 14px 8px;display:flex;justify-content:space-between;align-items:center;color:var(--faint);font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}.history-list{padding:0 8px 12px;display:grid;gap:6px;overflow:auto}.scan-row{border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:rgba(255,255,255,.012)}.scan-row.empty{color:var(--faint);font-size:12px;line-height:1.45}.scan-row b{display:block;font-size:12px}.scan-row span{display:block;margin-top:2px;font-family:var(--mono);font-size:10px;color:var(--muted)}.side-note{margin:10px;border:1px solid var(--amber-line);background:var(--amber-bg);border-radius:12px;padding:10px 11px;font-size:11px;color:var(--muted);line-height:1.45}.side-note b{color:var(--text)}
-.main{min-width:0;height:100vh;display:flex;flex-direction:column}.topbar{height:52px;flex-shrink:0;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:0 18px;background:rgba(10,8,7,.82);backdrop-filter:blur(14px)}.menu{display:none}.crumbs{display:flex;align-items:center;gap:8px;color:var(--muted);min-width:0}.crumbs b{color:var(--text);font-weight:600}.top-actions{margin-left:auto;display:flex;align-items:center;gap:8px}.badge{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--amber-line);background:var(--amber-bg);color:var(--amber);border-radius:999px;padding:6px 9px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em}.badge:before{content:'';width:6px;height:6px;border-radius:50%;background:var(--amber)}.btn{border:1px solid var(--line2);background:var(--panel);color:var(--text);border-radius:9px;padding:9px 12px;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:8px;text-decoration:none}.btn:hover{border-color:var(--line3);background:var(--panel2)}.btn.primary{background:linear-gradient(180deg,var(--amber),#c77f12);border-color:#c77f12;color:#1a1208}.btn.ghost{background:transparent}.btn.soft{background:var(--amber-bg);border-color:var(--amber-line);color:var(--amber)}
-.header{border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.006));padding:18px 24px 0}.headline-row{display:flex;align-items:flex-end;justify-content:space-between;gap:18px}.title-block h1{margin:0 0 8px;font-size:clamp(22px,3vw,34px);line-height:1.02;letter-spacing:-.035em}.title-block p{margin:0 0 16px;color:var(--muted);max-width:760px}.head-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.kpis{display:none;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);margin-top:2px}.ready .kpis{display:grid}.kpi{padding:13px 16px;border-right:1px solid var(--line)}.kpi:last-child{border-right:0}.kpi .k{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.07em;text-transform:uppercase}.kpi .v{display:block;margin-top:5px;font-family:var(--mono);font-size:24px;color:var(--text);letter-spacing:-.03em}.kpi .s{font-size:12px;color:var(--muted)}.tabs{display:none;gap:4px;overflow:auto}.ready .tabs{display:flex}.tab{border:0;background:transparent;color:var(--muted);padding:12px 13px;border-bottom:2px solid transparent;font-weight:600;white-space:nowrap}.tab.on{color:var(--text);border-bottom-color:var(--amber)}.content{flex:1;min-height:0;overflow:auto;padding:22px 24px 26px}.card{border:1px solid var(--line);background:rgba(255,255,255,.018);border-radius:16px;overflow:hidden}.card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.012)}.card-h b{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--text)}.card-h span{font-size:12px;color:var(--muted)}.card-b{padding:15px}.grid{display:grid;gap:16px}.two{grid-template-columns:1.15fr .85fr}.three{grid-template-columns:repeat(3,1fr)}
-.intake{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:18px;align-items:start}.intro-card{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(245,166,35,.09),rgba(255,255,255,.014) 54%,rgba(10,8,7,.36));padding:22px}.intro-k{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--amber);margin-bottom:14px}.intro-card h2{font-size:clamp(32px,4.8vw,62px);line-height:.95;letter-spacing:-.055em;margin:0 0 14px;font-weight:700}.intro-card p{font-size:16px;color:var(--muted);max-width:760px;margin:0 0 18px}.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}.flow-step{border:1px solid var(--line);border-radius:14px;background:rgba(10,8,7,.44);padding:12px;min-height:112px}.flow-step small{font-family:var(--mono);color:var(--amber);font-size:10px}.flow-step b{display:block;margin:8px 0 5px;font-size:15px}.flow-step span{font-size:12px;color:var(--muted)}.form-card{border:1px solid var(--amber-line);border-radius:18px;background:linear-gradient(180deg,rgba(245,166,35,.08),rgba(255,255,255,.014));padding:16px;box-shadow:0 24px 70px rgba(0,0,0,.28)}.field{display:grid;gap:7px;margin-bottom:13px}.field label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}.field input,.field textarea{width:100%;border:1px solid var(--line2);background:#0d0b08;color:var(--text);border-radius:11px;padding:11px 12px;outline:none}.field input:focus,.field textarea:focus{border-color:var(--amber-line);box-shadow:0 0 0 3px rgba(245,166,35,.09)}.field textarea{min-height:94px;resize:vertical}.hint{font-size:11px;color:var(--muted);line-height:1.4}.error{min-height:18px;color:#e89b93;font-size:12px;margin:4px 0 8px}.fine{margin-top:12px;font-size:11px;line-height:1.5;color:var(--faint)}
-.scanning{max-width:900px;margin:38px auto}.scan-top{display:flex;align-items:center;gap:13px}.spinner{width:30px;height:30px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--amber);animation:spin .75s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.scan-title{font-size:20px;font-weight:700}.progress{height:8px;border-radius:99px;background:var(--panel2);overflow:hidden;margin:18px 0}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--amber),var(--orange));transition:width .24s}.scan-steps{display:grid;gap:9px}.scan-step{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.014);color:var(--muted)}.scan-step.active{border-color:var(--amber-line);background:var(--amber-bg);color:var(--text)}.scan-step.done .num{background:var(--green);color:#06110d}.num{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--panel2);font-family:var(--mono);font-size:11px}.scan-step b{display:block;color:var(--text)}.scan-step small{color:var(--muted)}.scan-step .meta{font-family:var(--mono);font-size:11px;color:var(--faint)}
-.verdict{border:1px solid var(--amber-line);background:linear-gradient(135deg,var(--amber-bg),rgba(255,255,255,.014));border-radius:17px;padding:19px}.verdict small{font-family:var(--mono);color:var(--amber);text-transform:uppercase;letter-spacing:.08em}.verdict h2{margin:8px 0 10px;font-size:clamp(26px,3.2vw,42px);line-height:1.02;letter-spacing:-.04em}.verdict p{color:var(--muted);margin:0;max-width:860px}.business{display:grid;grid-template-columns:58px 1fr;gap:14px;align-items:start}.biz-avatar{width:58px;height:58px;border-radius:17px;background:linear-gradient(180deg,var(--amber),#c77f12);color:#1a1208;display:grid;place-items:center;font-weight:800;font-size:20px}.biz-meta h3{margin:0 0 4px;font-size:22px}.biz-meta p{margin:0;color:var(--muted)}.pill-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}.pill{border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:5px 8px;font-size:11px;color:var(--muted)}.pill.good{border-color:rgba(111,179,154,.35);background:var(--green-bg);color:#9bd8c4}.pill.warn{border-color:var(--amber-line);background:var(--amber-bg);color:var(--amber)}.findings{display:grid;gap:8px}.finding{display:grid;grid-template-columns:9px 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:10px 11px;background:rgba(255,255,255,.012)}.finding .b{width:8px;height:8px;border-radius:50%;background:var(--green)}.finding.warn .b{background:var(--amber)}.finding.bad .b{background:var(--red)}.finding span:nth-child(2){color:var(--muted)}.finding code{font-family:var(--mono);font-size:11px;background:#0d0b08;border:1px solid var(--line);border-radius:5px;padding:1px 4px;color:var(--amber)}.finding .sev{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--faint)}
-.matrix-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 14px;border-bottom:1px solid var(--line)}.legend{display:flex;gap:12px;flex-wrap:wrap}.legend span{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:12px}.sq{width:12px;height:12px;border-radius:4px}.matrix-wrap{overflow:auto;max-height:520px}.matrix{display:grid;grid-template-columns:220px repeat(4,105px);min-width:640px}.hcell,.rcell,.cell{border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.hcell{position:sticky;top:0;z-index:2;background:var(--panel2);padding:10px 11px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--faint)}.rcell{padding:9px 10px;background:rgba(255,255,255,.01);font-size:12.5px}.rcell .idx{color:var(--faint);margin-right:7px}.rcell .vol{display:block;margin-top:3px;color:var(--faint);font-size:10px}.cell{display:grid;place-items:center;min-height:48px}.cell .dot{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-family:var(--mono);font-size:11px}.cell.absent .dot{background:#0d0b08;color:var(--faint);border:1px solid var(--line2)}.cell.organic .dot{background:var(--amber-bg);border:1px solid var(--amber-line);color:var(--amber)}.cell.pack .dot{background:linear-gradient(180deg,var(--amber),#c77f12);color:#1a1208}.matrix-foot{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}.matrix-foot div{padding:12px 14px;border-right:1px solid var(--line)}.matrix-foot div:last-child{border-right:0}.matrix-foot small{display:block;font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--faint);letter-spacing:.07em}.matrix-foot b{display:block;margin-top:5px;font-family:var(--mono);font-size:22px}.comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.comp{border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.016);padding:14px;display:grid;gap:13px}.comp-head{display:flex;gap:10px;align-items:flex-start}.comp-avatar{width:42px;height:42px;border-radius:12px;background:var(--panel2);border:1px solid var(--line2);display:grid;place-items:center;color:var(--amber);font-weight:800}.comp h3{margin:0;font-size:17px}.comp p{margin:3px 0 0;color:var(--muted);font-size:12.5px}.comp-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0}.comp-stats span{display:grid;gap:3px;text-align:center;border-right:1px solid var(--line)}.comp-stats span:last-child{border-right:0}.comp-stats b{font-family:var(--mono);font-size:17px}.comp-stats small{font-size:10px;color:var(--faint);text-transform:uppercase}.wins{display:flex;gap:6px;flex-wrap:wrap}.wins i{font-style:normal;border:1px solid var(--line);border-radius:999px;padding:4px 7px;font-size:11px;color:var(--muted)}.plan-head{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.filter{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:7px 10px;font-size:12px}.filter.on{background:var(--amber-bg);border-color:var(--amber-line);color:var(--amber)}.action-grid{display:grid;gap:10px}.action{display:grid;grid-template-columns:92px 1fr;gap:13px;border:1px solid var(--line);border-radius:14px;padding:13px;background:rgba(255,255,255,.012)}.action .when{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--amber);border:1px solid var(--amber-line);border-radius:8px;padding:6px;text-align:center;background:var(--amber-bg);height:max-content}.action h3{margin:0 0 6px;font-size:17px}.action p{margin:0;color:var(--muted)}.meta-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.meta-row span{border:1px solid var(--line);border-radius:8px;padding:5px 7px;color:var(--muted);font-size:11px}.ev-table{width:100%;border-collapse:collapse}.ev-table th{text-align:left;border-bottom:1px solid var(--line);background:var(--panel2);padding:10px 12px;font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--faint)}.ev-table td{border-bottom:1px solid var(--line);padding:10px 12px;color:var(--muted);font-size:12px}.tag{display:inline-block;border-radius:7px;padding:3px 7px;font-size:10px;text-transform:uppercase;font-family:var(--mono)}.tag.absent{background:var(--red-bg);color:#f09a92;border:1px solid rgba(216,95,95,.34)}.tag.organic{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}.tag.pack{background:var(--green-bg);color:#9bd8c4;border:1px solid rgba(111,179,154,.34)}
-.ask-fab{position:fixed;right:18px;bottom:18px;border:1px solid var(--amber-line);background:linear-gradient(180deg,var(--amber),#c77f12);color:#1a1208;border-radius:999px;padding:11px 14px;font-weight:800;box-shadow:0 16px 52px rgba(0,0,0,.34);z-index:20}.ask-panel{position:fixed;right:18px;bottom:74px;width:min(420px,calc(100vw - 36px));max-height:min(640px,calc(100vh - 96px));display:none;flex-direction:column;border:1px solid var(--line2);border-radius:18px;background:#0d0b08;box-shadow:0 30px 100px rgba(0,0,0,.55);z-index:21;overflow:hidden}.ask-panel.open{display:flex}.ask-h{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}.ask-h b{font-size:13px;text-transform:uppercase}.ask-h button{border:0;background:transparent;color:var(--muted)}.ask-stream{padding:13px;display:grid;gap:10px;overflow:auto;min-height:160px}.msg{display:grid;gap:5px;max-width:92%}.msg.user{justify-self:end}.msg small{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--faint)}.bubble{border:1px solid var(--line);border-radius:13px;padding:10px 11px;color:var(--muted);background:var(--panel)}.msg.user .bubble{background:var(--amber-bg);border-color:var(--amber-line);color:var(--text)}.ask-suggest{display:flex;gap:6px;flex-wrap:wrap;padding:0 13px 10px}.ask-suggest button{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:6px 8px;font-size:11px}.ask-compose{display:flex;gap:8px;border-top:1px solid var(--line);padding:10px;background:var(--bg2)}.ask-compose input{flex:1;border:1px solid var(--line);border-radius:10px;background:#0a0807;color:var(--text);padding:9px}.ask-compose button{border:1px solid #c77f12;background:var(--amber);color:#1a1208;border-radius:10px;padding:0 11px;font-weight:800}
-@media(max-width:1120px){.shell{grid-template-columns:1fr}.sidebar{position:fixed;left:0;top:0;bottom:0;width:280px;z-index:30;transform:translateX(-100%);transition:.2s}.sidebar.open{transform:none;box-shadow:30px 0 80px rgba(0,0,0,.5)}.menu{display:inline-flex}.intake,.two,.three,.comp-grid{grid-template-columns:1fr}.flow{grid-template-columns:repeat(2,1fr)}.ready .kpis{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:640px){body{overflow:auto}.shell{height:auto;min-height:100vh}.main{height:auto;min-height:100vh}.topbar{padding:0 12px}.crumbs{font-size:12px}.top-actions .btn.ghost{display:none}.header{padding:16px 14px 0}.headline-row{display:grid}.head-actions{justify-content:stretch}.head-actions .btn{flex:1;justify-content:center}.content{padding:14px}.intro-card h2{font-size:38px}.flow{grid-template-columns:1fr}.ready .kpis{grid-template-columns:1fr}.kpi{border-right:0;border-bottom:1px solid var(--line)}.matrix{grid-template-columns:155px repeat(4,90px)}.matrix-foot{grid-template-columns:1fr 1fr}.matrix-foot div{border-bottom:1px solid var(--line)}.action{grid-template-columns:1fr}.ev-table{min-width:680px}.card.table-scroll{overflow:auto}}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{font-family:var(--sans);font-size:13px;color:var(--fg);background:var(--bg);-webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss01","ss03"}
+button{font-family:inherit;cursor:pointer}
+input,textarea,select{font-family:inherit}
+a{color:inherit}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ====== APP SHELL ====== */
+.app{display:grid;grid-template-columns:228px 1fr;height:100vh;overflow:hidden}
+.rail{background:var(--rail);color:var(--rail-fg);display:flex;flex-direction:column;padding:14px 12px;gap:4px;border-right:1px solid oklch(0.18 0.012 250);min-height:0}
+.rail-brand{display:flex;align-items:center;gap:10px;padding:6px 8px 14px;border-bottom:1px solid oklch(0.28 0.012 250);margin-bottom:8px}
+.rail-brand-mark{width:28px;height:28px;border-radius:6px;background:var(--accent);display:grid;place-items:center;color:white;font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:-.02em}
+.rail-brand-name{color:var(--rail-fg-active);font-weight:600;font-size:13.5px;letter-spacing:-.01em}
+.rail-brand-sub{color:oklch(0.55 0.012 250);font-size:10.5px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.rail-section{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:oklch(0.55 0.012 250);padding:14px 8px 6px;font-weight:500}
+.rail-item{display:flex;align-items:center;gap:10px;padding:7px 9px;border-radius:5px;color:var(--rail-fg);font-size:13px;user-select:none;border:none;background:transparent;width:100%;text-align:left}
+.rail-item:hover{background:oklch(0.28 0.012 250);color:var(--rail-fg-active)}
+.rail-item.active{background:oklch(0.30 0.014 250);color:var(--rail-fg-active)}
+.rail-item.active .rail-item-glyph{color:var(--accent)}
+.rail-item[disabled]{opacity:.42;cursor:not-allowed}
+.rail-item[disabled]:hover{background:transparent;color:var(--rail-fg)}
+.rail-item-glyph{width:18px;font-size:13px;text-align:center;color:oklch(0.62 0.012 250);font-family:var(--mono)}
+.rail-item .badge{margin-left:auto;font-family:var(--mono);font-size:10px;background:oklch(0.30 0.012 250);color:oklch(0.85 0.012 250);padding:1px 6px;border-radius:3px}
+.rail-item .health-dot{margin-left:auto;width:6px;height:6px;border-radius:50%;background:oklch(0.45 0.012 250)}
+.rail-item.active .health-dot{background:var(--accent);box-shadow:0 0 0 3px oklch(0.32 0.05 var(--accent-h) / .35)}
+
+.rail-run-card{margin:0 6px;padding:11px 12px;border:1px solid oklch(0.30 0.012 250);border-radius:8px;background:oklch(0.245 0.012 250);color:var(--rail-fg);font-size:12px;line-height:1.4}
+.rail-run-head{display:flex;align-items:center;gap:8px;color:var(--rail-fg-active);font-weight:600;margin-bottom:6px}
+.rail-run-dot{width:7px;height:7px;border-radius:50%;background:oklch(0.55 0.13 75);box-shadow:0 0 0 3px oklch(0.32 0.06 75 / .4)}
+.rail-run-card.live .rail-run-dot{background:var(--ok);box-shadow:0 0 0 3px oklch(0.32 0.06 155 / .4)}
+.rail-run-card p{margin:0 0 9px;color:oklch(0.66 0.012 250);font-size:11.5px;line-height:1.45}
+.rail-run-meta{display:grid;gap:6px;margin:0}
+.rail-run-meta>div{display:grid;gap:1px}
+.rail-run-meta dt{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:oklch(0.55 0.012 250);margin:0}
+.rail-run-meta dd{color:var(--rail-fg-active);font-size:11.5px;margin:0;font-family:var(--mono)}
+
+.rail-history{padding:0 6px;margin-top:8px;display:grid;gap:6px;min-height:0;overflow:auto}
+.rail-history-empty{border:1px dashed oklch(0.32 0.012 250);border-radius:7px;padding:9px 10px;color:oklch(0.58 0.012 250);font-size:11.5px;line-height:1.4}
+.rail-history-row{border:1px solid oklch(0.30 0.012 250);border-radius:7px;padding:8px 10px;background:oklch(0.245 0.012 250);color:var(--rail-fg-active);font-size:12px}
+.rail-history-row small{display:block;font-family:var(--mono);font-size:10px;color:oklch(0.58 0.012 250);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
+
+.rail-foot{margin-top:auto;padding:10px 8px;border-top:1px solid oklch(0.28 0.012 250);display:flex;align-items:center;gap:10px}
+.rail-foot-avatar{width:28px;height:28px;border-radius:50%;background:oklch(0.40 0.06 var(--accent-h));color:white;display:grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:700}
+.rail-foot-name{color:var(--rail-fg-active);font-size:12.5px;font-weight:500}
+.rail-foot-role{color:oklch(0.55 0.012 250);font-size:11px}
+
+/* ====== MAIN ====== */
+.main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg);min-width:0}
+.topbar{height:48px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;padding:0 18px;gap:12px;flex-shrink:0}
+.crumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--fg-2);white-space:nowrap;min-width:0}
+.crumb b{color:var(--fg);font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.crumb-sep{color:var(--fg-muted)}
+.topbar-spacer{flex:1}
+.agent-pill{display:inline-flex;align-items:center;gap:6px;background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--accent-fg);padding:4px 10px 4px 8px;border-radius:100px;font-size:11.5px;font-weight:500;white-space:nowrap}
+.agent-pill .pulse{width:6px;height:6px;border-radius:50%;background:var(--accent);position:relative}
+.agent-pill .pulse::after{content:"";position:absolute;inset:-3px;border-radius:50%;background:var(--accent);opacity:.3;animation:pulse 2s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.8);opacity:.45}100%{transform:scale(2);opacity:0}}
+
+.btn{height:30px;padding:0 12px;border-radius:var(--radius);font-size:12.5px;font-weight:500;border:1px solid var(--border);background:var(--surface);color:var(--fg);display:inline-flex;align-items:center;gap:6px;white-space:nowrap;text-decoration:none;transition:background .12s ease,border-color .12s ease}
+.btn:hover{background:var(--surface-2);border-color:var(--border-strong)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:white}
+.btn-primary:hover{filter:brightness(1.06);background:var(--accent)}
+.btn-ghost{border-color:transparent;background:transparent}
+.btn-ghost:hover{background:var(--surface-3)}
+.btn-soft{background:var(--accent-soft);border-color:var(--accent-border);color:var(--accent-fg)}
+.btn-soft:hover{background:oklch(0.94 0.05 var(--accent-h))}
+
+.menu-btn{display:none}
+
+/* ====== PAGE ====== */
+.page{flex:1;overflow:auto;display:flex;flex-direction:column;min-height:0}
+.page-header{padding:22px 24px 12px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-shrink:0}
+.page-title{font-size:19px;font-weight:600;letter-spacing:-.015em;margin:0;color:var(--fg)}
+.page-sub{color:var(--fg-2);font-size:13px;margin:4px 0 0;max-width:720px;line-height:1.5}
+.page-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+
+/* ====== STAT STRIP ====== */
+.stat-strip{display:grid;grid-template-columns:repeat(5,1fr);margin:0 24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.stat-cell{padding:12px 16px;border-right:1px solid var(--border);min-width:0}
+.stat-cell:last-child{border-right:none}
+.stat-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-3);font-weight:500}
+.stat-value{font-family:var(--mono);font-size:20px;font-weight:500;letter-spacing:-.02em;color:var(--fg);margin-top:4px;display:flex;align-items:baseline;gap:6px}
+.stat-sub{font-size:11px;color:var(--fg-3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stat-delta{font-size:11px;font-family:var(--mono);color:var(--accent-fg)}
+
+/* ====== TABS ====== */
+.tabs-row{display:flex;align-items:center;gap:8px;padding:14px 24px 0;border-bottom:1px solid var(--border);margin-top:2px}
+.tab-btn{height:32px;padding:0 10px;border:none;background:transparent;color:var(--fg-2);font-size:12.5px;font-weight:500;border-bottom:2px solid transparent;margin-bottom:-1px;display:inline-flex;align-items:center;gap:6px;border-radius:0}
+.tab-btn:hover{color:var(--fg)}
+.tab-btn.active{color:var(--fg);border-bottom-color:var(--accent)}
+.tab-btn .count{font-family:var(--mono);font-size:10.5px;color:var(--fg-3);background:var(--surface-3);border-radius:3px;padding:1px 5px}
+.tab-btn.active .count{color:var(--accent-fg);background:var(--accent-soft)}
+
+/* ====== CONTENT WRAP ====== */
+.content{flex:1;min-height:0;overflow:auto;padding:18px 24px 24px;display:flex;flex-direction:column;gap:16px}
+
+/* ====== CARDS ====== */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface)}
+.card-head b{display:block;font-size:13px;color:var(--fg);font-weight:600}
+.card-head small{display:block;color:var(--fg-3);font-size:11.5px;margin-top:1px}
+.card-body{padding:16px}
+.card-row{display:grid;gap:16px;grid-template-columns:1.1fr .9fr}
+.card-row.three{grid-template-columns:repeat(3,1fr)}
+
+/* ====== INTAKE ====== */
+.intake-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px;align-items:start}
+.intake-hero{padding:20px 22px}
+.intake-eyebrow{display:inline-flex;align-items:center;gap:7px;color:var(--accent-fg);font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:10px}
+.intake-eyebrow .pulse{width:7px;height:7px;border-radius:99px;background:var(--accent);box-shadow:0 0 0 4px oklch(0.82 0.08 var(--accent-h) / .32)}
+.intake-hero h2{margin:0 0 8px;font-size:22px;font-weight:600;letter-spacing:-.02em;line-height:1.15}
+.intake-hero p{margin:0;color:var(--fg-2);font-size:13.5px;line-height:1.5;max-width:560px}
+.flow{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}
+.flow-step{border:1px solid var(--border);border-radius:8px;padding:11px 12px;background:var(--surface-2)}
+.flow-step small{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent-fg)}
+.flow-step b{display:block;margin:5px 0 3px;font-size:13px;color:var(--fg);font-weight:600}
+.flow-step span{font-size:11.5px;color:var(--fg-2);line-height:1.4}
+
+.form-card{padding:18px}
+.form-card h3{margin:0 0 4px;font-size:14px;font-weight:600}
+.form-card .form-sub{margin:0 0 14px;color:var(--fg-3);font-size:12px}
+.field{display:grid;gap:5px;margin-bottom:12px}
+.field label{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-3);font-weight:500}
+.field input,.field textarea{width:100%;border:1px solid var(--border);background:var(--surface);color:var(--fg);border-radius:var(--radius);padding:8px 10px;outline:none;font-size:13px}
+.field input:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.field textarea{min-height:80px;resize:vertical;font-family:inherit}
+.field-hint{font-size:11px;color:var(--fg-3);line-height:1.4}
+.field-optional{color:var(--fg-muted);text-transform:none;letter-spacing:0;font-family:var(--sans)}
+.form-error{min-height:16px;color:var(--err);font-size:11.5px;margin:4px 0 8px}
+.form-submit{width:100%;justify-content:center;height:36px;font-size:13px}
+.form-fine{margin-top:12px;font-size:11px;line-height:1.5;color:var(--fg-3);padding-top:12px;border-top:1px solid var(--hairline)}
+
+/* ====== SCAN ====== */
+.scan-card{max-width:840px;margin:0 auto;width:100%}
+.scan-head{display:flex;align-items:center;gap:14px;padding:16px}
+.spinner{width:24px;height:24px;border-radius:50%;border:2px solid var(--surface-3);border-top-color:var(--accent);animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scan-head-copy{flex:1;min-width:0}
+.scan-head-copy b{display:block;font-size:14px;font-weight:600}
+.scan-head-copy span{display:block;font-size:11.5px;color:var(--fg-3);margin-top:1px}
+.scan-pct{font-family:var(--mono);font-size:13px;color:var(--accent-fg);font-weight:500}
+.scan-progress{height:4px;background:var(--surface-3);overflow:hidden}
+.scan-progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .24s}
+.scan-steps{padding:14px 16px 16px;display:grid;gap:8px}
+.scan-step{display:grid;grid-template-columns:24px 1fr auto;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface-2);color:var(--fg-2)}
+.scan-step.active{border-color:var(--accent-border);background:var(--accent-soft)}
+.scan-step.done{border-color:oklch(0.86 0.08 155);background:var(--ok-soft);color:var(--fg)}
+.scan-step .num{width:20px;height:20px;border-radius:5px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--border);font-family:var(--mono);font-size:10.5px;color:var(--fg-2)}
+.scan-step.active .num{background:var(--accent);border-color:var(--accent);color:white}
+.scan-step.done .num{background:var(--ok);border-color:var(--ok);color:white}
+.scan-step b{display:block;font-size:12.5px;font-weight:600;color:var(--fg)}
+.scan-step small{display:block;font-size:11.5px;color:var(--fg-3);margin-top:1px}
+.scan-step .meta{font-family:var(--mono);font-size:10.5px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.04em}
+
+/* ====== OVERVIEW ====== */
+.verdict{padding:20px 22px;background:linear-gradient(135deg,var(--accent-soft),var(--surface));border:1px solid var(--accent-border)}
+.verdict small{display:inline-flex;align-items:center;gap:7px;color:var(--accent-fg);font-family:var(--mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.verdict small .pulse{width:7px;height:7px;border-radius:99px;background:var(--accent);box-shadow:0 0 0 4px oklch(0.82 0.08 var(--accent-h) / .32)}
+.verdict h2{margin:8px 0 6px;font-size:22px;line-height:1.2;letter-spacing:-.02em;font-weight:600}
+.verdict h2 em{font-style:normal;color:var(--accent-fg)}
+.verdict p{margin:0;color:var(--fg-2);font-size:13px;line-height:1.55;max-width:780px}
+
+.business{display:grid;grid-template-columns:48px 1fr;gap:14px;align-items:start}
+.biz-avatar{width:48px;height:48px;border-radius:12px;background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--accent-fg);display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:15px}
+.biz-meta h3{margin:0 0 2px;font-size:15px;font-weight:600;letter-spacing:-.01em}
+.biz-meta p{margin:0;color:var(--fg-2);font-size:12.5px;line-height:1.45}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.pill{border:1px solid var(--border);background:var(--surface-2);border-radius:999px;padding:3px 8px;font-size:11px;color:var(--fg-2)}
+.pill.accent{border-color:var(--accent-border);background:var(--accent-soft);color:var(--accent-fg)}
+.pill.warn{border-color:oklch(0.86 0.10 75);background:var(--warn-soft);color:oklch(0.38 0.13 75)}
+
+.findings{display:grid;gap:6px}
+.finding{display:grid;grid-template-columns:8px 1fr auto;gap:10px;align-items:center;border:1px solid var(--border);border-radius:var(--radius);padding:9px 11px;background:var(--surface)}
+.finding .b{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.finding.warn .b{background:var(--warn)}
+.finding.bad .b{background:var(--err)}
+.finding span:nth-child(2){color:var(--fg-2);font-size:12.5px;line-height:1.45}
+.finding span:nth-child(2) strong{color:var(--fg);font-weight:600}
+.finding .sev{font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--fg-3);letter-spacing:.04em}
+
+/* ====== MATRIX ====== */
+.matrix-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+.legend{display:flex;gap:14px;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px;color:var(--fg-2);font-size:11.5px}
+.sq{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.matrix-wrap{overflow:auto;max-height:480px}
+.matrix{display:grid;grid-template-columns:240px repeat(4,110px);min-width:680px}
+.hcell,.rcell,.cell{border-right:1px solid var(--border);border-bottom:1px solid var(--hairline)}
+.hcell{position:sticky;top:0;z-index:2;background:var(--surface-2);padding:9px 12px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-3);font-weight:500}
+.rcell{padding:9px 12px;background:var(--surface);font-size:12.5px;color:var(--fg);display:flex;flex-direction:column;justify-content:center;min-height:42px}
+.rcell .idx{color:var(--fg-3);margin-right:6px;font-family:var(--mono);font-size:10.5px}
+.rcell .vol{display:block;margin-top:2px;color:var(--fg-3);font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em}
+.cell{display:grid;place-items:center;min-height:42px;background:var(--surface)}
+.cell .dot{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;font-family:var(--mono);font-size:10.5px;font-weight:600}
+.cell.absent .dot{background:var(--surface-3);color:var(--fg-3);border:1px solid var(--border)}
+.cell.organic .dot{background:var(--accent-soft);border:1px solid var(--accent-border);color:var(--accent-fg)}
+.cell.pack .dot{background:var(--accent);color:white;border:1px solid var(--accent)}
+.matrix-foot{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--border);background:var(--surface-2)}
+.matrix-foot div{padding:10px 14px;border-right:1px solid var(--border)}
+.matrix-foot div:last-child{border-right:0}
+.matrix-foot small{display:block;font-family:var(--mono);font-size:10px;text-transform:uppercase;color:var(--fg-3);letter-spacing:.06em}
+.matrix-foot b{display:block;margin-top:3px;font-family:var(--mono);font-size:17px;font-weight:500;letter-spacing:-.02em;color:var(--fg)}
+
+/* ====== COMPETITORS ====== */
+.comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.comp{border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);padding:14px;display:grid;gap:12px}
+.comp-head{display:flex;gap:10px;align-items:flex-start}
+.comp-avatar{width:36px;height:36px;border-radius:8px;background:var(--surface-3);border:1px solid var(--border);display:grid;place-items:center;color:var(--fg-2);font-family:var(--mono);font-weight:700;font-size:11px;flex-shrink:0}
+.comp h3{margin:0;font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.comp p{margin:2px 0 0;color:var(--fg-2);font-size:12px;line-height:1.4}
+.comp-rank{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--accent-fg);background:var(--accent-soft);border:1px solid var(--accent-border);border-radius:5px;padding:2px 7px;height:max-content}
+.comp-stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);padding:9px 0}
+.comp-stats span{display:grid;gap:2px;text-align:center;border-right:1px solid var(--hairline)}
+.comp-stats span:last-child{border-right:0}
+.comp-stats b{font-family:var(--mono);font-size:15px;color:var(--fg);font-weight:500;letter-spacing:-.02em}
+.comp-stats small{font-size:10px;color:var(--fg-3);text-transform:uppercase;letter-spacing:.06em}
+.wins{display:flex;gap:5px;flex-wrap:wrap}
+.wins i{font-style:normal;border:1px solid var(--border);border-radius:999px;padding:3px 7px;font-size:11px;color:var(--fg-2);background:var(--surface-2)}
+
+/* ====== ACTION PLAN ====== */
+.plan-head{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.filter-chip{height:28px;border:1px dashed var(--border-strong);border-radius:var(--radius);padding:0 10px;background:transparent;color:var(--fg-2);font-size:12px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.filter-chip:hover{background:var(--surface-2)}
+.filter-chip.on{border-style:solid;background:var(--accent-soft);color:var(--accent-fg);border-color:var(--accent-border)}
+.action-grid{display:grid;gap:10px}
+.action{display:grid;grid-template-columns:96px 1fr;gap:14px;border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;background:var(--surface)}
+.action .when{font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent-fg);border:1px solid var(--accent-border);border-radius:var(--radius);padding:5px 7px;text-align:center;background:var(--accent-soft);height:max-content}
+.action h3{margin:0 0 4px;font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.action p{margin:0;color:var(--fg-2);font-size:12.5px;line-height:1.5}
+.meta-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.meta-row span{border:1px solid var(--border);border-radius:var(--radius);padding:3px 7px;color:var(--fg-2);font-size:10.5px;background:var(--surface-2);font-family:var(--mono);text-transform:uppercase;letter-spacing:.04em}
+
+/* ====== EVIDENCE TABLE ====== */
+.sheet-scroll{overflow:auto}
+table.sheet{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px;table-layout:auto}
+table.sheet thead th{position:sticky;top:0;background:var(--surface-2);border-bottom:1px solid var(--border);text-align:left;font-weight:500;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--fg-3);padding:0 14px;height:34px;z-index:2;user-select:none;white-space:nowrap}
+table.sheet tbody td{padding:0 14px;height:var(--row-h);border-bottom:1px solid var(--hairline);vertical-align:middle;color:var(--fg-2)}
+table.sheet tbody tr:hover td{background:var(--surface-2)}
+table.sheet tbody td.term{color:var(--fg);font-weight:500}
+table.sheet tbody td.rank{font-family:var(--mono);color:var(--accent-fg)}
+.tag{display:inline-block;border-radius:4px;padding:2px 7px;font-size:10px;text-transform:uppercase;font-family:var(--mono);letter-spacing:.04em;font-weight:500}
+.tag.absent{background:var(--err-soft);color:var(--err);border:1px solid oklch(0.86 0.08 25)}
+.tag.organic{background:var(--accent-soft);color:var(--accent-fg);border:1px solid var(--accent-border)}
+.tag.pack{background:var(--ok-soft);color:oklch(0.32 0.10 155);border:1px solid oklch(0.78 0.10 155)}
+.sheet-foot{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);background:var(--surface-2);padding:9px 16px;font-size:11.5px;color:var(--fg-3);font-family:var(--mono);letter-spacing:.02em}
+
+/* ====== ASK PANEL ====== */
+.ask-fab{position:fixed;right:18px;bottom:18px;border:1px solid var(--accent);background:var(--accent);color:white;border-radius:999px;padding:9px 14px;font-weight:500;font-size:12.5px;box-shadow:0 14px 36px -16px oklch(0.30 0.10 var(--accent-h) / .45);z-index:20;display:inline-flex;align-items:center;gap:6px}
+.ask-fab:hover{filter:brightness(1.05)}
+.ask-panel{position:fixed;right:18px;bottom:70px;width:min(400px,calc(100vw - 36px));max-height:min(620px,calc(100vh - 96px));display:none;flex-direction:column;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:0 24px 80px -20px oklch(0.22 0.012 250 / .35);z-index:21;overflow:hidden}
+.ask-panel.open{display:flex}
+.ask-h{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--surface-2)}
+.ask-h b{font-size:12.5px;font-weight:600}
+.ask-h small{display:block;font-size:11px;color:var(--fg-3);margin-top:1px}
+.ask-h button{border:1px solid var(--border);background:var(--surface);color:var(--fg-2);border-radius:5px;width:26px;height:26px;display:grid;place-items:center;font-size:14px;line-height:1}
+.ask-h button:hover{background:var(--surface-3)}
+.ask-stream{padding:12px;display:grid;gap:10px;overflow:auto;min-height:160px;flex:1}
+.msg{display:grid;gap:4px;max-width:92%}
+.msg.user{justify-self:end}
+.msg small{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;color:var(--fg-3);letter-spacing:.06em}
+.bubble{border:1px solid var(--border);border-radius:9px;padding:9px 11px;color:var(--fg-2);background:var(--surface-2);font-size:12.5px;line-height:1.45}
+.bubble strong{color:var(--fg);font-weight:600}
+.msg.user .bubble{background:var(--accent-soft);border-color:var(--accent-border);color:var(--accent-fg)}
+.ask-suggest{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 10px}
+.ask-suggest button{border:1px solid var(--border);background:var(--surface);color:var(--fg-2);border-radius:999px;padding:4px 9px;font-size:11px}
+.ask-suggest button:hover{background:var(--surface-2);border-color:var(--border-strong)}
+.ask-compose{display:flex;gap:8px;border-top:1px solid var(--border);padding:10px;background:var(--surface-2)}
+.ask-compose input{flex:1;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);color:var(--fg);padding:7px 9px;font-size:12.5px;outline:none}
+.ask-compose input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.ask-compose button{border:1px solid var(--accent);background:var(--accent);color:white;border-radius:var(--radius);padding:0 12px;font-weight:500;font-size:12.5px}
+
+/* ====== EMPTY STATE FOR RESULT AREA WHEN BLANK ====== */
+.empty-result{border:1px dashed var(--border-strong);border-radius:var(--radius-lg);padding:24px;text-align:center;color:var(--fg-3);background:var(--surface);font-size:12.5px;line-height:1.5}
+.empty-result b{display:block;color:var(--fg);font-size:13px;font-weight:600;margin-bottom:4px}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width:1180px){
+  .comp-grid{grid-template-columns:repeat(2,1fr)}
+  .card-row.three{grid-template-columns:1fr 1fr}
+}
+@media (max-width:980px){
+  .app{grid-template-columns:1fr}
+  .rail{position:fixed;left:0;top:0;bottom:0;width:264px;z-index:30;transform:translateX(-100%);transition:transform .2s ease;box-shadow:24px 0 60px -24px oklch(0.22 0.012 250 / .5)}
+  .rail.open{transform:none}
+  .menu-btn{display:inline-flex}
+  .stat-strip{grid-template-columns:repeat(2,1fr)}
+  .stat-cell{border-right:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .intake-grid,.card-row,.card-row.three{grid-template-columns:1fr}
+  .comp-grid{grid-template-columns:1fr}
+  .matrix{grid-template-columns:180px repeat(4,96px)}
+}
+@media (max-width:640px){
+  .page-header{padding:18px 16px 8px;flex-direction:column;align-items:flex-start;gap:10px}
+  .page-actions{justify-content:stretch;width:100%}
+  .page-actions .btn{flex:1;justify-content:center}
+  .stat-strip{margin:0 16px;grid-template-columns:1fr}
+  .stat-cell{border-right:none;border-bottom:1px solid var(--border)}
+  .stat-cell:last-child{border-bottom:none}
+  .content{padding:14px 16px 20px}
+  .tabs-row{padding:14px 16px 0;overflow-x:auto;flex-wrap:nowrap}
+  .action{grid-template-columns:1fr}
+  .matrix-foot{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
-<body data-agent-ui="seo-competitor-fresh-input" data-public-safe="capped-preview" data-default-state="blank">
-<div class="shell" id="appShell">
-  <aside class="sidebar" id="sidebar">
-    <div class="brand"><div class="mark">⌁</div><div><b>Clawdified</b><span>SEO agent</span></div></div>
-    <div class="workspace"><div class="ws-avatar" id="wsAvatar">+</div><div class="ws-meta"><div class="ws-name" id="wsName">New website</div><div class="ws-sub" id="wsSub">Fresh interaction</div></div></div>
-    <nav class="nav" aria-label="Workspace navigation">
-      <div class="nav-label">Workspace</div>
-      <button class="nav-btn on" data-tab="overview"><span class="dot"></span>Overview</button>
-      <button class="nav-btn" data-tab="coverage" disabled><span class="dot"></span>Search coverage</button>
-      <button class="nav-btn" data-tab="competitors" disabled><span class="dot"></span>Competitors</button>
-      <button class="nav-btn" data-tab="plan" disabled><span class="dot"></span>Action plan</button>
-      <button class="nav-btn" data-tab="evidence" disabled><span class="dot"></span>Evidence</button>
-      <div class="nav-label">Agent</div>
-      <button class="nav-btn" type="button" onclick="openAsk()"><span class="dot"></span>Ask the agent</button>
-    </nav>
-    <div class="history"><div class="history-head"><span>Preview history</span></div><div class="history-list" id="historyList"><div class="scan-row empty">No scan yet. Enter a website and run a capped preview.</div></div></div>
-    <div class="side-note"><b>Public-safe mode.</b> This page shows a capped preview shape. The full SEO audit is run after review, with deeper crawling, SERP capture, and implementation planning.</div>
-  </aside>
-  <main class="main">
-    <div class="topbar">
-      <button class="btn ghost menu" type="button" onclick="document.getElementById('sidebar').classList.toggle('open')">Menu</button>
-      <div class="crumbs"><span>Clawdified</span><span>/</span><b>SEO & Competitor Intelligence</b><span id="crumbDetail"></span></div>
-      <div class="top-actions"><span class="badge">Capped preview</span><a class="btn ghost" href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener">Request full audit</a></div>
-    </div>
-    <header class="header" id="pageHeader">
-      <div class="headline-row">
-        <div class="title-block"><h1 id="pageTitle">Start a search gap preview.</h1><p id="pageLead">Paste a business website. The workspace starts blank, reads the site, then populates search coverage, competitors, first fixes, and evidence-style proof.</p></div>
-        <div class="head-actions"><button class="btn soft" type="button" onclick="focusWebsite()">Enter website</button><button class="btn ghost" type="button" onclick="startOver()">Start over</button></div>
+<body
+  data-agent-ui="seo-competitor-fresh-input"
+  data-public-safe="capped-preview"
+  data-default-state="blank"
+  data-ui-family="clawdified-operator-light-rail"
+  data-design-source="lead-growth-zc-robert-operator"
+>
+<div class="app">
+  <aside class="rail" id="sideRail" aria-label="SEO agent workspace navigation">
+    <div class="rail-brand">
+      <div class="rail-brand-mark">⌁</div>
+      <div>
+        <div class="rail-brand-name">Clawdified</div>
+        <div class="rail-brand-sub">SEO agent</div>
       </div>
-      <div class="kpis" id="kpiStrip"></div>
-      <nav class="tabs" id="tabsBar" aria-label="Result tabs">
-        <button class="tab on" data-tab="overview">Overview</button><button class="tab" data-tab="coverage">Search coverage</button><button class="tab" data-tab="competitors">Competitors</button><button class="tab" data-tab="plan">Action plan</button><button class="tab" data-tab="evidence">Evidence</button>
-      </nav>
-    </header>
-    <section class="content" id="content"></section>
+    </div>
+
+    <div class="rail-section">Workspace</div>
+    <button class="rail-item active" type="button" data-tab="overview"><span class="rail-item-glyph" aria-hidden="true">◉</span><span>Website read</span><span class="health-dot" aria-hidden="true"></span></button>
+    <button class="rail-item" type="button" data-tab="coverage" disabled><span class="rail-item-glyph" aria-hidden="true">▦</span><span>Search coverage</span></button>
+    <button class="rail-item" type="button" data-tab="competitors" disabled><span class="rail-item-glyph" aria-hidden="true">⌖</span><span>Competitors</span></button>
+    <button class="rail-item" type="button" data-tab="plan" disabled><span class="rail-item-glyph" aria-hidden="true">→</span><span>Action plan</span></button>
+    <button class="rail-item" type="button" data-tab="evidence" disabled><span class="rail-item-glyph" aria-hidden="true">≡</span><span>Evidence</span></button>
+
+    <div class="rail-section">Agent</div>
+    <button class="rail-item" type="button" onclick="openAsk()"><span class="rail-item-glyph" aria-hidden="true">✦</span><span>Ask agent</span><span class="health-dot" aria-hidden="true"></span></button>
+
+    <div class="rail-section">Preview state</div>
+    <div class="rail-run-card" id="railRunCard">
+      <div class="rail-run-head"><span class="rail-run-dot" aria-hidden="true"></span><b id="railRunTitle">Awaiting input</b></div>
+      <p id="railRunNote">Paste a website to start a public-safe preview. The agent reads the site, then populates this workspace.</p>
+      <dl class="rail-run-meta">
+        <div><dt>Mode</dt><dd>Capped preview</dd></div>
+        <div><dt>Target</dt><dd id="railRunTarget">—</dd></div>
+      </dl>
+    </div>
+
+    <div class="rail-section">Preview history</div>
+    <div class="rail-history" id="railHistory">
+      <div class="rail-history-empty">No scan yet. Enter a website above and run a capped preview.</div>
+    </div>
+
+    <div class="rail-foot">
+      <div class="rail-foot-avatar">CL</div>
+      <div>
+        <div class="rail-foot-name">Clawdified</div>
+        <div class="rail-foot-role">Public preview · v1</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main" aria-label="SEO competitor workspace">
+    <div class="topbar" role="banner">
+      <button class="btn btn-ghost menu-btn" type="button" onclick="document.getElementById('sideRail').classList.toggle('open')">Menu</button>
+      <div class="crumb">
+        <span>Clawdified</span>
+        <span class="crumb-sep">/</span>
+        <b id="crumbMain">SEO competitor</b>
+        <span class="crumb-sep" id="crumbSep" hidden>/</span>
+        <span id="crumbDetail" style="color:var(--fg-3)"></span>
+      </div>
+      <div class="topbar-spacer"></div>
+      <span class="agent-pill"><span class="pulse" aria-hidden="true"></span>Public-safe preview</span>
+      <a class="btn btn-soft" href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener">Request full audit</a>
+    </div>
+
+    <section class="page" id="page">
+      <header class="page-header">
+        <div>
+          <h1 class="page-title" id="pageTitle">Start a search gap preview.</h1>
+          <p class="page-sub" id="pageSub">Paste a business website. The workspace starts blank, reads the site, then populates search coverage, competitors, first fixes, and evidence-style proof.</p>
+        </div>
+        <div class="page-actions" id="pageActions">
+          <button class="btn btn-ghost" type="button" onclick="startOver()">Start over</button>
+          <button class="btn btn-primary" type="button" onclick="focusWebsite()">Enter website</button>
+        </div>
+      </header>
+
+      <div id="statStripWrap" hidden></div>
+      <nav class="tabs-row" id="tabsRow" hidden aria-label="Result tabs"></nav>
+
+      <section class="content" id="content"></section>
+    </section>
   </main>
 </div>
-<button class="ask-fab" type="button" id="askFab" onclick="openAsk()">Ask the agent</button>
+
+<button class="ask-fab" type="button" id="askFab" onclick="openAsk()">
+  <span aria-hidden="true">✦</span> Ask the agent
+</button>
 <aside class="ask-panel" id="askPanel" aria-label="Ask the SEO agent">
-  <div class="ask-h"><b>Ask the agent</b><button type="button" onclick="closeAsk()">Close</button></div>
+  <div class="ask-h">
+    <div><b>Ask the agent</b><small>Public preview · answers within the capped output</small></div>
+    <button type="button" onclick="closeAsk()" aria-label="Close">×</button>
+  </div>
   <div class="ask-stream" id="askStream"></div>
   <div class="ask-suggest" id="askSuggest"></div>
-  <form class="ask-compose" onsubmit="event.preventDefault();sendChat();"><input id="askInput" placeholder="Ask after a preview scan…" /><button type="submit">Send</button></form>
+  <form class="ask-compose" onsubmit="event.preventDefault();sendChat();">
+    <input id="askInput" placeholder="Run a preview scan first…" autocomplete="off" />
+    <button type="submit">Send</button>
+  </form>
 </aside>
+
 <script>
 const DEFAULT_PEST_TERMS=['pest control near me','exterminator','mosquito control','rodent removal','ant control','bed bug treatment','wasp nest removal','wildlife removal','commercial pest control','quarterly pest service','home pest protection','pest inspection','roach control','spider control','flea treatment','tick control','same day pest control','eco friendly pest control','monthly pest control service','restaurant pest control'];
 const DEFAULT_SERVICE_TERMS=['service near me','best local provider','emergency service','quote request','same day appointment','maintenance plan','commercial service','residential service','local company','reviews','pricing','consultation','repair','installation','inspection','nearby provider','trusted company','service area','book online','free estimate'];
 const STATE={mode:'empty',tab:'overview',scanStep:0,planFilter:'all',biz:null,timer:null};
-const SCAN_STEPS=[['Reading website','Identifying offer, service area, page signals','site read'],['Checking local search coverage','Building a capped 20 × 4 search matrix','80 cells'],['Comparing competitors','Surfacing businesses that show up instead','6 surfaced'],['Building fix plan','Grouping first moves into 72-hour, 30-day, and 60/90-day work','action plan']];
+const SCAN_STEPS=[
+  ['Reading website','Identifying offer, service area, and page signals','site read'],
+  ['Checking local search coverage','Building a capped 20 × 4 search matrix','80 cells'],
+  ['Comparing competitors','Surfacing businesses that show up instead','6 surfaced'],
+  ['Building fix plan','Grouping first moves into 72-hour, 30-day, and 60/90-day work','action plan']
+];
+const TABS=[
+  {id:'overview',label:'Website read'},
+  {id:'coverage',label:'Search coverage'},
+  {id:'competitors',label:'Competitors'},
+  {id:'plan',label:'Action plan'},
+  {id:'evidence',label:'Evidence'}
+];
+
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-function qs(s,r=document){return r.querySelector(s)}function qsa(s,r=document){return Array.from(r.querySelectorAll(s))}
+function qs(s,r=document){return r.querySelector(s)}
+function qsa(s,r=document){return Array.from(r.querySelectorAll(s))}
 function domainFrom(url){let s=String(url||'').trim();if(!/^https?:\/\//i.test(s))s='https://'+s;try{return new URL(s).hostname.replace(/^www\./,'')}catch{return String(url||'').replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0]||'yourwebsite.com'}}
-function brandFrom(domain){let base=domain.split('.')[0].replace(/[-_]/g,' ');return base.replace(/\b\w/g,m=>m.toUpperCase())}
+function brandFrom(domain){const base=domain.split('.')[0].replace(/[-_]/g,' ');return base.replace(/\b\w/g,m=>m.toUpperCase())}
 function initials(name){return (name||'New').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase()||'N'}
 function inferCategory(text){const s=String(text||'').toLowerCase();if(/pest|extermin|termite|mosquito|rodent|bug|wildlife/.test(s))return 'pest control service';if(/hvac|heating|cooling|air|furnace/.test(s))return 'HVAC service company';if(/roof|gutter|siding|exterior/.test(s))return 'roofing and exterior contractor';if(/clean|janitor|maid/.test(s))return 'cleaning service company';if(/dent|ortho|clinic/.test(s))return 'local healthcare practice';if(/law|attorney|legal/.test(s))return 'local professional service firm';return 'local service business'}
 function splitList(s){return String(s||'').split(/[\n,;/|]+|\s+and\s+/i).map(x=>x.trim()).filter(Boolean)}
 function buildGeos(area){let geos=splitList(area).map(x=>x.replace(/\b(TN|GA|FL|AL|SC|NC|KY|VA)\b\.?/gi,'').trim()).filter(Boolean);if(!geos.length)geos=['Primary city','Nearby area','Service area','County'];while(geos.length<4)geos.push(['Nearby area','Suburb','County','Metro'][geos.length]);return geos.slice(0,4)}
 function buildTerms(targets,category){let terms=splitList(targets);const defaults=category.includes('pest')?DEFAULT_PEST_TERMS:DEFAULT_SERVICE_TERMS;if(!terms.length)terms=defaults.slice(0,8);for(const t of defaults){if(terms.length>=20)break;if(!terms.map(x=>x.toLowerCase()).includes(t.toLowerCase()))terms.push(t)}return terms.slice(0,20)}
-function competitorNames(category,area){if(category.includes('pest'))return ['Pest Ops Pest Control','Alta Pest Control','Russell\'s Pest Control','ClearDefense Pest Control','EPITUER Pest Solutions','Critter Wranglers'];const city=(buildGeos(area)[0]||'Local').replace(/\s+.*/,'');const noun=category.replace(/local |service company|firm|practice/gi,'').trim()||'Services';return [`${city} ${noun} Pros`,`Volunteer ${noun} Group`,`Summit ${noun} Co.`,`ClearPath ${noun}`,`Eastside ${noun}`,`Premier Local ${noun}`];}
-function makeAnalysis(){const website=qs('#website').value.trim();const area=qs('#area').value.trim();const targets=qs('#targets').value.trim();if(!website){qs('#formError').textContent='Paste a website before running the preview.';qs('#website').focus();return null}const domain=domainFrom(website);const name=brandFrom(domain);const category=inferCategory(`${domain} ${targets}`);const geos=buildGeos(area);const terms=buildTerms(targets,category);const comps=competitorNames(category,area).map((name,i)=>({name,overlap:[62,57,49,41,28,22][i],reviews:[421,318,612,248,84,156][i],areas:[4,4,4,3,2,2][i],note:['Wins the broadest search terms','Strong on city + service pages','High review volume','Recently entered nearby results','Closest true-peer benchmark','Specialist competitor'][i],terms:terms.slice(i,Math.min(i+4,terms.length))}));const matrix=terms.map((_,ri)=>geos.map((__,ci)=>({status:0,rank:null})));[0,1,4,8,12].forEach((ri,i)=>{if(matrix[ri])matrix[ri][0]={status:1,rank:[11,17,23,9,14][i]}});const evidence=terms.slice(0,16).map((term,i)=>({term,city:geos[i%geos.length],status:i%5===0?'organic':'absent',rank:i%5===0?'#'+([11,17,23,9][i%4]):'—',winner:comps[i%comps.length].name,time:'preview'}));return {domain,name,category,area:area||geos.join(', '),geos,terms,comps,matrix,evidence,visible:5,total:80,absent:75,pack:0,reviews:12,peerMedian:58.5};}
-function renderIntake(){STATE.mode='empty';document.body.classList.remove('ready');qs('#pageTitle').textContent='Start a search gap preview.';qs('#pageLead').textContent='Paste a business website. The workspace starts blank, reads the site, then populates search coverage, competitors, first fixes, and evidence-style proof.';qs('#kpiStrip').innerHTML='';qs('#historyList').innerHTML='<div class="scan-row empty">No scan yet. Enter a website and run a capped preview.</div>';qsa('.nav-btn[data-tab]').forEach((b,i)=>{b.disabled=i!==0;b.classList.toggle('on',i===0)});qs('#wsName').textContent='New website';qs('#wsSub').textContent='Fresh interaction';qs('#wsAvatar').textContent='+';qs('#crumbDetail').textContent='';qs('#content').innerHTML=`<div class="intake"><article class="intro-card"><div class="intro-k">Client-facing SEO workspace</div><h2>Paste a site. See the search gaps.</h2><p>This opens clean for every visitor. No preloaded client, no fake finished audit. The preview reads their inputs, shows what the full agent checks, and turns the result into first fixes.</p><div class="flow"><div class="flow-step"><small>01</small><b>Website read</b><span>Detect business, offer, service area, and page signals.</span></div><div class="flow-step"><small>02</small><b>Search coverage</b><span>Preview where the business shows up or goes missing.</span></div><div class="flow-step"><small>03</small><b>Competitors</b><span>Show who appears instead and why they are winning.</span></div><div class="flow-step"><small>04</small><b>Fix queue</b><span>Prioritize 72-hour, 30-day, and 60/90-day work.</span></div></div></article><form class="form-card" id="scanForm"><div class="field"><label for="website">Website</label><input id="website" inputmode="url" placeholder="https://yourcompany.com" autocomplete="url" /><div class="hint">The first output proves the agent understood this website.</div></div><div class="field"><label for="area">Service area</label><input id="area" placeholder="Knoxville, Farragut, Maryville, Oak Ridge" autocomplete="off" /></div><div class="field"><label for="targets">What do you want to rank for?</label><textarea id="targets" placeholder="pest control, rodent removal, mosquito control, same day service"></textarea><div class="hint">Comma-separated is fine. If left broad, the agent fills sensible local-service terms.</div></div><div class="error" id="formError"></div><button class="btn primary" type="submit" style="width:100%;justify-content:center">Preview SEO scan</button><p class="fine">Public-safe: this is a capped preview UI, not a full live Google/Search Console audit. Full audits are run after review with deeper crawling and evidence capture.</p></form></div>`;qs('#scanForm').addEventListener('submit',e=>{e.preventDefault();const biz=makeAnalysis();if(biz)startScan(biz)});setAskEmpty();}
-function startScan(biz){STATE.biz=biz;STATE.mode='scanning';STATE.scanStep=0;renderScanning();if(STATE.timer)clearInterval(STATE.timer);STATE.timer=setInterval(()=>{STATE.scanStep++;paintScan();if(STATE.scanStep>SCAN_STEPS.length){clearInterval(STATE.timer);STATE.timer=null;setTimeout(()=>showReady(),260)}},620)}
-function renderScanning(){const b=STATE.biz;qs('#pageTitle').textContent=`Reading ${b.domain}`;qs('#pageLead').textContent='Running the public-safe preview sequence. This demonstrates the agent workflow without exposing a full uncapped audit.';qs('#content').innerHTML=`<div class="scanning card"><div class="card-b"><div class="scan-top"><div class="spinner"></div><div><div class="scan-title">Building preview for <span class="mono" style="color:var(--amber)">${esc(b.domain)}</span></div><div style="color:var(--muted)">Capped preview · 20 terms × 4 areas · sample evidence rows</div></div><span class="mono" id="scanPct" style="margin-left:auto;color:var(--amber)">0%</span></div><div class="progress"><i id="scanBar"></i></div><div class="scan-steps" id="scanSteps">${SCAN_STEPS.map((s,i)=>`<div class="scan-step" data-i="${i}"><div class="num">${i+1}</div><div><b>${s[0]}</b><small>${s[1]}</small></div><span class="meta">${s[2]}</span></div>`).join('')}</div></div></div>`;paintScan();}
-function paintScan(){qsa('.scan-step').forEach((el,i)=>{el.classList.toggle('done',i<STATE.scanStep);el.classList.toggle('active',i===STATE.scanStep);const n=el.querySelector('.num');if(n)n.textContent=i<STATE.scanStep?'✓':String(i+1)});const pct=Math.min(100,Math.round((STATE.scanStep/SCAN_STEPS.length)*100));if(qs('#scanBar'))qs('#scanBar').style.width=pct+'%';if(qs('#scanPct'))qs('#scanPct').textContent=pct+'%'}
-function showReady(){STATE.mode='ready';STATE.tab='overview';document.body.classList.add('ready');const b=STATE.biz;qs('#wsName').textContent=b.name;qs('#wsSub').textContent=b.domain;qs('#wsAvatar').textContent=initials(b.name);qs('#crumbDetail').textContent=' / '+b.domain;qs('#pageTitle').textContent=`Search gap preview for ${b.name}`;qs('#pageLead').textContent=`The agent read ${b.domain} as a ${b.category}. It now shows a capped local-search preview, competitors showing instead, first fixes, and sample evidence rows.`;qs('#kpiStrip').innerHTML=`<div class="kpi"><span class="k">Preview visibility</span><span class="v">${b.visible}/${b.total}</span><span class="s">sample cells visible</span></div><div class="kpi"><span class="k">Missing cells</span><span class="v">${b.absent}/${b.total}</span><span class="s">places competitors show instead</span></div><div class="kpi"><span class="k">Top overlap</span><span class="v">${b.comps[0].overlap}%</span><span class="s">${esc(b.comps[0].name)}</span></div><div class="kpi"><span class="k">Review gap</span><span class="v">−46.5</span><span class="s">vs true-peer median 58.5</span></div>`;qs('#historyList').innerHTML=`<div class="scan-row"><b>Current capped preview</b><span>${esc(b.domain)} · just now</span></div>`;qsa('.nav-btn[data-tab]').forEach(btn=>btn.disabled=false);setTab('overview');setAskReady();}
-function setTab(tab){if(STATE.mode!=='ready')return;STATE.tab=tab;qsa('[data-tab]').forEach(btn=>btn.classList.toggle('on',btn.dataset.tab===tab));qsa('.nav-btn[data-tab]').forEach(btn=>btn.disabled=false);const map={overview:renderOverview,coverage:renderCoverage,competitors:renderCompetitors,plan:renderPlan,evidence:renderEvidence};qs('#content').innerHTML=map[tab]();bindDynamic();}
-function renderOverview(){const b=STATE.biz;return `<div class="grid two"><div class="verdict"><small>Agent verdict</small><h2>You are visible in <span style="color:var(--amber)">${b.visible} of ${b.total}</span> preview cells, and never in local-pack top 3.</h2><p>The first move is not “more SEO charts.” It is a fix queue: make the site readable, show local proof, add service/location specificity, then rerun the same matrix.</p></div><div class="card"><div class="card-b business"><div class="biz-avatar">${esc(initials(b.name))}</div><div class="biz-meta"><h3>${esc(b.name)}</h3><p>${esc(b.domain)} · ${esc(b.category)} · ${esc(b.area)}</p><div class="pill-row"><span class="pill warn">capped preview</span><span class="pill">${b.terms.length} search terms</span><span class="pill">${b.geos.length} areas</span></div></div></div></div></div><div class="grid two" style="margin-top:16px"><div class="card"><div class="card-h"><b>Website read</b><span>What the agent believes before recommending fixes</span></div><div class="card-b"><div class="findings"><div class="finding"><span class="b"></span><span>Detected this as a <strong>${esc(b.category)}</strong> serving <strong>${esc(b.geos.join(', '))}</strong>.</span><span class="sev">read</span></div><div class="finding warn"><span class="b"></span><span>Preview should check whether service + city are obvious on the first screen.</span><span class="sev">site fix</span></div><div class="finding warn"><span class="b"></span><span>Review/profile proof likely matters because local competitors are winning map results.</span><span class="sev">local profile</span></div><div class="finding bad"><span class="b"></span><span>Full audit needed to verify robots, sitemap, schema, crawl/render parity, and exact rankings.</span><span class="sev">verify</span></div></div></div></div><div class="card"><div class="card-h"><b>First fixes</b><span>Plain-English action queue</span></div><div class="card-b"><div class="action-grid">${actions().slice(0,3).map(actionCard).join('')}</div></div></div></div><div style="margin-top:16px">${matrixCard(true)}</div>`}
-function matrixCard(compact){const b=STATE.biz;return `<div class="card"><div class="card-h"><b>Search coverage</b><span>${b.total}/${b.total} preview cells · ${b.terms.length} terms × ${b.geos.length} areas</span></div><div class="matrix-toolbar"><div class="legend"><span><i class="sq" style="background:linear-gradient(180deg,var(--amber),#c77f12)"></i> Local-pack top 3</span><span><i class="sq" style="background:var(--amber-bg);border:1px solid var(--amber-line)"></i> Organic only</span><span><i class="sq" style="background:#0d0b08;border:1px solid var(--line2)"></i> Not showing</span></div><span class="mono" style="margin-left:auto;color:var(--faint);font-size:11px">Preview matrix</span></div><div class="matrix-wrap" style="${compact?'max-height:360px':''}"><div class="matrix"><div class="hcell">Search term</div>${b.geos.map(g=>`<div class="hcell">${esc(g)}</div>`).join('')}${b.terms.map((term,ri)=>`<div class="rcell"><span class="idx mono">${String(ri+1).padStart(2,'0')}</span>${esc(term)}<span class="vol mono">intent</span></div>${b.geos.map((geo,ci)=>{const c=b.matrix[ri][ci];const cls=c.status===2?'pack':c.status===1?'organic':'absent';const label=c.status===2?'▲':c.status===1?'#'+c.rank:'—';return `<div class="cell ${cls}" title="${esc(term)} · ${esc(geo)}"><span class="dot">${label}</span></div>`}).join('')}`).join('')}</div></div><div class="matrix-foot"><div><small>Not showing</small><b>${b.absent}/80</b></div><div><small>Organic only</small><b>${b.visible}/80</b></div><div><small>Local-pack top 3</small><b>${b.pack}/80</b></div><div><small>Areas covered</small><b>1/4</b></div><div><small>Evidence rows</small><b>sample</b></div></div></div>`}
+function competitorNames(category,area){const city=(buildGeos(area)[0]||'Local').replace(/\s+.*/,'');const noun=category.replace(/local |service company|firm|practice|company/gi,'').trim()||'Services';return [`${city} ${noun} Leader`,`Regional ${noun} Group`,`High-review ${noun} Competitor`,`Map-pack ${noun} Competitor`,`Specialist ${noun} Benchmark`,`Nearby ${noun} Provider`];}
+
+function makeAnalysis(){
+  const website=qs('#website').value.trim();
+  const area=qs('#area').value.trim();
+  const targets=qs('#targets').value.trim();
+  if(!website){
+    qs('#formError').textContent='Paste a website before running the preview.';
+    qs('#website').focus();
+    return null;
+  }
+  const domain=domainFrom(website);
+  const name=brandFrom(domain);
+  const category=inferCategory(`${domain} ${targets}`);
+  const geos=buildGeos(area);
+  const terms=buildTerms(targets,category);
+  const comps=competitorNames(category,area).map((name,i)=>({
+    name,
+    overlap:[62,57,49,41,28,22][i],
+    reviews:[421,318,612,248,84,156][i],
+    areas:[4,4,4,3,2,2][i],
+    note:['Wins the broadest search terms','Strong on city + service pages','High review volume','Recently entered nearby results','Closest true-peer benchmark','Specialist competitor'][i],
+    terms:terms.slice(i,Math.min(i+4,terms.length))
+  }));
+  const matrix=terms.map(()=>geos.map(()=>({status:0,rank:null})));
+  [0,1,4,8,12].forEach((ri,i)=>{
+    if(matrix[ri])matrix[ri][0]={status:1,rank:[11,17,23,9,14][i]};
+  });
+  const evidence=terms.slice(0,16).map((term,i)=>({
+    term,
+    city:geos[i%geos.length],
+    status:i%5===0?'organic':'absent',
+    rank:i%5===0?'#'+([11,17,23,9][i%4]):'—',
+    winner:comps[i%comps.length].name,
+    time:'preview'
+  }));
+  return {domain,name,category,area:area||geos.join(', '),geos,terms,comps,matrix,evidence,visible:5,total:80,absent:75,pack:0,reviews:12,peerMedian:58.5};
+}
+
+/* ====== INTAKE ====== */
+function renderIntake(){
+  STATE.mode='empty';
+  STATE.tab='overview';
+  qs('#pageTitle').textContent='Start a search gap preview.';
+  qs('#pageSub').textContent='Paste a business website. The workspace starts blank, reads the site, then populates search coverage, competitors, first fixes, and evidence-style proof.';
+  qs('#crumbDetail').textContent='';
+  qs('#crumbSep').hidden=true;
+  qs('#railRunTitle').textContent='Awaiting input';
+  qs('#railRunNote').textContent='Paste a website to start a public-safe preview. The agent reads the site, then populates this workspace.';
+  qs('#railRunTarget').textContent='—';
+  qs('#railRunCard').classList.remove('live');
+  qs('#railHistory').innerHTML='<div class="rail-history-empty">No scan yet. Enter a website above and run a capped preview.</div>';
+  qs('#statStripWrap').hidden=true;
+  qs('#statStripWrap').innerHTML='';
+  qs('#tabsRow').hidden=true;
+  qs('#tabsRow').innerHTML='';
+  qsa('.rail-item[data-tab]').forEach((b,i)=>{
+    b.disabled=i!==0;
+    b.classList.toggle('active',i===0);
+  });
+
+  qs('#content').innerHTML=`
+    <div class="intake-grid">
+      <article class="card intake-hero">
+        <div class="intake-eyebrow"><span class="pulse"></span>Public-safe operator preview</div>
+        <h2>Paste a site. See the search gaps.</h2>
+        <p>This opens clean for every visitor. No preloaded client, no fake finished audit. The preview reads the inputs, shows what the full agent checks, and turns the result into a first-fix queue.</p>
+        <div class="flow">
+          <div class="flow-step"><small>01 · Website read</small><b>Read the site</b><span>Detect business, offer, service area, and on-page signals.</span></div>
+          <div class="flow-step"><small>02 · Search coverage</small><b>Build coverage matrix</b><span>Preview where the business shows up or goes missing.</span></div>
+          <div class="flow-step"><small>03 · Competitors</small><b>Surface who wins</b><span>Show who appears instead and why they are winning.</span></div>
+          <div class="flow-step"><small>04 · Action plan</small><b>Prioritize fixes</b><span>Group 72-hour, 30-day, and 60/90-day work.</span></div>
+        </div>
+      </article>
+      <form class="card form-card" id="scanForm">
+        <h3>Run a capped preview scan</h3>
+        <p class="form-sub">The first output proves the agent understood this website. Service area and search terms are optional.</p>
+        <div class="field">
+          <label for="website">Website</label>
+          <input id="website" inputmode="url" placeholder="https://yourcompany.com" autocomplete="url" />
+          <div class="field-hint">Paste the homepage URL — the agent reads the domain and first page.</div>
+        </div>
+        <div class="field">
+          <label for="area">Service area <span class="field-optional">· optional</span></label>
+          <input id="area" placeholder="Knoxville, Farragut, Maryville, Oak Ridge" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="targets">Target search terms <span class="field-optional">· optional</span></label>
+          <textarea id="targets" placeholder="pest control, rodent removal, mosquito control, same day service"></textarea>
+          <div class="field-hint">Comma-separated is fine. Left broad, the agent fills sensible local-service terms.</div>
+        </div>
+        <div class="form-error" id="formError"></div>
+        <button class="btn btn-primary form-submit" type="submit">Preview SEO scan</button>
+        <p class="form-fine">Public-safe: this is a capped preview UI, not a full live Google or Search Console audit. The full audit is run after review with deeper crawling and evidence capture.</p>
+      </form>
+    </div>
+  `;
+  qs('#scanForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    const biz=makeAnalysis();
+    if(biz)startScan(biz);
+  });
+  setAskEmpty();
+}
+
+/* ====== SCAN ====== */
+function startScan(biz){
+  STATE.biz=biz;
+  STATE.mode='scanning';
+  STATE.scanStep=0;
+  renderScanning();
+  if(STATE.timer)clearInterval(STATE.timer);
+  STATE.timer=setInterval(()=>{
+    STATE.scanStep++;
+    paintScan();
+    if(STATE.scanStep>SCAN_STEPS.length){
+      clearInterval(STATE.timer);
+      STATE.timer=null;
+      setTimeout(()=>showReady(),260);
+    }
+  },620);
+}
+function renderScanning(){
+  const b=STATE.biz;
+  qs('#pageTitle').textContent=`Reading ${b.domain}`;
+  qs('#pageSub').textContent='Running the public-safe preview sequence. This demonstrates the agent workflow without exposing a full uncapped audit.';
+  qs('#crumbSep').hidden=false;
+  qs('#crumbDetail').textContent=b.domain;
+  qs('#railRunTitle').textContent='Scanning';
+  qs('#railRunNote').textContent=`Building the capped preview for ${b.domain}. Each step takes about a second.`;
+  qs('#railRunTarget').textContent=b.domain;
+  qs('#railRunCard').classList.add('live');
+
+  qs('#content').innerHTML=`
+    <div class="card scan-card">
+      <div class="scan-head">
+        <div class="spinner"></div>
+        <div class="scan-head-copy">
+          <b>Building preview for <span class="mono" style="color:var(--accent-fg)">${esc(b.domain)}</span></b>
+          <span>Capped preview · 20 terms × 4 areas · sample evidence rows</span>
+        </div>
+        <span class="scan-pct" id="scanPct">0%</span>
+      </div>
+      <div class="scan-progress"><i id="scanBar"></i></div>
+      <div class="scan-steps" id="scanSteps">
+        ${SCAN_STEPS.map((s,i)=>`
+          <div class="scan-step" data-i="${i}">
+            <div class="num">${i+1}</div>
+            <div><b>${esc(s[0])}</b><small>${esc(s[1])}</small></div>
+            <span class="meta">${esc(s[2])}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+  `;
+  paintScan();
+}
+function paintScan(){
+  qsa('.scan-step').forEach((el,i)=>{
+    el.classList.toggle('done',i<STATE.scanStep);
+    el.classList.toggle('active',i===STATE.scanStep);
+    const n=el.querySelector('.num');
+    if(n)n.textContent=i<STATE.scanStep?'✓':String(i+1);
+  });
+  const pct=Math.min(100,Math.round((STATE.scanStep/SCAN_STEPS.length)*100));
+  if(qs('#scanBar'))qs('#scanBar').style.width=pct+'%';
+  if(qs('#scanPct'))qs('#scanPct').textContent=pct+'%';
+}
+
+/* ====== READY ====== */
+function showReady(){
+  STATE.mode='ready';
+  STATE.tab='overview';
+  const b=STATE.biz;
+  qs('#crumbSep').hidden=false;
+  qs('#crumbDetail').textContent=b.domain;
+  qs('#pageTitle').textContent=`Search gap preview for ${b.name}`;
+  qs('#pageSub').textContent=`Read as a ${b.category}. Below is a capped local-search preview, who shows up instead, first fixes, and sample evidence rows.`;
+  qs('#railRunTitle').textContent='Preview ready';
+  qs('#railRunNote').textContent='Capped preview complete. Browse the tabs or ask the agent.';
+  qs('#railRunTarget').textContent=b.domain;
+  qs('#railRunCard').classList.add('live');
+  qs('#railHistory').innerHTML=`
+    <div class="rail-history-row"><div>${esc(b.name)}</div><small>${esc(b.domain)} · just now</small></div>
+  `;
+
+  qsa('.rail-item[data-tab]').forEach(btn=>btn.disabled=false);
+
+  // stat strip
+  qs('#statStripWrap').hidden=false;
+  qs('#statStripWrap').innerHTML=`
+    <div class="stat-strip">
+      <div class="stat-cell">
+        <div class="stat-label">Preview visibility</div>
+        <div class="stat-value">${b.visible}<span class="stat-delta">/ ${b.total}</span></div>
+        <div class="stat-sub">sample cells visible</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Missing cells</div>
+        <div class="stat-value">${b.absent}<span class="stat-delta">/ ${b.total}</span></div>
+        <div class="stat-sub">competitors show instead</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Local-pack top 3</div>
+        <div class="stat-value">${b.pack}<span class="stat-delta">/ ${b.total}</span></div>
+        <div class="stat-sub">map results in preview</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Top competitor overlap</div>
+        <div class="stat-value">${b.comps[0].overlap}<span class="stat-delta">%</span></div>
+        <div class="stat-sub">${esc(b.comps[0].name)}</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Review gap</div>
+        <div class="stat-value">−46.5</div>
+        <div class="stat-sub">vs peer median ${b.peerMedian}</div>
+      </div>
+    </div>
+  `;
+
+  // tabs
+  qs('#tabsRow').hidden=false;
+  qs('#tabsRow').innerHTML=TABS.map(t=>`
+    <button class="tab-btn ${t.id===STATE.tab?'active':''}" type="button" data-tab="${t.id}">${esc(t.label)}</button>
+  `).join('');
+
+  setTab('overview');
+  setAskReady();
+}
+
+function setTab(tab){
+  if(STATE.mode!=='ready')return;
+  STATE.tab=tab;
+  qsa('[data-tab]').forEach(btn=>{
+    if(btn.classList.contains('tab-btn')){
+      btn.classList.toggle('active',btn.dataset.tab===tab);
+    }
+    if(btn.classList.contains('rail-item')){
+      btn.classList.toggle('active',btn.dataset.tab===tab);
+    }
+  });
+  const map={overview:renderOverview,coverage:renderCoverage,competitors:renderCompetitors,plan:renderPlan,evidence:renderEvidence};
+  qs('#content').innerHTML=map[tab]();
+  bindDynamic();
+}
+
+/* ====== TAB RENDERS ====== */
+function renderOverview(){
+  const b=STATE.biz;
+  return `
+    <section class="card verdict">
+      <small><span class="pulse"></span>Agent verdict</small>
+      <h2>You appear in <em>${b.visible} of ${b.total}</em> preview cells, and never in local-pack top 3.</h2>
+      <p>The first move is not “more SEO charts.” It is a fix queue: make the site readable, show local proof, add service and location specificity, then rerun the same matrix.</p>
+    </section>
+
+    <div class="card-row">
+      <section class="card">
+        <div class="card-head">
+          <div><b>Website read</b><small>What the agent believes before recommending fixes</small></div>
+          <span class="pill accent">site read</span>
+        </div>
+        <div class="card-body">
+          <div class="business" style="margin-bottom:14px">
+            <div class="biz-avatar">${esc(initials(b.name))}</div>
+            <div class="biz-meta">
+              <h3>${esc(b.name)}</h3>
+              <p>${esc(b.domain)} · ${esc(b.category)}</p>
+              <div class="pill-row">
+                <span class="pill accent">capped preview</span>
+                <span class="pill">${b.terms.length} search terms</span>
+                <span class="pill">${b.geos.length} areas</span>
+                <span class="pill warn">${b.reviews} reviews · vs peer ${b.peerMedian}</span>
+              </div>
+            </div>
+          </div>
+          <div class="findings">
+            <div class="finding"><span class="b"></span><span>Detected this as a <strong>${esc(b.category)}</strong> serving <strong>${esc(b.geos.join(', '))}</strong>.</span><span class="sev">read</span></div>
+            <div class="finding warn"><span class="b"></span><span>Preview should check whether service + city are obvious on the first screen.</span><span class="sev">site fix</span></div>
+            <div class="finding warn"><span class="b"></span><span>Review and profile proof likely matters because local competitors are winning map results.</span><span class="sev">local profile</span></div>
+            <div class="finding bad"><span class="b"></span><span>Full audit needed to verify robots, sitemap, schema, crawl/render parity, and exact rankings.</span><span class="sev">verify</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div><b>First fixes</b><small>Plain-English action queue</small></div>
+          <button class="btn btn-ghost" type="button" data-tab="plan" onclick="setTab('plan')">Full plan →</button>
+        </div>
+        <div class="card-body">
+          <div class="action-grid">${actions().slice(0,3).map(actionCard).join('')}</div>
+        </div>
+      </section>
+    </div>
+
+    ${matrixCard(true)}
+  `;
+}
+
+function matrixCard(compact){
+  const b=STATE.biz;
+  return `
+    <section class="card">
+      <div class="card-head">
+        <div><b>Search coverage</b><small>${b.total}/${b.total} preview cells · ${b.terms.length} terms × ${b.geos.length} areas</small></div>
+        <button class="btn btn-ghost" type="button" onclick="setTab('coverage')">Full matrix →</button>
+      </div>
+      <div class="matrix-toolbar">
+        <div class="legend">
+          <span><i class="sq" style="background:var(--accent);border:1px solid var(--accent)"></i> Local-pack top 3</span>
+          <span><i class="sq" style="background:var(--accent-soft);border:1px solid var(--accent-border)"></i> Organic only</span>
+          <span><i class="sq" style="background:var(--surface-3);border:1px solid var(--border)"></i> Not showing</span>
+        </div>
+        <span class="mono" style="margin-left:auto;color:var(--fg-3);font-size:11px;text-transform:uppercase;letter-spacing:.04em">Preview matrix</span>
+      </div>
+      <div class="matrix-wrap" style="${compact?'max-height:340px':''}">
+        <div class="matrix">
+          <div class="hcell">Search term</div>
+          ${b.geos.map(g=>`<div class="hcell">${esc(g)}</div>`).join('')}
+          ${b.terms.map((term,ri)=>`
+            <div class="rcell">
+              <div><span class="idx">${String(ri+1).padStart(2,'0')}</span>${esc(term)}</div>
+              <span class="vol">local intent</span>
+            </div>
+            ${b.geos.map((geo,ci)=>{
+              const c=b.matrix[ri][ci];
+              const cls=c.status===2?'pack':c.status===1?'organic':'absent';
+              const label=c.status===2?'▲':c.status===1?'#'+c.rank:'—';
+              return `<div class="cell ${cls}" title="${esc(term)} · ${esc(geo)}"><span class="dot">${label}</span></div>`;
+            }).join('')}
+          `).join('')}
+        </div>
+      </div>
+      <div class="matrix-foot">
+        <div><small>Not showing</small><b>${b.absent}/${b.total}</b></div>
+        <div><small>Organic only</small><b>${b.visible}/${b.total}</b></div>
+        <div><small>Local-pack top 3</small><b>${b.pack}/${b.total}</b></div>
+        <div><small>Areas covered</small><b>1/${b.geos.length}</b></div>
+        <div><small>Evidence rows</small><b>sample</b></div>
+      </div>
+    </section>
+  `;
+}
+
 function renderCoverage(){return matrixCard(false)}
-function renderCompetitors(){const b=STATE.biz;return `<div class="comp-grid">${b.comps.map((c,i)=>`<article class="comp"><div class="comp-head"><div class="comp-avatar">${esc(initials(c.name))}</div><div><h3>${esc(c.name)}</h3><p>${esc(c.note)}</p></div><span class="pill warn" style="margin-left:auto">#${i+1}</span></div><div class="comp-stats"><span><b>${c.overlap}%</b><small>overlap</small></span><span><b>${c.reviews}</b><small>reviews</small></span><span><b>${c.areas}/4</b><small>areas</small></span></div><div class="wins">${c.terms.map(t=>`<i>${esc(t)}</i>`).join('')}</div></article>`).join('')}</div><div class="card" style="margin-top:16px"><div class="card-h"><b>Why these competitors</b><span>methodology</span></div><div class="card-b" style="color:var(--muted)">The preview surfaces businesses that appear in the same buyer-intent cells where your site is weak. A full audit expands this into exact SERP/local-pack evidence with timestamps and source URLs.</div></div>`}
-function actions(){return [{when:'72 hours',title:'Make service + city obvious on the highest-intent page',why:'The first screen should say what you do and where you do it before visitors or search engines have to hunt.',owner:'Website',conf:'High',kpi:'CTR + relevance'},{when:'72 hours',title:'Verify crawl basics: robots, sitemap, titles, H1s, schema',why:'If Google cannot cleanly read the page, content and review work compounds slower.',owner:'Developer',conf:'High',kpi:'2/2 endpoints valid'},{when:'72 hours',title:'Ask recent happy customers for Google reviews',why:'The preview uses 12 reviews vs. a 58.5 true-peer median to show how local prominence can lag even with a high rating.',owner:'Owner',conf:'High',kpi:'12 → 20 reviews'},{when:'30 days',title:'Build dedicated service pages for the top searches',why:'One generic page rarely wins several different high-intent searches.',owner:'Content + Dev',conf:'Medium',kpi:'+6 to +14 cells'},{when:'30 days',title:'Add location proof for each service area',why:'Competitors win by pairing service pages with specific local proof, city names, landmarks, photos, and reviews.',owner:'Content',conf:'Medium',kpi:'1 → 4 areas'},{when:'60–90 days',title:'Rerun the same matrix monthly',why:'Use the same search cells to measure movement instead of guessing from one-off screenshots.',owner:'SEO Agent',conf:'High',kpi:'+8 to +20 cells'}]}
-function actionCard(a){return `<div class="action"><div class="when">${esc(a.when)}</div><div><h3>${esc(a.title)}</h3><p>${esc(a.why)}</p><div class="meta-row"><span>Owner · ${esc(a.owner)}</span><span>Confidence · ${esc(a.conf)}</span><span>KPI · ${esc(a.kpi)}</span><span>Evidence ↳ preview</span></div></div></div>`}
-function renderPlan(){let acts=actions();if(STATE.planFilter!=='all')acts=acts.filter(a=>a.when===STATE.planFilter);return `<div class="card"><div class="card-h"><b>Action plan</b><span>Prioritized by urgency, effort, and confidence</span></div><div class="card-b"><div class="plan-head" style="margin-bottom:13px"><button class="filter ${STATE.planFilter==='all'?'on':''}" data-filter="all">All</button><button class="filter ${STATE.planFilter==='72 hours'?'on':''}" data-filter="72 hours">72-hour</button><button class="filter ${STATE.planFilter==='30 days'?'on':''}" data-filter="30 days">30-day</button><button class="filter ${STATE.planFilter==='60–90 days'?'on':''}" data-filter="60–90 days">60/90-day</button></div><div class="action-grid">${acts.map(actionCard).join('')}</div></div></div>`}
-function renderEvidence(){const b=STATE.biz;return `<div class="card table-scroll"><div class="card-h"><b>Evidence behind this</b><span>Sample rows only · full audit captures timestamps, source URLs, and screenshots where needed</span></div><table class="ev-table"><thead><tr><th>Search term</th><th>Area</th><th>Status</th><th>You</th><th>Competitor shown</th><th>Captured</th></tr></thead><tbody>${b.evidence.map(r=>`<tr><td style="color:var(--text)">${esc(r.term)}</td><td>${esc(r.city)}</td><td><span class="tag ${r.status}">${r.status}</span></td><td style="color:var(--amber)">${esc(r.rank)}</td><td>${esc(r.winner)}</td><td>${esc(r.time)}</td></tr>`).join('')}</tbody></table><div class="card-b" style="border-top:1px solid var(--line);color:var(--muted);font-size:12px">Showing ${b.evidence.length} preview rows. The full Clawdified audit creates the larger evidence log, root-cause model, and prioritized recovery plan.</div></div>`}
-function bindDynamic(){qsa('.filter').forEach(btn=>btn.addEventListener('click',()=>{STATE.planFilter=btn.dataset.filter;setTab('plan')}));}
-function setAskEmpty(){qs('#askStream').innerHTML='<div class="msg"><small>SEO Agent</small><div class="bubble">Run a preview first. Then I can answer questions about the site read, search gaps, competitors, and first fixes.</div></div>';qs('#askSuggest').innerHTML='';qs('#askInput').placeholder='Run a preview scan first…'}
-function setAskReady(){const b=STATE.biz;qs('#askStream').innerHTML=`<div class="msg"><small>SEO Agent</small><div class="bubble">Preview ready for <strong>${esc(b.domain)}</strong>. Ask why a competitor is ahead, what to fix first, or what a full audit would verify.</div></div>`;const qsx=['What should I fix first?','Why are competitors ahead?','What does the full audit verify?','What can I do this week?'];qs('#askSuggest').innerHTML=qsx.map(q=>`<button type="button" onclick="askPreset('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');qs('#askInput').placeholder='Ask about this preview…'}
-function openAsk(){qs('#askPanel').classList.add('open');qs('#askFab').style.display='none'}function closeAsk(){qs('#askPanel').classList.remove('open');qs('#askFab').style.display=''}function askPreset(q){qs('#askInput').value=q;sendChat()}function sendChat(){const input=qs('#askInput'),stream=qs('#askStream');const q=input.value.trim();if(!q)return;input.value='';stream.insertAdjacentHTML('beforeend',`<div class="msg user"><small>You</small><div class="bubble">${esc(q)}</div></div>`);let reply='Run a preview first and I can answer from that generated workspace.';if(STATE.biz){const k=q.toLowerCase();if(k.includes('first'))reply='Start with the 72-hour queue: make service + city obvious, verify crawl basics, and ask recent customers for reviews. Those unlock the rest of the plan.';else if(k.includes('competitor')||k.includes('ahead'))reply=`The top competitor in this preview is <strong>${esc(STATE.biz.comps[0].name)}</strong>. They overlap more cells because the preview assumes stronger service pages, review volume, and local proof.`;else if(k.includes('full')||k.includes('verify'))reply='The full audit verifies exact SERP/local-pack positions, crawl/render parity, robots/sitemap/schema, Google profile signals, competitor pages, timestamps, and source evidence.';else reply='For this public preview, the useful next question is whether the site is readable, specific to service + city, and backed by enough local proof. The action plan tab ranks those moves.'}setTimeout(()=>{stream.insertAdjacentHTML('beforeend',`<div class="msg"><small>SEO Agent</small><div class="bubble">${reply}</div></div>`);stream.scrollTop=stream.scrollHeight},220)}
-function focusWebsite(){const input=qs('#website');if(input){input.focus();input.scrollIntoView({behavior:'smooth',block:'center'})}}function startOver(){if(STATE.timer)clearInterval(STATE.timer);STATE.biz=null;STATE.planFilter='all';STATE.tab='overview';renderIntake()}qsa('.nav-btn[data-tab], .tab[data-tab]').forEach(btn=>btn.addEventListener('click',()=>setTab(btn.dataset.tab)));renderIntake();
+
+function renderCompetitors(){
+  const b=STATE.biz;
+  return `
+    <section class="card">
+      <div class="card-head">
+        <div><b>Competitors showing instead</b><small>Surfaced from the same buyer-intent cells</small></div>
+        <span class="pill">${b.comps.length} surfaced</span>
+      </div>
+      <div class="card-body">
+        <div class="comp-grid">
+          ${b.comps.map((c,i)=>`
+            <article class="comp">
+              <div class="comp-head">
+                <div class="comp-avatar">${esc(initials(c.name))}</div>
+                <div style="flex:1;min-width:0">
+                  <h3>${esc(c.name)}</h3>
+                  <p>${esc(c.note)}</p>
+                </div>
+                <span class="comp-rank">#${i+1}</span>
+              </div>
+              <div class="comp-stats">
+                <span><b>${c.overlap}%</b><small>overlap</small></span>
+                <span><b>${c.reviews}</b><small>reviews</small></span>
+                <span><b>${c.areas}/${b.geos.length}</b><small>areas</small></span>
+              </div>
+              <div class="wins">${c.terms.map(t=>`<i>${esc(t)}</i>`).join('')}</div>
+            </article>
+          `).join('')}
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><div><b>Why these competitors</b><small>Methodology</small></div></div>
+      <div class="card-body" style="color:var(--fg-2);font-size:12.5px;line-height:1.55">
+        The preview surfaces businesses that appear in the same buyer-intent cells where your site is weak. A full audit expands this into exact SERP and local-pack evidence with timestamps and source URLs.
+      </div>
+    </section>
+  `;
+}
+
+function actions(){
+  return [
+    {when:'72 hours',title:'Make service + city obvious on the highest-intent page',why:'The first screen should say what you do and where you do it before visitors or search engines have to hunt.',owner:'Website',conf:'High',kpi:'CTR + relevance'},
+    {when:'72 hours',title:'Verify crawl basics: robots, sitemap, titles, H1s, schema',why:'If Google cannot cleanly read the page, content and review work compounds slower.',owner:'Developer',conf:'High',kpi:'2/2 endpoints valid'},
+    {when:'72 hours',title:'Ask recent happy customers for Google reviews',why:'The preview uses 12 reviews vs. a 58.5 true-peer median to show how local prominence can lag even with a high rating.',owner:'Owner',conf:'High',kpi:'12 → 20 reviews'},
+    {when:'30 days',title:'Build dedicated service pages for the top searches',why:'One generic page rarely wins several different high-intent searches.',owner:'Content + Dev',conf:'Medium',kpi:'+6 to +14 cells'},
+    {when:'30 days',title:'Add location proof for each service area',why:'Competitors win by pairing service pages with specific local proof — city names, landmarks, photos, and reviews.',owner:'Content',conf:'Medium',kpi:'1 → 4 areas'},
+    {when:'60–90 days',title:'Rerun the same matrix monthly',why:'Use the same search cells to measure movement instead of guessing from one-off screenshots.',owner:'SEO Agent',conf:'High',kpi:'+8 to +20 cells'}
+  ];
+}
+function actionCard(a){
+  return `
+    <div class="action">
+      <div class="when">${esc(a.when)}</div>
+      <div>
+        <h3>${esc(a.title)}</h3>
+        <p>${esc(a.why)}</p>
+        <div class="meta-row">
+          <span>Owner · ${esc(a.owner)}</span>
+          <span>Confidence · ${esc(a.conf)}</span>
+          <span>KPI · ${esc(a.kpi)}</span>
+          <span>Evidence ↳ preview</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function renderPlan(){
+  let acts=actions();
+  if(STATE.planFilter!=='all')acts=acts.filter(a=>a.when===STATE.planFilter);
+  return `
+    <section class="card">
+      <div class="card-head">
+        <div><b>Action plan</b><small>Prioritized by urgency, effort, and confidence</small></div>
+        <span class="pill">${acts.length} ${acts.length===1?'item':'items'}</span>
+      </div>
+      <div class="card-body">
+        <div class="plan-head">
+          <button class="filter-chip ${STATE.planFilter==='all'?'on':''}" data-filter="all">All</button>
+          <button class="filter-chip ${STATE.planFilter==='72 hours'?'on':''}" data-filter="72 hours">72-hour</button>
+          <button class="filter-chip ${STATE.planFilter==='30 days'?'on':''}" data-filter="30 days">30-day</button>
+          <button class="filter-chip ${STATE.planFilter==='60–90 days'?'on':''}" data-filter="60–90 days">60/90-day</button>
+        </div>
+        <div class="action-grid">${acts.map(actionCard).join('')}</div>
+      </div>
+    </section>
+  `;
+}
+function renderEvidence(){
+  const b=STATE.biz;
+  return `
+    <section class="card">
+      <div class="card-head">
+        <div><b>Evidence behind this</b><small>Sample rows · full audit captures timestamps, source URLs, and screenshots</small></div>
+        <span class="pill">${b.evidence.length} rows</span>
+      </div>
+      <div class="sheet-scroll">
+        <table class="sheet">
+          <thead>
+            <tr>
+              <th>Search term</th>
+              <th>Area</th>
+              <th>Status</th>
+              <th>You</th>
+              <th>Competitor shown</th>
+              <th>Captured</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${b.evidence.map(r=>`
+              <tr>
+                <td class="term">${esc(r.term)}</td>
+                <td>${esc(r.city)}</td>
+                <td><span class="tag ${r.status}">${r.status}</span></td>
+                <td class="rank">${esc(r.rank)}</td>
+                <td>${esc(r.winner)}</td>
+                <td class="mono" style="color:var(--fg-3);font-size:11px;text-transform:uppercase;letter-spacing:.04em">${esc(r.time)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="sheet-foot">
+        <span>Showing ${b.evidence.length} preview rows</span>
+        <span>Full audit · larger evidence log + root-cause model</span>
+      </div>
+    </section>
+  `;
+}
+
+function bindDynamic(){
+  qsa('.filter-chip').forEach(btn=>btn.addEventListener('click',()=>{
+    STATE.planFilter=btn.dataset.filter;
+    setTab('plan');
+  }));
+}
+
+/* ====== ASK PANEL ====== */
+function setAskEmpty(){
+  qs('#askStream').innerHTML='<div class="msg"><small>SEO Agent</small><div class="bubble">Run a preview first. Then I can answer questions about the site read, search gaps, competitors, and first fixes.</div></div>';
+  qs('#askSuggest').innerHTML='';
+  qs('#askInput').placeholder='Run a preview scan first…';
+}
+function setAskReady(){
+  const b=STATE.biz;
+  qs('#askStream').innerHTML=`<div class="msg"><small>SEO Agent</small><div class="bubble">Preview ready for <strong>${esc(b.domain)}</strong>. Ask why a competitor is ahead, what to fix first, or what a full audit would verify.</div></div>`;
+  const qsx=['What should I fix first?','Why are competitors ahead?','What does the full audit verify?','What can I do this week?'];
+  qs('#askSuggest').innerHTML=qsx.map(q=>`<button type="button" onclick="askPreset('${q.replace(/'/g,"\\'")}')">${q}</button>`).join('');
+  qs('#askInput').placeholder='Ask about this preview…';
+}
+function openAsk(){qs('#askPanel').classList.add('open');qs('#askFab').style.display='none'}
+function closeAsk(){qs('#askPanel').classList.remove('open');qs('#askFab').style.display=''}
+function askPreset(q){qs('#askInput').value=q;sendChat()}
+function sendChat(){
+  const input=qs('#askInput'),stream=qs('#askStream');
+  const q=input.value.trim();
+  if(!q)return;
+  input.value='';
+  stream.insertAdjacentHTML('beforeend',`<div class="msg user"><small>You</small><div class="bubble">${esc(q)}</div></div>`);
+  let reply='Run a preview first and I can answer from that generated workspace.';
+  if(STATE.biz){
+    const k=q.toLowerCase();
+    if(k.includes('first'))reply='Start with the 72-hour queue: make service + city obvious, verify crawl basics, and ask recent customers for reviews. Those unlock the rest of the plan.';
+    else if(k.includes('competitor')||k.includes('ahead'))reply=`The top competitor in this preview is <strong>${esc(STATE.biz.comps[0].name)}</strong>. They overlap more cells because the preview assumes stronger service pages, review volume, and local proof.`;
+    else if(k.includes('full')||k.includes('verify'))reply='The full audit verifies exact SERP and local-pack positions, crawl/render parity, robots/sitemap/schema, Google profile signals, competitor pages, timestamps, and source evidence.';
+    else reply='For this public preview, the useful next question is whether the site is readable, specific to service + city, and backed by enough local proof. The action plan tab ranks those moves.';
+  }
+  setTimeout(()=>{
+    stream.insertAdjacentHTML('beforeend',`<div class="msg"><small>SEO Agent</small><div class="bubble">${reply}</div></div>`);
+    stream.scrollTop=stream.scrollHeight;
+  },220);
+}
+
+/* ====== CONTROLS ====== */
+function focusWebsite(){
+  if(STATE.mode!=='empty'){startOver();}
+  setTimeout(()=>{
+    const input=qs('#website');
+    if(input){input.focus();input.scrollIntoView({behavior:'smooth',block:'center'});}
+  },20);
+}
+function startOver(){
+  if(STATE.timer)clearInterval(STATE.timer);
+  STATE.biz=null;
+  STATE.planFilter='all';
+  STATE.tab='overview';
+  renderIntake();
+}
+
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-tab]');
+  if(!btn||btn.disabled)return;
+  if(btn.classList.contains('tab-btn')||btn.classList.contains('rail-item')){
+    setTab(btn.dataset.tab);
+  }
+});
+
+renderIntake();
 </script>
 </body>
 </html>
