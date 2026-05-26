@@ -168,9 +168,9 @@ const PUBLIC_DEMO_MODE = true;
 const DEFAULT_RUN_CRITERIA = {
   website: "",
   icp: "",
-  geography: "Knoxville, TN",
-  searchQuery: "Owner-led service businesses needing follow-up and review automation",
-  geographySegment: "Knoxville, TN",
+  geography: "",
+  searchQuery: "",
+  geographySegment: "",
   targetWeeklyVolume: 3,
 };
 
@@ -188,8 +188,8 @@ function publicDemoStatus(criteria = {}, latestResult = null) {
     scheduler: {
       enabled: false,
       criteria: {
-        searchQuery: criteria.icp || criteria.searchQuery || "visitor ICP required",
-        geographySegment: criteria.geography || criteria.geographySegment || "visitor search area required",
+        searchQuery: criteria.icp || "inferred from visitor website",
+        geographySegment: criteria.geography || "inferred from visitor website",
         targetWeeklyVolume: 3,
       },
     },
@@ -241,6 +241,17 @@ function leadgenTrialToRawLead(lead, result, index) {
     sourceUrls: sources.join("; "),
     sourceQuality: "PUBLIC_DEMO_PREVIEW",
     providerSourceUsed: "Public demo wrapper; capped sample rows",
+    publicDemoForVisitor: true,
+    visitorCompanyName: business.name || "the visitor's company",
+    visitorWebsite: business.website || "",
+    visitorOffer: business.offer || "the visitor's offer",
+    visitorIcp: business.icp || "",
+    visitorGeography: business.geography || "",
+    icpSource: business.icp_source || "visitor_input",
+    geographySource: business.geography_source || "visitor_input",
+    customerFitHeadline: lead.customerFitHeadline || `Potential customer for ${business.name || "the visitor"}`,
+    customerFitSummary: lead.customerFitSummary || lead.reasons?.[0] || "Public-safe customer fit preview",
+    customerFitWhy: lead.customerFitWhy || lead.outreachAngle || "Customer fit should be reviewed before outreach.",
     estimatedRevenueBand: "UNVERIFIED",
     revenueConfidence: "UNVERIFIED",
     createdAt: new Date().toISOString(),
@@ -282,7 +293,7 @@ const PublicDemoIntake = ({ runCriteria, onRunCriteriaChange, onRunNow, runBusy 
       <div className="icon"><Icon name="target" /></div>
       <div style={{ flex: 1 }}>
         <h3 className="card-title">Public lead search intake</h3>
-        <div className="card-sub">This is the real Lead Sheet UI. These fields feed the public-safe wrapper, then rows populate below. No Apollo reveal, provider spend, or outbound sends.</div>
+        <div className="card-sub">This is the real Lead Sheet UI. Enter a website; ICP and search area can be blank and the wrapper will infer them from the visitor's business. No Apollo reveal, provider spend, or outbound sends.</div>
       </div>
       <span className="status-pill ok"><span className="d" />Actual UI demo</span>
     </div>
@@ -293,12 +304,12 @@ const PublicDemoIntake = ({ runCriteria, onRunCriteriaChange, onRunNow, runBusy 
           <input type="url" placeholder="https://yourcompany.com" value={runCriteria.website || ""} onChange={(event) => onRunCriteriaChange?.("website", event.target.value)} />
         </div>
         <div className="input-row" style={{ margin: 0 }}>
-          <div className="input-label">Ideal customer / ICP</div>
-          <input type="text" placeholder="Owner-led HVAC companies needing quote follow-up" value={runCriteria.icp || ""} onChange={(event) => onRunCriteriaChange?.("icp", event.target.value)} />
+          <div className="input-label">Ideal customer / ICP <span style={{ color: "var(--fg-3)", fontWeight: 500 }}>(optional)</span></div>
+          <input type="text" placeholder="e.g. dental offices, manufacturers, property managers" value={runCriteria.icp || ""} onChange={(event) => onRunCriteriaChange?.("icp", event.target.value)} />
         </div>
         <div className="input-row" style={{ margin: 0 }}>
-          <div className="input-label">Search area</div>
-          <input type="text" placeholder="Knoxville, TN" value={runCriteria.geography || ""} onChange={(event) => onRunCriteriaChange?.("geography", event.target.value)} />
+          <div className="input-label">Search area <span style={{ color: "var(--fg-3)", fontWeight: 500 }}>(optional)</span></div>
+          <input type="text" placeholder="e.g. Knoxville, East TN, Southeast" value={runCriteria.geography || ""} onChange={(event) => onRunCriteriaChange?.("geography", event.target.value)} />
         </div>
         <button className="btn btn-primary" style={{ alignSelf: "end", height: 34 }} onClick={() => onRunNow?.({ mode: "public_demo" })} disabled={runBusy}><Icon name="refresh" />{runBusy ? "Running…" : "Run lead search"}</button>
       </div>
@@ -405,11 +416,11 @@ const App = () => {
 
     if (PUBLIC_DEMO_MODE) {
       const website = String(runCriteria.website || "").trim();
-      const icp = String(runCriteria.icp || runCriteria.searchQuery || "").trim();
-      const geography = String(runCriteria.geography || runCriteria.geographySegment || "").trim();
-      if (!website || !icp || !geography) {
+      const icp = String(runCriteria.icp || "").trim();
+      const geography = String(runCriteria.geography || "").trim();
+      if (!website) {
         setRunNotice("");
-        setError("Enter website, ICP, and search area in the public lead search intake before running.");
+        setError("Enter a business website. ICP and search area can be blank; the public demo will infer them from that site.");
         setRunBusy(false);
         return;
       }
@@ -481,7 +492,7 @@ const App = () => {
       setRuns([]);
       setSelectedId(null);
       setPanelOpen(false);
-      setRunNotice("Public demo sheet cleared. Enter website, ICP, and search area to populate it again.");
+      setRunNotice("Public demo sheet cleared. Enter a business website to populate it again; ICP and search area can stay blank for inference.");
       setError("");
       return;
     }

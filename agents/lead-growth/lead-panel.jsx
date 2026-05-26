@@ -130,8 +130,8 @@ const LeadPanel = ({ lead, open, onClose }) => {
         <div className="panel-body">
           <div className="panel-section panel-quick-read">
             <div className="insight-card pain-card">
-              <div className="insight-eyebrow"><Icon name="bolt" />Suggested AI agent<span>{painInsight.label}</span></div>
-              <h3>{painInsight.suggestedAgent || painInsight.headline}</h3>
+              <div className="insight-eyebrow"><Icon name="target" />Suggested customer angle<span>{painInsight.label}</span></div>
+              <h3>{painInsight.headline || painInsight.suggestedAgent}</h3>
               <p><b>Why:</b> {painInsight.why || painInsight.summary}</p>
             </div>
 
