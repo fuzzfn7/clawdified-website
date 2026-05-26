@@ -9,237 +9,501 @@
 <style>
 :root{
   color-scheme:dark;
-  --bg:#0f0e0a;--panel:#17140e;--panel2:#211b12;
-  --ink:#f8edda;--muted:rgba(248,237,218,.68);--faint:rgba(248,237,218,.46);
-  --line:rgba(248,237,218,.13);--line-strong:rgba(248,237,218,.22);
-  --gold:#f1b45b;--orange:#d48553;--green:#7ad99d;--red:#ff8d7d;
+  --bg:#0c0b07;
+  --surface:#15120c;
+  --surface-2:#1c1810;
+  --surface-3:#221d13;
+  --ink:#f6ecd6;
+  --muted:rgba(246,236,214,.66);
+  --faint:rgba(246,236,214,.44);
+  --dim:rgba(246,236,214,.28);
+  --line:rgba(246,236,214,.08);
+  --line-strong:rgba(246,236,214,.16);
+  --line-stronger:rgba(246,236,214,.24);
+  --gold:#f1b45b;
+  --gold-soft:rgba(241,180,91,.12);
+  --orange:#d48553;
+  --green:#7ad99d;
+  --green-soft:rgba(122,217,157,.10);
+  --red:#ff8d7d;
+  --red-soft:rgba(255,141,125,.10);
   --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  --serif:Georgia,"Playfair Display","Times New Roman",serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100vh}
 body{
-  background:
-    radial-gradient(circle at 18% -8%,rgba(241,180,91,.18),transparent 32rem),
-    radial-gradient(circle at 82% 4%,rgba(212,133,83,.13),transparent 28rem),
-    var(--bg);
+  background:var(--bg);
   color:var(--ink);
   font-family:var(--sans);
-  font-size:15px;line-height:1.55;
+  font-size:14px;line-height:1.5;
   -webkit-font-smoothing:antialiased;
+  font-feature-settings:"ss01","cv11";
 }
 a{color:inherit}
-button{font:inherit}
+button{font:inherit;color:inherit}
 
-/* === Shell === */
-.top{display:flex;justify-content:space-between;align-items:center;gap:14px;
-  padding:18px 26px;border-bottom:1px solid var(--line);
-  background:rgba(15,14,10,.78);backdrop-filter:blur(16px);
-  position:sticky;top:0;z-index:5}
-.brand{font-weight:900;letter-spacing:.06em;font-size:13px;text-decoration:none}
-.brand .dot{display:inline-block;width:7px;height:7px;border-radius:50%;
+/* === Topbar === */
+.top{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:14px 28px;border-bottom:1px solid var(--line);
+  background:rgba(12,11,7,.92);backdrop-filter:blur(14px);
+  position:sticky;top:0;z-index:10;
+}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
+.brand-mark{
+  width:24px;height:24px;border-radius:7px;
   background:linear-gradient(135deg,var(--gold),var(--orange));
-  margin-right:8px;vertical-align:1px;box-shadow:0 0 0 3px rgba(241,180,91,.12)}
-.top-right{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--muted)}
-.top-right .who{font-family:var(--mono);font-size:12px;color:var(--faint)}
-.back{color:var(--muted);text-decoration:none;font-size:13px}
-.back:hover{color:var(--ink)}
+  display:grid;place-items:center;color:#1a1208;
+  font-family:var(--mono);font-weight:800;font-size:13px;
+  box-shadow:0 6px 16px rgba(241,180,91,.20), inset 0 1px 0 rgba(255,255,255,.32);
+}
+.brand-meta{display:grid;line-height:1.1}
+.brand-name{font-weight:800;letter-spacing:.08em;font-size:12px;text-transform:uppercase}
+.brand-sub{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
+.top-right{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--muted)}
+.top-right .who{
+  font-family:var(--mono);font-size:11.5px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--line);
+  padding:5px 11px;border-radius:999px;display:inline-flex;align-items:center;
+}
+.top-right .who::before{
+  content:"";display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--green);margin-right:8px;
+  box-shadow:0 0 0 3px var(--green-soft);
+}
+.signout{
+  background:transparent;border:1px solid var(--line);color:var(--muted);
+  border-radius:999px;padding:6px 12px;font-size:12px;cursor:pointer;
+}
+.signout:hover{color:var(--ink);border-color:var(--line-strong)}
 
-main{max-width:1180px;margin:0 auto;padding:42px 22px 80px}
+main{max-width:1240px;margin:0 auto;padding:34px 26px 80px}
 
-/* === Cards === */
-.card{border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(33,27,18,.92),rgba(23,20,14,.94));
-  border-radius:24px;padding:24px;
-  box-shadow:0 24px 70px rgba(0,0,0,.28)}
-.card.flat{box-shadow:none}
-.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:.2em;
-  font-size:11px;font-weight:900}
-h1{font-family:var(--serif);font-weight:500;letter-spacing:-.035em;
-  line-height:.95;font-size:clamp(40px,6.4vw,72px);margin:14px 0 14px}
-h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-spacing:-.005em}
-.lead{color:var(--muted);line-height:1.55;font-size:16px;max-width:680px;margin:0}
-.note{color:var(--faint);font-size:13px;line-height:1.5;margin:0}
-.mono{font-family:var(--mono);font-size:12px;color:var(--faint)}
+/* === Type primitives === */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--gold);text-transform:uppercase;
+  letter-spacing:.18em;font-size:10.5px;font-weight:800;
+}
+.eyebrow::before{
+  content:"";width:5px;height:5px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 0 3px var(--gold-soft);
+}
+.eyebrow.plain{color:var(--muted)}
+.eyebrow.plain::before{background:var(--muted);box-shadow:0 0 0 3px rgba(246,236,214,.05)}
+h1.console-title{
+  font-family:var(--sans);font-weight:700;font-size:26px;
+  letter-spacing:-.018em;margin:8px 0 0;line-height:1.1;
+}
+h2.section-title{
+  font-family:var(--sans);font-weight:700;font-size:16px;
+  margin:6px 0 0;letter-spacing:-.005em;
+}
+.subtitle{color:var(--muted);font-size:13.5px;margin:8px 0 0;max-width:60ch}
+.note{color:var(--faint);font-size:12.5px;margin:0;line-height:1.5}
+.mono{font-family:var(--mono);font-size:11.5px;color:var(--faint)}
 
-/* === Form atoms === */
+/* === Composer Hero === */
+.composer{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,var(--surface-2),var(--surface));
+  border-radius:18px;overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.30), inset 0 1px 0 rgba(255,255,255,.025);
+}
+.composer-head{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:24px;
+  padding:22px 26px 20px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(241,180,91,.04),transparent);
+}
+.composer-head .head-meta{display:grid;gap:2px;min-width:0}
+.id-stamp{
+  font-family:var(--mono);font-size:10.5px;color:var(--faint);
+  border:1px solid var(--line);padding:6px 10px;border-radius:999px;
+  background:rgba(8,7,5,.55);white-space:nowrap;letter-spacing:.02em;
+}
+.composer-body{display:grid;grid-template-columns:1.15fr 1fr .95fr}
+.step{
+  padding:22px 24px;border-right:1px solid var(--line);
+  display:grid;gap:14px;align-content:start;min-width:0;
+}
+.step:last-child{border-right:0}
+.step-head{display:flex;align-items:center;gap:10px}
+.step-num{
+  width:22px;height:22px;border-radius:999px;
+  display:grid;place-items:center;
+  font-family:var(--mono);font-size:11px;font-weight:800;color:var(--gold);
+  background:var(--gold-soft);border:1px solid rgba(241,180,91,.32);
+}
+.step-label{
+  font-size:11px;text-transform:uppercase;letter-spacing:.14em;
+  color:var(--muted);font-weight:700;
+}
+
+/* === Inputs === */
 .field{display:grid;gap:6px}
-.field>span{color:var(--faint);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.field > span{
+  color:var(--faint);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;font-weight:700;
+}
 .input{
-  width:100%;border:1px solid var(--line);background:rgba(8,7,5,.78);
-  border-radius:14px;color:var(--ink);padding:13px 14px;
-  font:inherit;outline:none;transition:border-color .15s, box-shadow .15s;
+  width:100%;border:1px solid var(--line);background:rgba(7,6,3,.7);
+  border-radius:10px;color:var(--ink);padding:10px 12px;
+  font:inherit;font-size:13.5px;outline:none;
+  transition:border-color .12s,box-shadow .12s,background .12s;
 }
-.input::placeholder{color:rgba(248,237,218,.32)}
-.input:focus{border-color:rgba(241,180,91,.62);box-shadow:0 0 0 4px rgba(241,180,91,.10)}
+.input::placeholder{color:rgba(246,236,214,.28)}
+.input:focus{
+  border-color:rgba(241,180,91,.55);
+  box-shadow:0 0 0 3px var(--gold-soft);
+  background:rgba(7,6,3,.88);
+}
+.service-select{
+  appearance:none;-webkit-appearance:none;
+  background-image:
+    linear-gradient(45deg,transparent 50%,var(--muted) 50%),
+    linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 18px) 52%,calc(100% - 12px) 52%;
+  background-size:6px 6px;background-repeat:no-repeat;
+  padding-right:32px;
+}
+
+/* === Buttons === */
 .button{
-  border:0;cursor:pointer;border-radius:999px;padding:12px 18px;
-  font-size:14px;font-weight:800;letter-spacing:.01em;
-  background:linear-gradient(135deg,var(--gold),var(--orange));color:#1a1008;
-  box-shadow:0 14px 36px rgba(212,133,83,.22);
-  transition:transform .12s, box-shadow .12s, opacity .12s;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:0;cursor:pointer;border-radius:10px;
+  padding:10px 14px;font-size:13px;font-weight:700;letter-spacing:.005em;
+  background:linear-gradient(180deg,#f3bd6e,#dc9050);color:#1a1208;
+  box-shadow:0 6px 18px rgba(212,133,83,.22), inset 0 1px 0 rgba(255,255,255,.28);
+  transition:transform .1s,box-shadow .12s,opacity .12s;
+  text-decoration:none;
 }
-.button:hover{transform:translateY(-1px);box-shadow:0 18px 40px rgba(212,133,83,.28)}
+.button:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 24px rgba(212,133,83,.30), inset 0 1px 0 rgba(255,255,255,.28);
+}
 .button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
-.button.secondary{background:transparent;color:var(--ink);
-  border:1px solid var(--line);box-shadow:none}
-.button.secondary:hover{border-color:var(--line-strong);background:rgba(255,255,255,.03)}
-.button.ghost{background:transparent;color:var(--muted);border:0;box-shadow:none;padding:8px 12px}
-.button.ghost:hover{color:var(--ink)}
-.button.danger{background:transparent;color:var(--red);
-  border:1px solid rgba(255,141,125,.32);box-shadow:none}
-.button.danger:hover{background:rgba(255,141,125,.06)}
-.button:disabled{opacity:.55;cursor:not-allowed;transform:none}
-.button.full{width:100%;justify-content:center;display:inline-flex;align-items:center;gap:8px}
-
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.stack{display:grid;gap:14px}
-
-/* === Login screen === */
-.login-wrap{min-height:calc(100vh - 70px);display:flex;align-items:center;justify-content:center;padding:42px 22px}
-.login-card{width:100%;max-width:420px;padding:30px}
-.login-card .eyebrow{margin-bottom:4px}
-.login-card h1{font-size:clamp(34px,5vw,42px);margin:6px 0 6px;letter-spacing:-.02em}
-.login-card .note{margin-bottom:18px}
-.login-form{display:grid;gap:14px;margin-top:10px}
-.login-error{
-  min-height:1.4em;font-size:13px;color:var(--red);
+.button.secondary{
+  background:rgba(255,255,255,.04);color:var(--ink);
+  border:1px solid var(--line-strong);box-shadow:none;
 }
-.login-error:empty{display:none}
+.button.secondary:hover{
+  background:rgba(255,255,255,.07);border-color:var(--line-stronger);
+  box-shadow:none;transform:none;
+}
+.button.ghost{
+  background:transparent;color:var(--muted);border:0;
+  box-shadow:none;padding:7px 10px;border-radius:8px;
+}
+.button.ghost:hover{color:var(--ink);background:rgba(255,255,255,.04);box-shadow:none;transform:none}
+.button.subtle{
+  background:transparent;color:var(--gold);
+  border:1px dashed rgba(241,180,91,.32);box-shadow:none;
+  font-size:12px;padding:8px 12px;border-radius:8px;justify-self:start;
+}
+.button.subtle:hover{background:var(--gold-soft);border-color:rgba(241,180,91,.55);transform:none;box-shadow:none}
+.button:disabled,.button[aria-disabled="true"]{
+  opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;pointer-events:none;
+}
+.button.full{width:100%}
 
-/* === Hero/dashboard === */
-.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.85fr);gap:20px;align-items:stretch}
-.invite-card{display:grid;gap:12px}
-.invite-card .row{align-items:stretch}
-.invite-preview{
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.stack{display:grid;gap:10px}
+
+/* === Connector picker === */
+.connector-picker{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.connector-checklist{display:grid;gap:6px;margin-top:2px}
+.connector-option{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  border:1px solid var(--line);background:rgba(7,6,3,.45);
+  border-radius:10px;padding:9px 12px 9px 14px;color:var(--ink);
+  font-size:13px;transition:border-color .12s,background .12s;
+}
+.connector-option:hover{border-color:var(--line-strong);background:rgba(7,6,3,.65)}
+.connector-option > span{display:grid;gap:3px;min-width:0}
+.connector-option b{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--ink);font-size:13px;font-weight:600;
+}
+.connector-option b::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 0 2px var(--gold-soft);
+}
+.connector-option span > span{
+  display:block;color:var(--faint);font-size:10.5px;
+  text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono);
+}
+.connector-remove{
+  border:1px solid var(--line);background:transparent;color:var(--faint);
+  border-radius:999px;padding:4px 10px;font-size:10.5px;font-weight:700;
+  cursor:pointer;letter-spacing:.04em;text-transform:uppercase;
+}
+.connector-remove:hover{
+  color:var(--red);border-color:rgba(255,141,125,.35);background:var(--red-soft);
+}
+.empty-connectors{
+  border:1px dashed var(--line-strong);
+  border-radius:10px;padding:14px;color:var(--faint);font-size:12.5px;
+  background:rgba(255,255,255,.015);
+}
+.empty-connectors b{
+  display:block;color:var(--muted);font-size:13px;font-weight:600;margin-bottom:4px;
+}
+
+/* === Invite preview === */
+.preview-shell{
+  border:1px solid var(--line);background:rgba(7,6,3,.6);
+  border-radius:10px;overflow:hidden;
+}
+.preview-shell .pf-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 11px;border-bottom:1px solid var(--line);
+  background:rgba(255,255,255,.02);
+}
+.preview-shell .pf-label{
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint);font-weight:700;font-family:var(--mono);
+}
+.preview-shell .pf-dots{display:flex;gap:5px}
+.preview-shell .pf-dots i{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--dim);display:block;
+}
+.preview-shell .pf-body{
   font-family:var(--mono);font-size:12px;color:var(--muted);
-  background:rgba(8,7,5,.55);border:1px solid var(--line);
-  border-radius:12px;padding:10px 12px;overflow-wrap:anywhere;
+  padding:11px 12px;overflow-wrap:anywhere;word-break:break-all;
+  min-height:42px;line-height:1.45;
 }
-.service-strip{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-.service-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:12px}
-.service-chip::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold)}
-.service-chip.meta::before{background:#8ab4ff}
-.service-chip.slack::before{background:#56d364}
-.service-chip.hubspot::before{background:#ff7a59}
-.service-select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 52%,calc(100% - 12px) 52%;background-size:6px 6px;background-repeat:no-repeat}
-.connector-picker{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:stretch}
-.connector-checklist{display:grid;gap:8px}
-.connector-option{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:rgba(8,7,5,.46);border-radius:14px;padding:11px 12px;color:var(--muted)}
-.connector-option:hover{border-color:var(--line-strong);color:var(--ink)}
-.connector-option input{accent-color:var(--gold);width:16px;height:16px}
-.connector-option b{display:block;color:var(--ink);font-size:13px}
-.connector-option span{display:block;color:var(--faint);font-size:12px;text-transform:none;letter-spacing:0}
-.connector-remove{border:1px solid var(--line);background:transparent;color:var(--faint);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800;cursor:pointer}
-.connector-remove:hover{border-color:rgba(255,141,125,.32);color:var(--red);background:rgba(255,141,125,.045)}
-.empty-connectors{border:1px dashed var(--line);border-radius:14px;padding:12px;color:var(--faint);font-size:13px;background:rgba(8,7,5,.28)}
-.connector-request-shortcut{justify-self:start;margin-top:-2px}
-.service-error{border:1px solid rgba(255,141,125,.24);border-radius:16px;padding:12px 14px;background:rgba(255,141,125,.045);color:var(--red);font-size:13px;margin-bottom:12px}
-.request-card{margin:20px 0 2px;display:grid;gap:14px}
-.request-form{display:grid;gap:12px;margin-top:4px}
-.request-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-textarea.input{min-height:110px;resize:vertical}
-.request-status{font-size:13px;color:var(--faint);min-height:1.4em}
-.request-status.good{color:var(--green)}
-.request-status.bad{color:var(--red)}
+.preview-shell .pf-body.preview-empty{color:var(--dim);font-style:italic}
 
-/* === Stats === */
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:26px 0 8px}
-.stat{border:1px solid var(--line);background:rgba(255,255,255,.035);
-  border-radius:18px;padding:16px}
-.stat b{display:block;font-family:var(--serif);font-weight:500;
-  font-size:30px;color:var(--gold);letter-spacing:-.02em;line-height:1}
-.stat span{display:block;margin-top:6px;font-size:11px;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.14em}
+/* === Public connector pages strip === */
+.connector-pages{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  margin:18px 0 4px;
+}
+.connector-pages > span{
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.12em;
+  font-size:10px;color:var(--faint);margin-right:4px;
+}
+.connector-pages a{
+  color:var(--muted);text-decoration:none;
+  border:1px solid var(--line);padding:5px 11px;border-radius:999px;
+  font-size:11.5px;display:inline-flex;align-items:center;gap:6px;
+  transition:color .12s,border-color .12s,background .12s;
+}
+.connector-pages a::before{
+  content:"";width:5px;height:5px;border-radius:50%;background:var(--dim);
+}
+.connector-pages a:hover{
+  color:var(--ink);border-color:var(--line-strong);
+  background:rgba(255,255,255,.025);
+}
+.connector-pages a:hover::before{background:var(--gold)}
 
-/* === Toolbar === */
-.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;
-  margin:30px 0 14px;flex-wrap:wrap}
-.toolbar .left{display:grid;gap:4px}
-.status{font-size:13px;color:var(--faint);min-height:1.4em}
+/* === Section bar === */
+.section-bar{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:18px;
+  margin:38px 0 14px;flex-wrap:wrap;
+}
+.section-bar .left{display:grid;gap:2px;min-width:0}
+.section-bar .right{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+
+.metrics{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.metric{
+  display:inline-flex;align-items:baseline;gap:6px;
+  border:1px solid var(--line);background:rgba(255,255,255,.025);
+  padding:6px 11px;border-radius:8px;
+  font-size:10.5px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.08em;font-weight:700;
+}
+.metric b{
+  font-family:var(--mono);font-size:13px;color:var(--ink);
+  font-weight:700;letter-spacing:.01em;text-transform:none;
+}
+.metric.ready b{color:var(--green)}
+.metric.warn b{color:var(--red)}
+.metric.latest b{font-size:11.5px;font-weight:600;color:var(--muted)}
+
+.service-strip{display:flex;flex-wrap:wrap;gap:6px}
+.service-chip{
+  display:inline-flex;align-items:center;gap:6px;
+  border:1px solid var(--line);border-radius:999px;
+  padding:4px 10px;color:var(--muted);font-size:11.5px;
+  background:rgba(255,255,255,.015);
+}
+.service-chip::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 0 2px var(--gold-soft);
+}
+.service-chip.meta::before{background:#8ab4ff;box-shadow:0 0 0 2px rgba(138,180,255,.18)}
+.service-chip.slack::before{background:#56d364;box-shadow:0 0 0 2px rgba(86,211,100,.18)}
+.service-chip.hubspot::before{background:#ff7a59;box-shadow:0 0 0 2px rgba(255,122,89,.18)}
+
+.status{font-size:12.5px;color:var(--faint);min-height:1.4em;margin:4px 0 12px}
 .status.good{color:var(--green)}
 .status.bad{color:var(--red)}
 .status.working{color:var(--muted)}
 
-/* === Connections list === */
-.table{display:grid;gap:12px}
+/* === Connection rows === */
+.table{display:grid;gap:8px}
 .connection{
   border:1px solid var(--line);
-  background:linear-gradient(180deg,rgba(23,20,14,.86),rgba(23,20,14,.78));
-  border-radius:20px;padding:18px 20px;
-  display:grid;grid-template-columns:minmax(220px,1.15fr) minmax(220px,1fr) auto;
+  background:var(--surface);
+  border-radius:12px;padding:14px 18px;
+  display:grid;grid-template-columns:minmax(220px,1.1fr) minmax(220px,1.1fr) auto;
   gap:18px;align-items:center;
-  transition:border-color .15s, transform .15s;
+  transition:border-color .12s,background .12s;
 }
-.connection:hover{border-color:var(--line-strong)}
+.connection:hover{border-color:var(--line-strong);background:var(--surface-2)}
 .connection .who{display:grid;gap:4px;min-width:0}
-.connection .id{font-family:var(--mono);font-size:11px;color:var(--faint);overflow-wrap:anywhere}
-.connection .workflow{color:var(--muted);font-size:13px}
-.connection .meta{display:grid;gap:6px;min-width:0}
-.connection .email{font-weight:700;font-size:14px;overflow-wrap:anywhere}
-.connection .pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
-.connection .when{color:var(--faint);font-size:12px;margin-top:2px}
-.connection .actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.connection .who h2{font-size:14.5px;margin:2px 0 0;font-weight:700;letter-spacing:-.005em}
+.connection .workflow{color:var(--muted);font-size:12px}
+.connection .id{
+  font-family:var(--mono);font-size:10.5px;color:var(--dim);
+  overflow-wrap:anywhere;margin-top:2px;
+}
+.connection .meta{display:grid;gap:5px;min-width:0}
+.connection .email{font-weight:600;font-size:13px;overflow-wrap:anywhere;color:var(--ink)}
+.connection .pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:2px}
+.connection .when{
+  color:var(--faint);font-size:11px;margin-top:2px;font-family:var(--mono);
+}
+.connection .actions{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.connection .actions .button{font-size:12px;padding:7px 11px}
 
-.pill{display:inline-flex;align-items:center;gap:6px;
-  border:1px solid var(--line);border-radius:999px;padding:5px 10px;
-  color:var(--muted);font-size:11.5px;letter-spacing:.02em}
-.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:.7}
-.pill.ready{color:var(--green);border-color:rgba(122,217,157,.32)}
+.pill{
+  display:inline-flex;align-items:center;gap:5px;
+  border:1px solid var(--line);border-radius:999px;
+  padding:3px 9px;color:var(--muted);font-size:10.5px;
+  letter-spacing:.03em;font-weight:600;
+}
+.pill::before{
+  content:"";width:5px;height:5px;border-radius:50%;
+  background:var(--muted);opacity:.65;
+}
+.pill.ready{color:var(--green);border-color:rgba(122,217,157,.32);background:var(--green-soft)}
 .pill.ready::before{background:var(--green);opacity:1}
-.pill.warn{color:var(--red);border-color:rgba(255,141,125,.32)}
+.pill.warn{color:var(--red);border-color:rgba(255,141,125,.32);background:var(--red-soft)}
 .pill.warn::before{background:var(--red);opacity:1}
-.pill.muted::before{opacity:.5}
+.pill.muted::before{opacity:.45}
 
-.empty{border:1px dashed var(--line);border-radius:20px;padding:32px;
-  text-align:center;color:var(--muted);background:rgba(255,255,255,.025);
-  font-size:14px}
-.empty strong{display:block;color:var(--ink);font-family:var(--serif);
-  font-weight:500;font-size:22px;letter-spacing:-.01em;margin-bottom:6px}
+.empty{
+  border:1px dashed var(--line);
+  border-radius:14px;padding:28px;text-align:center;color:var(--muted);
+  background:rgba(255,255,255,.015);font-size:13px;
+}
+.empty strong{
+  display:block;color:var(--ink);font-size:15px;font-weight:700;margin-bottom:6px;
+}
 
 .skeleton{
-  height:84px;border-radius:20px;border:1px solid var(--line);
-  background:linear-gradient(90deg,rgba(255,255,255,.02),rgba(255,255,255,.05),rgba(255,255,255,.02));
+  height:64px;border-radius:12px;border:1px solid var(--line);
+  background:linear-gradient(90deg,rgba(255,255,255,.015),rgba(255,255,255,.04),rgba(255,255,255,.015));
   background-size:200% 100%;animation:shimmer 1.4s linear infinite;
 }
 @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
 
+.service-error{
+  border:1px solid rgba(255,141,125,.24);border-radius:10px;
+  padding:10px 12px;background:var(--red-soft);
+  color:var(--red);font-size:12.5px;margin-bottom:10px;
+}
+
+/* === Connector request agent (secondary) === */
+.request-card{
+  margin-top:24px;border:1px solid var(--line);
+  background:var(--surface);border-radius:16px;
+}
+.request-head{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:18px;
+  padding:18px 22px 14px;border-bottom:1px solid var(--line);
+}
+.request-head .request-meta{display:grid;gap:4px;min-width:0}
+.request-head h2{
+  font-size:15.5px;margin:6px 0 0;font-weight:700;letter-spacing:-.005em;
+}
+.request-head .note{margin-top:4px;max-width:60ch}
+.request-stamp{
+  font-family:var(--mono);font-size:10.5px;color:var(--faint);
+  border:1px solid var(--line);padding:6px 10px;border-radius:999px;
+  background:rgba(8,7,5,.55);white-space:nowrap;
+}
+.request-form{display:grid;gap:12px;padding:18px 22px 22px}
+.request-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+textarea.input{
+  min-height:88px;resize:vertical;
+  font-family:var(--sans);font-size:13px;line-height:1.45;
+}
+.request-status{font-size:12.5px;color:var(--faint);min-height:1.4em}
+.request-status.good{color:var(--green)}
+.request-status.bad{color:var(--red)}
+
+/* === Login === */
+.login-wrap{
+  min-height:calc(100vh - 60px);display:flex;align-items:center;justify-content:center;
+  padding:50px 22px;
+}
+.login-card{
+  width:100%;max-width:400px;padding:30px;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,var(--surface-2),var(--surface));
+  border-radius:16px;
+  box-shadow:0 30px 70px rgba(0,0,0,.40);
+}
+.login-card h1{
+  font-family:var(--sans);font-size:24px;font-weight:700;
+  letter-spacing:-.015em;margin:8px 0 4px;
+}
+.login-card .note{margin-bottom:16px}
+.login-form{display:grid;gap:12px;margin-top:8px}
+.login-error{min-height:1.4em;font-size:12.5px;color:var(--red)}
+.login-error:empty{display:none}
+
 .hide{display:none!important}
 
-@media(max-width:920px){
-  .hero{grid-template-columns:1fr}
-  .grid{grid-template-columns:repeat(2,1fr)}
-  .request-grid{grid-template-columns:1fr}
-  .connection{grid-template-columns:1fr;gap:14px}
+@media(max-width:1020px){
+  .composer-body{grid-template-columns:1fr 1fr}
+  .step:nth-child(1){grid-column:1 / -1;border-right:0;border-bottom:1px solid var(--line)}
+  .step:nth-child(2){border-right:1px solid var(--line)}
+}
+@media(max-width:760px){
+  .composer-body{grid-template-columns:1fr}
+  .step{border-right:0;border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:0}
+  .request-grid{grid-template-columns:repeat(2,1fr)}
+  .connection{grid-template-columns:1fr;gap:10px}
   .connection .actions{justify-content:flex-start}
 }
 @media(max-width:560px){
-  main{padding:30px 16px 60px}
-  .top{padding:16px}
-  .grid{grid-template-columns:1fr}
+  main{padding:24px 16px 50px}
+  .top{padding:12px 16px}
+  .request-grid{grid-template-columns:1fr}
   .connector-picker{grid-template-columns:1fr}
-  .card{padding:20px;border-radius:20px}
+  .composer-head{padding:18px 18px 14px;flex-direction:column;align-items:flex-start;gap:10px}
+  .step{padding:18px}
   .login-card{padding:24px}
+  h1.console-title{font-size:22px}
 }
 </style>
 </head>
 <body>
-<nav class="top" aria-label="Page navigation">
-  <a class="brand" href="/"><span class="dot" aria-hidden="true"></span>CLAWDIFIED</a>
+<nav class="top" aria-label="Operator navigation">
+  <a class="brand" href="/">
+    <span class="brand-mark" aria-hidden="true">C</span>
+    <span class="brand-meta">
+      <span class="brand-name">Clawdified</span>
+      <span class="brand-sub">Operator console</span>
+    </span>
+  </a>
   <div class="top-right" id="topRight">
-    <a class="back" href="/connect/gmail/">Gmail page</a>
-    <a class="back" href="/connect/social/">Facebook + Instagram page</a>
-    <a class="back" href="/connect/slack/">Slack page</a>
-    <a class="back" href="/connect/hubspot/">HubSpot page</a>
     <span class="who hide" id="whoLabel"></span>
-    <button class="button ghost hide" id="signOutButton" type="button">Sign out</button>
+    <button class="signout hide" id="signOutButton" type="button">Sign out</button>
   </div>
 </nav>
 
 <!-- === Login screen === -->
 <section id="loginView" class="login-wrap" aria-labelledby="loginHeading">
-  <div class="card login-card">
+  <div class="login-card">
     <div class="eyebrow">Private admin</div>
     <h1 id="loginHeading">Sign in</h1>
     <p class="note">Operator access only. Use the email and password issued to you.</p>
@@ -263,24 +527,24 @@ textarea.input{min-height:110px;resize:vertical}
 
 <!-- === Dashboard === -->
 <main id="dashboardView" class="hide" aria-busy="false">
-  <section class="hero">
-    <div class="card">
-      <div class="eyebrow">Private admin</div>
-      <h1>Client API connections</h1>
-      <p class="lead">One private place for client OAuth/API access — Gmail, Facebook + Instagram, Slack, and HubSpot now, with a connector request agent for the next API your client needs.</p>
-      <p class="note" style="margin-top:14px">Rows show safe summaries only. Sensitive agent packages are copied intentionally from a button and should go only to the approved client agent runtime.</p>
-      <div class="service-strip" id="serviceStrip" aria-label="Connected service types">
-        <span class="service-chip">Gmail</span>
-        <span class="service-chip meta">Facebook + Instagram</span>
-        <span class="service-chip slack">Slack</span>
-        <span class="service-chip hubspot">HubSpot</span>
+
+  <!-- Composer hero -->
+  <section class="composer" aria-labelledby="composerHeading">
+    <header class="composer-head">
+      <div class="head-meta">
+        <span class="eyebrow">New invite</span>
+        <h1 class="console-title" id="composerHeading">Create client connector page</h1>
+        <p class="subtitle">Pick the tools, name the workflow, copy a private link. No connectors are preselected — add only what this client actually needs.</p>
       </div>
-    </div>
-    <div class="card invite-card">
-      <div class="eyebrow">New invite</div>
-      <h2 style="margin-top:6px">Create client connector page</h2>
-      <div class="field">
-        <span>Software connectors this client needs</span>
+      <span class="id-stamp" aria-label="API route">POST /api/admin/client-invites</span>
+    </header>
+
+    <div class="composer-body">
+      <div class="step" aria-labelledby="step1-label">
+        <div class="step-head">
+          <span class="step-num" aria-hidden="true">1</span>
+          <span class="step-label" id="step1-label">Software connectors</span>
+        </div>
         <div class="connector-picker" aria-label="Add software connector">
           <select class="input service-select" id="connectorPicker" aria-label="Available software connectors">
             <option value="">Select connector to add…</option>
@@ -288,32 +552,93 @@ textarea.input{min-height:110px;resize:vertical}
           <button class="button secondary" id="addConnectorButton" type="button">Add connector</button>
         </div>
         <div class="connector-checklist" id="connectorChecklist" aria-label="Selected software connectors">
-          <div class="empty-connectors">Choose connectors from the bar above. Nothing is preselected.</div>
+          <div class="empty-connectors"><b>No connectors yet</b>Choose connectors from the bar above. Nothing is preselected.</div>
         </div>
-        <button class="button ghost connector-request-shortcut" id="newConnectorShortcut" type="button">Connector not listed? Create one</button>
+        <button class="button subtle" id="newConnectorShortcut" type="button">Connector not listed? Create one</button>
       </div>
-      <label class="field">
-        <span>Client / business name</span>
-        <input class="input" id="clientName" placeholder="Acme Roofing" autocomplete="off" />
-      </label>
-      <label class="field">
-        <span>Workflow label</span>
-        <input class="input" id="workflowName" placeholder="cold outbound" autocomplete="off" />
-      </label>
-      <div class="invite-preview" id="invitePreview">/connect/gmail/</div>
-      <div class="row">
-        <button class="button" id="copyInviteButton" type="button">Create client connector page</button>
-        <a class="button secondary" id="openInviteLink" href="/connect/gmail/" target="_blank" rel="noopener">Preview</a>
+
+      <div class="step" aria-labelledby="step2-label">
+        <div class="step-head">
+          <span class="step-num" aria-hidden="true">2</span>
+          <span class="step-label" id="step2-label">Client identity</span>
+        </div>
+        <label class="field">
+          <span>Client / business name</span>
+          <input class="input" id="clientName" placeholder="Acme Roofing" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Workflow label</span>
+          <input class="input" id="workflowName" placeholder="cold outbound" autocomplete="off" />
+        </label>
+        <p class="note">The workflow label is read by the agent as its job context.</p>
+      </div>
+
+      <div class="step" aria-labelledby="step3-label">
+        <div class="step-head">
+          <span class="step-num" aria-hidden="true">3</span>
+          <span class="step-label" id="step3-label">Private link</span>
+        </div>
+        <div class="preview-shell" aria-label="Generated invite URL preview">
+          <div class="pf-head">
+            <span class="pf-label">connect_url</span>
+            <span class="pf-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          </div>
+          <div class="pf-body preview-empty" id="invitePreview">Generate to reveal private link.</div>
+        </div>
+        <div class="row">
+          <button class="button" id="copyInviteButton" type="button">Create client connector page</button>
+          <a class="button secondary" id="openInviteLink" href="#" aria-disabled="true" target="_blank" rel="noopener">Preview</a>
+        </div>
+        <p class="note">Link is copied to your clipboard. Share only with the client.</p>
       </div>
     </div>
   </section>
 
-  <section class="card request-card" id="connectorRequestPanel" aria-labelledby="connectorRequestHeading">
-    <div>
-      <div class="eyebrow">Connector request agent</div>
-      <h2 id="connectorRequestHeading" style="margin-top:6px">Need another app?</h2>
-      <p class="note">After a client call, drop the software/auth/API notes here. The request is stored for the connector-builder workflow and can notify a Hermes webhook when configured.</p>
+  <!-- Public connector pages -->
+  <div class="connector-pages" aria-label="Public connector pages">
+    <span>Public connector pages</span>
+    <a href="/connect/gmail/" rel="noopener">Gmail</a>
+    <a href="/connect/social/" rel="noopener">Facebook + Instagram</a>
+    <a href="/connect/slack/" rel="noopener">Slack</a>
+    <a href="/connect/hubspot/" rel="noopener">HubSpot</a>
+  </div>
+
+  <!-- Connections section -->
+  <header class="section-bar">
+    <div class="left">
+      <span class="eyebrow plain">All connections</span>
+      <h2 class="section-title">Connected client workspaces</h2>
+      <div class="metrics" aria-label="Connection counts">
+        <span class="metric"><b id="totalCount">0</b>total</span>
+        <span class="metric ready"><b id="readyCount">0</b>ready</span>
+        <span class="metric warn"><b id="needsCount">0</b>attention</span>
+        <span class="metric latest"><b id="latestDate">—</b>latest</span>
+      </div>
     </div>
+    <div class="right">
+      <div class="service-strip" id="serviceStrip" aria-label="Registered connectors"></div>
+      <button class="button secondary" id="refreshButton" type="button">Refresh</button>
+    </div>
+  </header>
+
+  <div class="status" id="statusLine" role="status" aria-live="polite">Loading client connections…</div>
+
+  <section class="table" id="connectionsList" aria-live="polite">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </section>
+
+  <!-- Connector request agent (secondary) -->
+  <section class="request-card" id="connectorRequestPanel" aria-labelledby="connectorRequestHeading">
+    <header class="request-head">
+      <div class="request-meta">
+        <span class="eyebrow">Connector request agent</span>
+        <h2 id="connectorRequestHeading">Need another app?</h2>
+        <p class="note">After a client call, drop the software, auth, and API notes here. The request is stored for the connector-builder workflow and can notify a Hermes webhook when configured.</p>
+      </div>
+      <span class="request-stamp" aria-label="API route">POST /api/admin/connector-requests</span>
+    </header>
     <form class="request-form" id="connectorRequestForm" autocomplete="off">
       <div class="request-grid">
         <label class="field">
@@ -356,27 +681,6 @@ textarea.input{min-height:110px;resize:vertical}
         <div class="request-status" id="connectorRequestStatus" role="status" aria-live="polite"></div>
       </div>
     </form>
-  </section>
-
-  <section class="grid" aria-label="Connection summary">
-    <div class="stat"><b id="totalCount">0</b><span>Total</span></div>
-    <div class="stat"><b id="readyCount">0</b><span>Ready</span></div>
-    <div class="stat"><b id="needsCount">0</b><span>Needs attention</span></div>
-    <div class="stat"><b id="latestDate">—</b><span>Latest</span></div>
-  </section>
-
-  <div class="toolbar">
-    <div class="left">
-      <div class="eyebrow">All connections</div>
-      <div class="status" id="statusLine" role="status" aria-live="polite">Loading client connections…</div>
-    </div>
-    <button class="button secondary" id="refreshButton" type="button">Refresh</button>
-  </div>
-
-  <section class="table" id="connectionsList" aria-live="polite">
-    <div class="skeleton"></div>
-    <div class="skeleton"></div>
-    <div class="skeleton"></div>
   </section>
 </main>
 
@@ -540,7 +844,7 @@ textarea.input{min-height:110px;resize:vertical}
 
     const selected = selectedConnectorKeys();
     if (!selected.length) {
-      connectorChecklist.innerHTML = '<div class="empty-connectors">Choose connectors from the bar above. Nothing is preselected.</div>';
+      connectorChecklist.innerHTML = '<div class="empty-connectors"><b>No connectors yet</b>Choose connectors from the bar above. Nothing is preselected.</div>';
       return;
     }
 
@@ -705,7 +1009,7 @@ textarea.input{min-height:110px;resize:vertical}
     updateStats(rows);
     if (!rows.length) {
       const emptyText = opts.initial
-        ? 'Send a client invite link from the card above. Gmail and Facebook/Instagram connections show up here as soon as a client finishes OAuth.'
+        ? 'Send a client invite link from the composer above. Connections show up here as soon as a client finishes OAuth.'
         : 'Share an invite link with your client, then refresh.';
       listEl.innerHTML = `${errorBlock()}<div class="empty"><strong>No connections yet</strong>${escapeHtml(emptyText)}</div>`;
       return;
@@ -803,17 +1107,15 @@ textarea.input{min-height:110px;resize:vertical}
     };
   }
 
-  function buildInviteUrl() {
-    return lastCreatedInvite?.connect_url || 'Create a client connector page to generate a private link.';
-  }
-
   function updateInvitePreview() {
-    const built = buildInviteUrl();
-    invitePreview.textContent = built;
     if (lastCreatedInvite?.connect_url) {
+      invitePreview.textContent = lastCreatedInvite.connect_url;
+      invitePreview.classList.remove('preview-empty');
       openInviteLink.setAttribute('href', lastCreatedInvite.connect_url);
       openInviteLink.removeAttribute('aria-disabled');
     } else {
+      invitePreview.textContent = 'Generate to reveal private link.';
+      invitePreview.classList.add('preview-empty');
       openInviteLink.setAttribute('href', '#');
       openInviteLink.setAttribute('aria-disabled', 'true');
     }
