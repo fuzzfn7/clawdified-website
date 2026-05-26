@@ -2,6 +2,13 @@
 
 Canonical local source for `clawdified.com` Cloudflare Pages static site and Pages Functions.
 
+## Current homepage status
+
+- `/` hero and pricing remain the primary conversion anchors.
+- The middle homepage flow was redesigned with Claude Design on 2026-05-26 as three visual, copy-light sections: problem bottleneck (`#problem`), agent-between-apps solution (`#solution`), and managed workflow map (`#process`).
+- Required markers in `index.html`: `CLAUDE_DESIGN_HOME_VISUAL_REDESIGN_20260526`, `Claude Design homepage visual redesign 20260526`, and visible text `visual workflow proof` in the `/agents/` teaser.
+- Do not re-add the old homepage tabbed/fake-app demo flow (`#what-it-does`, `#tools`, `#how-it-works`). The actual interactive live agent showroom lives separately at `/agents/`.
+
 ## Current live agent showroom status
 
 - `/agents/` is the public agent systems showroom.

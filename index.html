@@ -1012,6 +1012,322 @@ footer{
   .integ-name{font-size:11px;}
 }
 
+/* Claude Design homepage visual redesign 20260526 */
+.chd-sec{padding:var(--s-section) var(--s-page);}
+.chd-problem{background:var(--bg);}
+.chd-solution{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.chd-managed{background:var(--bg);}
+
+.chd-head{text-align:center;max-width:680px;margin:0 auto 56px;}
+.chd-head .sec-eyebrow{display:block;color:var(--hi);margin-bottom:14px;}
+.chd-head .sec-h{margin:0 auto 18px;}
+.chd-head .sec-h em{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--hi);letter-spacing:-0.005em;padding:0 .05em;}
+.chd-head .sec-sub{margin:0 auto;color:var(--muted);max-width:520px;}
+
+/* ──── PROBLEM ──── */
+.chd-bottleneck{
+  position:relative;
+  display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;
+  gap:36px 200px;
+  max-width:1080px;margin:0 auto;padding:32px 0 28px;
+}
+.chd-quad{
+  position:relative;background:var(--bg-3);
+  border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px 20px;
+  display:flex;flex-direction:column;gap:14px;
+  min-height:210px;
+  box-shadow:0 16px 40px rgba(0,0,0,.32);
+}
+.chd-q-tl{transform:rotate(-1.4deg);}
+.chd-q-tr{transform:rotate(1.6deg);}
+.chd-q-bl{transform:rotate(1.1deg);}
+.chd-q-br{transform:rotate(-1.3deg);}
+.chd-quad-lbl{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+}
+.chd-stack{display:flex;flex-direction:column;gap:6px;position:relative;}
+.chd-msg{
+  display:flex;flex-direction:column;gap:1px;
+  padding:9px 12px;border-radius:8px;
+  background:var(--bg-2);border:1px solid var(--line);
+}
+.chd-msg b{font-size:11.5px;font-weight:600;color:var(--ink);letter-spacing:-0.005em;}
+.chd-msg span{font-size:11px;color:var(--faint);}
+.chd-counter{
+  position:absolute;top:-12px;right:-10px;
+  font-family:var(--mono);font-size:10.5px;font-weight:700;
+  background:var(--hi);color:#1a0e05;border-radius:100px;
+  padding:3px 11px;letter-spacing:.04em;
+  box-shadow:0 4px 16px rgba(212,133,83,.32);
+}
+.chd-reviews{display:flex;flex-direction:column;gap:6px;}
+.chd-rev{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:8px;
+  background:var(--bg-2);border:1px solid var(--line);
+}
+.chd-stars{font-size:12px;color:var(--hi);letter-spacing:.06em;line-height:1;}
+.chd-stars-dim{color:rgba(212,133,83,.35);}
+.chd-rev-meta{font-family:var(--mono);font-size:10px;color:var(--faint);letter-spacing:.02em;}
+.chd-followups{display:flex;flex-direction:column;gap:6px;}
+.chd-fu{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 12px;border-radius:8px;
+  background:var(--bg-2);border:1px solid var(--line);
+  font-size:11.5px;color:var(--muted);letter-spacing:-0.005em;
+}
+.chd-fu-dot{width:6px;height:6px;border-radius:50%;background:rgba(236,231,220,.3);flex-shrink:0;}
+.chd-fu-dot-warn{background:var(--hi);box-shadow:0 0 10px rgba(212,133,83,.55);}
+.chd-tools{display:flex;flex-wrap:wrap;gap:6px;}
+.chd-tool{
+  font-family:var(--mono);font-size:10.5px;font-weight:500;
+  padding:5px 11px;border-radius:100px;
+  background:var(--bg-2);border:1px solid var(--line);
+  color:var(--muted);letter-spacing:.01em;
+}
+
+.chd-owner-wrap{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:200px;height:200px;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+.chd-owner{position:relative;width:160px;height:160px;display:flex;align-items:center;justify-content:center;}
+.chd-owner-ring{
+  position:absolute;inset:0;border-radius:50%;
+  border:1px dashed rgba(212,133,83,.35);
+  animation:chd-rot 28s linear infinite;
+}
+.chd-owner-ring-2{
+  inset:14px;border:1px solid rgba(212,133,83,.18);border-style:dotted;
+  animation:chd-rot 18s linear infinite reverse;
+}
+.chd-owner-core{
+  position:relative;z-index:2;
+  width:104px;height:104px;border-radius:50%;
+  background:radial-gradient(ellipse at center,#22190f 0%,#0f0e0a 100%);
+  border:1px solid rgba(212,133,83,.55);
+  box-shadow:0 0 0 6px var(--bg),0 0 80px rgba(212,133,83,.22);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+}
+.chd-owner-lbl{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--hi);letter-spacing:.14em;}
+.chd-owner-sub{font-family:var(--mono);font-size:9px;color:var(--faint);margin-top:3px;letter-spacing:.04em;}
+.chd-arrow{position:absolute;width:90px;height:1px;background:linear-gradient(to right,transparent,rgba(212,133,83,.45));}
+.chd-arrow::after{content:'';position:absolute;right:0;top:50%;width:5px;height:5px;border-radius:50%;background:var(--hi);transform:translateY(-50%);box-shadow:0 0 12px rgba(212,133,83,.5);}
+.chd-arrow-tl{left:-46px;top:28%;transform:rotate(28deg);}
+.chd-arrow-tr{right:-46px;top:28%;transform:scaleX(-1) rotate(28deg);}
+.chd-arrow-bl{left:-46px;bottom:28%;transform:rotate(-28deg);}
+.chd-arrow-br{right:-46px;bottom:28%;transform:scaleX(-1) rotate(-28deg);}
+@keyframes chd-rot{from{transform:rotate(0);}to{transform:rotate(360deg);}}
+
+.chd-foot{
+  text-align:center;margin:40px auto 0;max-width:560px;
+  font-family:var(--serif);font-size:22px;color:var(--muted);
+  font-style:italic;letter-spacing:-0.01em;line-height:1.45;
+}
+
+/* ──── SOLUTION ──── */
+.chd-flow{
+  position:relative;display:grid;
+  grid-template-columns:1fr 240px 1fr;gap:32px;
+  align-items:stretch;max-width:1120px;margin:0 auto;
+}
+.chd-flow-col{display:flex;flex-direction:column;gap:14px;}
+.chd-flow-lbl{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--faint);padding-left:4px;
+}
+.chd-pane{
+  background:var(--bg-3);border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  display:flex;flex-direction:column;box-shadow:0 16px 40px rgba(0,0,0,.4);
+}
+.chd-pane-bar{
+  display:flex;align-items:center;gap:9px;
+  padding:10px 14px;background:rgba(255,255,255,.025);border-bottom:1px solid var(--line);
+}
+.chd-pane-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+.chd-pane-name{font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.02em;}
+.chd-pane-body{padding:16px 16px 18px;display:flex;flex-direction:column;gap:6px;}
+.chd-pane-from{font-size:11.5px;font-weight:500;color:var(--ink);}
+.chd-pane-from span{font-weight:400;color:var(--faint);letter-spacing:.02em;font-family:var(--mono);font-size:10.5px;}
+.chd-pane-subj{font-size:14px;font-weight:500;color:var(--ink);letter-spacing:-0.01em;}
+.chd-pane-body-txt{font-size:12.5px;color:var(--muted);line-height:1.55;letter-spacing:-0.003em;}
+
+.chd-flow-mid{position:relative;align-items:center;justify-content:center;display:flex;flex-direction:column;min-height:240px;}
+.chd-conn{position:absolute;top:50%;height:1px;width:46px;}
+.chd-conn-l{left:-46px;background:linear-gradient(to right,rgba(212,133,83,.15),rgba(212,133,83,.6));}
+.chd-conn-r{right:-46px;background:linear-gradient(to right,rgba(212,133,83,.6),rgba(212,133,83,.15));}
+.chd-conn::before,.chd-conn::after{content:'';position:absolute;width:6px;height:6px;border-radius:50%;background:var(--hi);top:50%;transform:translateY(-50%);}
+.chd-conn-l::before{left:-3px;opacity:.55;}
+.chd-conn-l::after{right:-3px;box-shadow:0 0 12px rgba(212,133,83,.55);}
+.chd-conn-r::before{right:-3px;opacity:.55;}
+.chd-conn-r::after{left:-3px;box-shadow:0 0 12px rgba(212,133,83,.55);}
+
+.chd-agent{
+  position:relative;width:100%;
+  background:var(--bg-3);border:1px solid rgba(212,133,83,.28);border-radius:14px;
+  padding:18px 18px 16px;display:flex;flex-direction:column;align-items:stretch;gap:14px;
+  box-shadow:0 0 0 1px rgba(212,133,83,.05),0 24px 60px rgba(0,0,0,.5);
+}
+.chd-agent-halo{position:absolute;inset:-1px;border-radius:14px;background:radial-gradient(ellipse at center,rgba(212,133,83,.18) 0%,transparent 70%);pointer-events:none;}
+.chd-agent-core{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.chd-agent-name{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink);letter-spacing:.08em;text-transform:uppercase;}
+.chd-agent-steps{list-style:none;display:flex;flex-direction:column;gap:5px;padding:10px 0 0;border-top:1px solid var(--line);position:relative;z-index:2;}
+.chd-agent-steps li{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);letter-spacing:-0.005em;}
+.chd-step-dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 1.8s ease-in-out infinite;}
+.chd-agent-steps li:nth-child(2) .chd-step-dot{animation-delay:.4s;}
+.chd-agent-steps li:nth-child(3) .chd-step-dot{animation-delay:.8s;}
+.chd-agent-steps li:nth-child(4) .chd-step-dot{animation-delay:1.2s;}
+
+.chd-out-stack{display:flex;flex-direction:column;gap:6px;}
+.chd-out{
+  display:grid;grid-template-columns:74px 1fr auto;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:10px;background:var(--bg-3);border:1px solid var(--line);
+  border-left:2px solid rgba(58,171,119,.5);
+}
+.chd-out-app{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--ink);letter-spacing:.04em;}
+.chd-out-txt{font-size:12px;color:var(--muted);line-height:1.4;letter-spacing:-0.005em;}
+.chd-out-tag{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green);padding:2px 9px;border-radius:100px;background:rgba(58,171,119,.08);border:1px solid rgba(58,171,119,.2);}
+
+.chd-beat{
+  display:grid;grid-template-columns:1fr 1fr;gap:0;margin:64px auto 0;max-width:780px;
+  border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--line);
+}
+.chd-beat-side{background:var(--bg-3);padding:28px 26px;display:flex;flex-direction:column;gap:14px;align-items:flex-start;}
+.chd-beat-after{background:var(--bg);}
+.chd-beat-lbl{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);}
+.chd-beat-after .chd-beat-lbl{color:var(--hi);}
+.chd-beat-side p{font-size:13px;color:var(--muted);letter-spacing:-0.005em;line-height:1.5;}
+.chd-beat-vis{position:relative;width:100%;height:64px;}
+.chd-beat-tangle span{position:absolute;height:1px;background:rgba(236,231,220,.28);transform-origin:left center;}
+.chd-beat-tangle span:nth-child(1){top:14px;left:4%;width:78%;transform:rotate(11deg);}
+.chd-beat-tangle span:nth-child(2){top:28px;left:8%;width:68%;transform:rotate(-7deg);}
+.chd-beat-tangle span:nth-child(3){top:42px;left:2%;width:88%;transform:rotate(4deg);}
+.chd-beat-tangle span:nth-child(4){top:54px;left:10%;width:60%;transform:rotate(-15deg);}
+.chd-beat-tangle span:nth-child(5){top:6px;left:18%;width:62%;transform:rotate(-22deg);}
+.chd-beat-line span{position:absolute;top:30px;left:0;height:2px;width:100%;background:linear-gradient(to right,rgba(212,133,83,.05),var(--hi) 50%,rgba(212,133,83,.05));border-radius:100px;}
+.chd-beat-line span::before,.chd-beat-line span::after{content:'';position:absolute;width:9px;height:9px;border-radius:50%;background:var(--hi);top:50%;transform:translateY(-50%);box-shadow:0 0 14px rgba(212,133,83,.55);}
+.chd-beat-line span::before{left:0;}
+.chd-beat-line span::after{right:0;}
+
+/* ──── MANAGED ──── */
+.chd-map{
+  position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;
+  max-width:1120px;margin:0 auto;padding-top:18px;
+}
+.chd-map-rail{position:absolute;left:6%;right:6%;top:18px;height:1px;background:linear-gradient(to right,rgba(212,133,83,0),rgba(212,133,83,.5) 8%,rgba(212,133,83,.5) 92%,rgba(212,133,83,0));}
+.chd-node{
+  background:var(--bg-3);border:1px solid var(--line);border-radius:14px;
+  padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;position:relative;min-height:250px;
+  box-shadow:0 16px 36px rgba(0,0,0,.32);
+}
+.chd-node::before{
+  content:'';position:absolute;top:-7px;left:24px;
+  width:13px;height:13px;border-radius:50%;background:var(--bg);
+  border:1px solid rgba(212,133,83,.55);
+  box-shadow:0 0 0 2px var(--bg),0 0 14px rgba(212,133,83,.4);
+}
+.chd-node-num{font-family:var(--mono);font-size:10.5px;font-weight:600;color:var(--hi);letter-spacing:.08em;}
+.chd-node-lbl{font-family:var(--sans);font-size:18px;font-weight:500;color:var(--ink);letter-spacing:-0.02em;margin-bottom:4px;}
+.chd-node-art{flex:1;display:flex;flex-direction:column;gap:6px;padding:6px 0;}
+.chd-node-cap{font-size:11.5px;color:var(--muted);letter-spacing:-0.005em;line-height:1.45;border-top:1px solid var(--line);padding-top:10px;}
+
+.chd-art-disc{gap:7px;}
+.chd-art-disc .chd-art-line{height:7px;border-radius:5px;background:rgba(236,231,220,.07);}
+.chd-art-disc .chd-art-line:nth-child(1){width:82%;}
+.chd-art-disc .chd-art-line:nth-child(2){width:62%;}
+.chd-art-disc .chd-art-line.short{width:38%;}
+.chd-art-disc .chd-art-line:nth-child(4){width:72%;}
+
+.chd-art-conn{flex-direction:row !important;flex-wrap:wrap;gap:5px;}
+.chd-art-conn span{
+  font-family:var(--mono);font-size:10.5px;color:var(--muted);
+  padding:4px 10px;border-radius:100px;background:var(--bg-2);border:1px solid var(--line);
+}
+.chd-art-conn span:last-child{color:var(--hi);border-color:rgba(212,133,83,.3);background:rgba(212,133,83,.07);}
+
+.chd-art-guard .chd-art-rule{
+  display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--muted);
+  padding:6px 10px;border-radius:8px;background:var(--bg-2);border:1px solid var(--line);
+}
+.chd-rule-k{font-family:var(--mono);font-size:10px;color:var(--hi);letter-spacing:.04em;}
+.chd-rule-tag{margin-left:auto;font-family:var(--mono);font-size:9.5px;font-weight:600;padding:2px 9px;border-radius:100px;background:rgba(212,133,83,.12);color:var(--hi);letter-spacing:.06em;text-transform:uppercase;}
+
+.chd-art-maint .chd-maint-row{display:flex;align-items:center;gap:9px;font-size:11.5px;color:var(--muted);padding:4px 2px;}
+.chd-art-maint .chd-maint-row span{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2s infinite;}
+.chd-art-maint .chd-maint-row:nth-child(2) span{animation-delay:.5s;}
+.chd-art-maint .chd-maint-row:nth-child(3) span{animation-delay:1s;}
+
+/* showroom teaser */
+.chd-teaser{
+  display:block;text-decoration:none;color:inherit;
+  margin:64px auto 0;max-width:1120px;
+  border:1px solid var(--line);border-radius:16px;background:var(--bg-2);
+  overflow:hidden;position:relative;
+  transition:border-color .2s ease,background-color .2s ease;
+}
+.chd-teaser:hover{border-color:rgba(212,133,83,.45);background:var(--bg-3);}
+.chd-teaser-grid{position:relative;display:grid;grid-template-columns:1.2fr 1.4fr auto;gap:36px;align-items:center;padding:28px 32px;}
+.chd-teaser-glow{position:absolute;inset:0;background:radial-gradient(ellipse 500px 220px at 70% 50%,rgba(212,133,83,.1),transparent 70%);pointer-events:none;}
+.chd-teaser-left{position:relative;z-index:2;}
+.chd-teaser-eyebrow{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--hi);display:block;margin-bottom:10px;}
+.chd-teaser-h{font-family:var(--sans);font-size:24px;font-weight:500;color:var(--ink);letter-spacing:-0.02em;margin-bottom:6px;line-height:1.2;}
+.chd-teaser-sub{font-size:13px;color:var(--muted);line-height:1.55;max-width:300px;}
+.chd-teaser-mid{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.chd-mini{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:9px;background:var(--bg-3);border:1px solid var(--line);font-size:11.5px;font-weight:500;color:var(--muted);letter-spacing:-0.005em;}
+.chd-mini-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;flex-shrink:0;}
+.chd-mini:nth-child(2) .chd-mini-dot{animation-delay:.4s;}
+.chd-mini:nth-child(3) .chd-mini-dot{animation-delay:.8s;}
+.chd-mini:nth-child(4) .chd-mini-dot{animation-delay:1.2s;}
+.chd-teaser-cta{
+  position:relative;z-index:2;display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--sans);font-size:13px;font-weight:600;color:#1a0e05;background:var(--hi);
+  padding:12px 20px;border-radius:100px;letter-spacing:-0.005em;
+  transition:background .15s ease,transform .15s ease;white-space:nowrap;
+}
+.chd-teaser:hover .chd-teaser-cta{background:#dd9264;transform:translateX(2px);}
+.chd-teaser-cta svg{flex-shrink:0;}
+
+@media(max-width:860px){
+  .chd-sec{padding:80px 20px;}
+  .chd-head{margin-bottom:32px;}
+  .chd-bottleneck{grid-template-columns:1fr;gap:12px;padding:8px 0 0;}
+  .chd-quad{min-height:auto;transform:none !important;}
+  .chd-quad-lbl{font-size:10.5px;}
+  .chd-owner-wrap{
+    position:relative;left:auto;top:auto;transform:none;
+    width:100%;height:auto;padding:8px 0 4px;order:-1;
+  }
+  .chd-owner{width:124px;height:124px;}
+  .chd-owner-core{width:90px;height:90px;}
+  .chd-owner-lbl{font-size:12px;}
+  .chd-arrow{display:none;}
+  .chd-foot{font-size:17px;margin-top:24px;padding:0 8px;}
+
+  .chd-flow{grid-template-columns:1fr;gap:18px;}
+  .chd-flow-mid{width:100%;min-height:auto;order:0;}
+  .chd-conn{display:none;}
+  .chd-agent{padding:16px;}
+  .chd-out{grid-template-columns:64px 1fr auto;}
+  .chd-beat{grid-template-columns:1fr;margin-top:36px;}
+
+  .chd-map{grid-template-columns:1fr 1fr;gap:12px;padding-top:14px;}
+  .chd-map-rail{display:none;}
+  .chd-node{min-height:auto;padding:16px;}
+  .chd-node::before{display:none;}
+  .chd-teaser{margin-top:40px;}
+  .chd-teaser-grid{grid-template-columns:1fr;gap:18px;padding:24px;}
+  .chd-teaser-mid{grid-template-columns:1fr 1fr;}
+  .chd-teaser-cta{justify-self:flex-start;}
+}
+@media(max-width:520px){
+  .chd-map{grid-template-columns:1fr;gap:10px;}
+  .chd-teaser-mid{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -1024,8 +1340,8 @@ footer{
     </svg><span style="color:var(--ink);">Clawdified</span>
   </a>
   <div class="n-links">
-    <a href="#what-it-does">What it does</a>
-    <a href="#how-it-works">How it works</a>
+    <a href="#problem">The problem</a>
+    <a href="#solution">The shift</a>
     <a href="#pricing">Pricing</a>
     <a href="/agents/" class="btn btn-ghost agents-nav-cta">Try live agents</a>
     <a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener" class="btn btn-hi">Book a call</a>
@@ -1040,7 +1356,7 @@ footer{
   <p class="hero-sub">We learn how your business runs, then deploy agents that do the real work &mdash; built for your workflows, connected to your tools, running 24/7.</p>
   <div class="hero-btns">
     <a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener" class="btn btn-hi btn-lg">Book a discovery call</a>
-    <a href="#what-it-does" class="btn btn-ghost btn-lg">See what it does</a>
+    <a href="#problem" class="btn btn-ghost btn-lg">See how it works</a>
   </div>
   <p class="hero-caption">Works inside Gmail, Calendar, HubSpot, Slack &mdash; and thousands more.</p>
 </section>
@@ -1048,1071 +1364,221 @@ footer{
 
 
 
-<!-- WHAT IT DOES — TABBED AGENTS -->
-<section class="sec agents-sec" id="what-it-does">
+<!-- CLAUDE_DESIGN_HOME_VISUAL_REDESIGN_20260526 -->
+
+<!-- PROBLEM — work stealing your week -->
+<section class="sec chd-sec chd-problem" id="problem">
   <div class="si">
-    <div class="agents-head">
-      <h2 class="sec-h centered r"><span style="color:var(--hi);">Your tools work with you.</span><br>Your AI agents work for you.</h2>
-      <p class="sec-sub centered r" style="margin:0 auto;">An AI agent living inside your business 24/7 — built around your workflows, connected to your tools, and running the tasks that used to eat your day.</p>
+    <div class="chd-head r">
+      <span class="sec-eyebrow">The problem</span>
+      <h2 class="sec-h">The work stealing<br>your <em>week</em>.</h2>
+      <p class="sec-sub">Messages pile. Reviews stall. Follow-ups slip.<br>Every owner runs the same gauntlet.</p>
     </div>
 
-    <div class="agent-tabs r" id="agent-tabs">
-      <div class="agent-tab active" data-tab="mr">Market Research</div>
-      <div class="agent-tab" data-tab="ci">Competitive Intel</div>
-      <div class="agent-tab" data-tab="rep">Reputation</div>
-      <div class="agent-tab" data-tab="assist">Daily Assistant</div>
-    </div>
-
-    <!-- MARKET RESEARCH -->
-    <div class="agent-panel active r" id="panel-mr">
-      <div class="ap-left">
-        <span class="ap-tag">Market Research Agent</span>
-        <h3 class="ap-title">Scans the market.<br>Builds your campaign.</h3>
-        <p class="ap-desc">Reads Reddit, Google Trends, and competitor ads — then synthesizes everything into a ready-to-run campaign brief.</p>
-        <div class="ap-handles">
-          <div class="ap-handle">Live source scanning</div>
-          <div class="ap-handle">Trend & demand analysis</div>
-          <div class="ap-handle">Competitor ad monitoring</div>
-          <div class="ap-handle">Campaign brief generation</div>
+    <div class="chd-bottleneck r">
+      <div class="chd-quad chd-q-tl">
+        <div class="chd-quad-lbl">unread messages</div>
+        <div class="chd-stack">
+          <div class="chd-msg"><b>Sarah K.</b><span>can you send a quote?</span></div>
+          <div class="chd-msg"><b>Dave R.</b><span>still waiting on times…</span></div>
+          <div class="chd-msg"><b>Maria J.</b><span>any update?</span></div>
+          <div class="chd-counter">+14</div>
         </div>
       </div>
-      <div class="ap-right">
-        <div class="demo-window">
-          <div class="demo-bar">
-            <div class="demo-dots"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div></div>
-            <span class="demo-title">Market Research Agent</span>
-            <div class="demo-live"><span class="demo-live-dot"></span>Scanning now</div>
-          </div>
-          <div style="display:flex;flex-direction:column;overflow:hidden;">
-            <div class="dbt-bar">
-              <div class="dbt-tab active" id="mr-tab-src"><span class="dbt-tdot" id="mr-dot-src"></span>🔍 Sources</div>
-              <div class="dbt-tab" id="mr-tab-ins"><span class="dbt-tdot" id="mr-dot-ins"></span>💡 Insights</div>
-              <div class="dbt-tab" id="mr-tab-brx"><span class="dbt-tdot" id="mr-dot-brx"></span>📋 Brief</div>
-              <div class="agent-pill"><span class="agent-pill-dot"></span>Agent active</div>
-            </div>
-            <div class="inner-panel show" id="mrp-src" style="padding:14px;gap:7px;"></div>
-            <div class="inner-panel" id="mrp-ins" style="padding:14px;gap:6px;"></div>
-            <div class="inner-panel" id="mrp-brx" style="padding:14px;gap:0;"></div>
+
+      <div class="chd-quad chd-q-tr">
+        <div class="chd-quad-lbl">reviews waiting</div>
+        <div class="chd-reviews">
+          <div class="chd-rev"><span class="chd-stars">★★★★★</span><span class="chd-rev-meta">Google · 2d</span></div>
+          <div class="chd-rev"><span class="chd-stars chd-stars-dim">★★★☆☆</span><span class="chd-rev-meta">Yelp · 4d</span></div>
+          <div class="chd-rev"><span class="chd-stars">★★★★☆</span><span class="chd-rev-meta">Angi · 5d</span></div>
+        </div>
+      </div>
+
+      <div class="chd-owner-wrap" aria-hidden="true">
+        <div class="chd-arrow chd-arrow-tl"></div>
+        <div class="chd-arrow chd-arrow-tr"></div>
+        <div class="chd-arrow chd-arrow-bl"></div>
+        <div class="chd-arrow chd-arrow-br"></div>
+        <div class="chd-owner">
+          <div class="chd-owner-ring"></div>
+          <div class="chd-owner-ring chd-owner-ring-2"></div>
+          <div class="chd-owner-core">
+            <div class="chd-owner-lbl">YOU</div>
+            <div class="chd-owner-sub">handling all of it</div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- COMPETITIVE INTEL -->
-    <div class="agent-panel r" id="panel-ci">
-      <div class="ap-left">
-        <span class="ap-tag">Competitive Intelligence Agent</span>
-        <h3 class="ap-title">Watches your competitors.<br>Tells you your move.</h3>
-        <p class="ap-desc">Weekly scan of competitor pricing, reviews, new services, and ads. Monday morning: here's what changed and what to do about it.</p>
-        <div class="ap-handles">
-          <div class="ap-handle">Google My Business monitoring</div>
-          <div class="ap-handle">Review sentiment tracking</div>
-          <div class="ap-handle">Pricing & service changes</div>
-          <div class="ap-handle">Action recommendations</div>
+      <div class="chd-quad chd-q-bl">
+        <div class="chd-quad-lbl">forgotten follow-ups</div>
+        <div class="chd-followups">
+          <div class="chd-fu"><span class="chd-fu-dot"></span>Henderson quote · 9d cold</div>
+          <div class="chd-fu"><span class="chd-fu-dot chd-fu-dot-warn"></span>Riverside lead · 4d silent</div>
+          <div class="chd-fu"><span class="chd-fu-dot"></span>Torres invoice · 30d+ overdue</div>
         </div>
       </div>
-      <div class="ap-right">
-        <div class="demo-window">
-          <div class="demo-bar">
-            <div class="demo-dots"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div></div>
-            <span class="demo-title">Competitive Intel Agent</span>
-            <div class="demo-live"><span class="demo-live-dot"></span>Agent active</div>
-          </div>
-          <div style="display:flex;flex-direction:column;overflow:hidden;">
-            <div class="dbt-bar">
-              <div class="dbt-tab active" id="ci-tab-sc"><span class="dbt-tdot" id="ci-dot-sc"></span>🔎 Scanning</div>
-              <div class="dbt-tab" id="ci-tab-ch"><span class="dbt-tdot" id="ci-dot-ch"></span>⚡ Changes</div>
-              <div class="dbt-tab" id="ci-tab-mv"><span class="dbt-tdot" id="ci-dot-mv"></span>📬 Your Move</div>
-              <div class="agent-pill"><span class="agent-pill-dot"></span>Agent active</div>
-            </div>
-            <div class="inner-panel show" id="cip-sc" style="padding:14px;gap:5px;"></div>
-            <div class="inner-panel" id="cip-ch" style="padding:14px;gap:6px;"></div>
-            <div class="inner-panel" id="cip-mv" style="padding:14px;gap:6px;"></div>
-          </div>
+
+      <div class="chd-quad chd-q-br">
+        <div class="chd-quad-lbl">scattered tools</div>
+        <div class="chd-tools">
+          <span class="chd-tool">Gmail</span>
+          <span class="chd-tool">HubSpot</span>
+          <span class="chd-tool">Calendar</span>
+          <span class="chd-tool">Slack</span>
+          <span class="chd-tool">Reviews</span>
+          <span class="chd-tool">Sheets</span>
         </div>
       </div>
     </div>
 
-    <!-- REPUTATION -->
-    <div class="agent-panel r" id="panel-rep">
-      <div class="ap-left">
-        <span class="ap-tag">Reputation Agent</span>
-        <h3 class="ap-title">Every review.<br>Responded to. Tonight.</h3>
-        <p class="ap-desc">Scans every platform overnight, drafts responses in your voice, posts them, and flags the one that needs you personally.</p>
-        <div class="ap-handles">
-          <div class="ap-handle">Google, Yelp, Angi, HomeAdvisor</div>
-          <div class="ap-handle">Responses in your voice</div>
-          <div class="ap-handle">Auto-post + smart flagging</div>
-          <div class="ap-handle">Referral follow-ups</div>
-        </div>
-      </div>
-      <div class="ap-right">
-        <div class="demo-window">
-          <div class="demo-bar">
-            <div class="demo-dots"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div></div>
-            <span class="demo-title">Reputation Agent</span>
-            <div class="demo-live"><span class="demo-live-dot"></span>Running overnight</div>
-          </div>
-          <div style="padding:16px;display:flex;flex-direction:column;gap:0;" id="rep-log"></div>
-          <div style="padding:12px 16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px;" id="rep-report"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DAILY ASSISTANT -->
-    <div class="agent-panel r" id="panel-assist">
-      <div class="ap-left">
-        <span class="ap-tag">Daily Assistant Agent</span>
-        <h3 class="ap-title">Your day.<br>Already handled.</h3>
-        <p class="ap-desc">Briefs your morning, updates your calendar, messages clients, sends team emails — all on command, any time.</p>
-        <div class="ap-handles">
-          <div class="ap-handle">Morning schedule briefings</div>
-          <div class="ap-handle">Calendar updates on the fly</div>
-          <div class="ap-handle">Client messaging</div>
-          <div class="ap-handle">Mass team emails</div>
-        </div>
-      </div>
-      <div class="ap-right">
-        <div class="demo-window">
-          <div class="demo-bar">
-            <div class="demo-dots"><div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div></div>
-            <span class="demo-title">Daily Assistant</span>
-            <div class="demo-live"><span class="demo-live-dot"></span>Always on</div>
-          </div>
-          <div style="padding:14px;display:flex;flex-direction:column;gap:10px;" id="assist-chat"></div>
-        </div>
-      </div>
-    </div>
-
+    <p class="chd-foot r">All of it real work. None of it the work you opened the doors to do.</p>
   </div>
 </section>
 
-<!-- LIVE PRODUCT DEMO -->
-<section class="sec tools-sec" id="tools">
+<!-- SOLUTION — an agent between your apps -->
+<section class="sec chd-sec chd-solution" id="solution">
   <div class="si">
-    <div class="tools-head r" style="text-align:center;margin-bottom:40px;">
-      <h2 class="sec-h centered" style="max-width:680px;margin:0 auto;"><span style="color:var(--hi);">AI agents are complex.</span><br>We make them simple.</h2>
-      <p class="sec-sub centered" style="margin:16px auto 0;max-width:480px;">This is what it looks like inside your business — reading your tools, running your tasks, reporting back. No prompts. No babysitting.</p>
+    <div class="chd-head r">
+      <span class="sec-eyebrow">The shift</span>
+      <h2 class="sec-h">An agent is the<br><em>worker</em> between your apps.</h2>
+      <p class="sec-sub">One message arrives. The agent reads context across your tools, acts, and reports back.</p>
     </div>
 
-    <!-- SIDE BY SIDE: desktop + phone -->
-    <div class="r tools-demo-grid" style="display:grid;grid-template-columns:1fr 200px;gap:16px;align-items:stretch;">
-
-      <!-- Desktop browser -->
-      <div style="background:var(--bg-3);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.55);display:flex;flex-direction:column;">
-        <div style="background:rgba(255,255,255,.03);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;">
-          <div style="display:flex;gap:5px;">
-            <div style="width:8px;height:8px;border-radius:50%;background:var(--line);"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:var(--line);"></div>
-            <div style="width:8px;height:8px;border-radius:50%;background:var(--line);"></div>
+    <div class="chd-flow r">
+      <div class="chd-flow-col chd-flow-in">
+        <div class="chd-flow-lbl">customer message</div>
+        <div class="chd-pane">
+          <div class="chd-pane-bar"><span class="chd-pane-dot"></span><span class="chd-pane-name">Gmail · inbox</span></div>
+          <div class="chd-pane-body">
+            <div class="chd-pane-from">Sarah Klein <span>· just now</span></div>
+            <div class="chd-pane-subj">Quote for HVAC replacement?</div>
+            <div class="chd-pane-body-txt">Hi — saw your reviews. Could we get on the calendar this week for a site visit?</div>
           </div>
-          <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:5px;padding:4px 12px;font-size:11px;color:var(--faint);">app.clawdified.com</div>
-          <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--green);"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;display:inline-block;"></span> 4 agents active</div>
         </div>
-        <iframe srcdoc="<!DOCTYPE html>
-<html lang=&quot;en&quot;>
-<head>
-<meta charset=&quot;UTF-8&quot;>
-<meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
-<title>Clawdified</title>
-<link href=&quot;https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&amp;display=swap&quot; rel=&quot;stylesheet&quot;>
-<style>
-:root{--bg:#000;--bg2:#080808;--bg3:#0e0e0e;--tx:#fff;--tx2:rgba(255,255,255,.5);--tx3:rgba(255,255,255,.22);--ln:rgba(255,255,255,.06);--hi:#c47840;--gn:#3aab77;--rd:#d44;--bl:#5b8dd9;--yl:#d4a03a;--pu:#7c6fb0;--sb:176px}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--tx);font-family:'DM Sans',system-ui,sans-serif;font-size:13px;font-weight:400;line-height:1.5;-webkit-font-smoothing:antialiased;display:flex}
+      </div>
 
-/* ─── Sidebar ─── */
-.sb{width:var(--sb);background:var(--bg2);border-right:1px solid var(--ln);display:flex;flex-direction:column;flex-shrink:0}
-.sb-top{padding:18px 14px 24px;display:flex;align-items:center;gap:7px;font-size:13.5px;font-weight:600;color:var(--tx)}
-.sb-top svg{flex-shrink:0}
-.sb-nav{display:flex;flex-direction:column;gap:1px;padding:0 6px;flex:1}
-.n{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;cursor:pointer;color:var(--tx2);font-size:12px;font-weight:400;transition:background .1s,color .1s}
-.n:hover{background:rgba(255,255,255,.03);color:var(--tx)}
-.n.on{background:rgba(255,255,255,.06);color:var(--tx);font-weight:500}
-.n svg{width:14px;height:14px;opacity:.35;flex-shrink:0}.n.on svg{opacity:.6}
-.n .ct{margin-left:auto;font-size:9px;font-weight:600;background:rgba(196,120,64,.8);color:#fff;padding:0 5px;border-radius:8px;line-height:16px}
-.sb-ft{padding:10px 14px;border-top:1px solid var(--ln);display:flex;align-items:center;gap:6px}
-.sb-av{width:22px;height:22px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:var(--tx3)}
-.sb-fn{font-size:11px;font-weight:500;color:var(--tx)}
-.sb-dot{margin-left:auto;width:5px;height:5px;border-radius:50%;background:var(--gn);animation:pulse 2.2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
-
-/* ─── Layout ─── */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.pg{display:none;flex-direction:column;flex:1;overflow:hidden}.pg.on{display:flex}
-.hd{padding:16px 22px 12px;border-bottom:1px solid var(--ln);display:flex;align-items:baseline;gap:12px;flex-shrink:0}
-.hd-t{font-size:14px;font-weight:600}.hd-s{font-size:10.5px;color:var(--tx3);margin-left:auto}
-@keyframes fu{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
-
-/* ─── Agent list ─── */
-.al{display:flex;flex:1;overflow:hidden}
-.als{width:210px;border-right:1px solid var(--ln);overflow-y:auto;padding:4px}.als::-webkit-scrollbar{width:0}
-.ac{display:flex;align-items:center;gap:8px;padding:8px;border-radius:6px;cursor:pointer;transition:background .1s}
-.ac:hover{background:rgba(255,255,255,.03)}.ac.on{background:rgba(255,255,255,.05)}
-.ad{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:600;color:#fff;flex-shrink:0}
-.an{font-size:12px;font-weight:400;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ac.on .an{font-weight:500}
-.ap{font-size:10px;color:var(--tx3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
-
-/* ─── Chat ─── */
-.ch{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.chh{padding:10px 18px;border-bottom:1px solid var(--ln);display:flex;align-items:center;gap:8px;flex-shrink:0}
-.chd{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:600;color:#fff;flex-shrink:0}
-.chn{font-size:12.5px;font-weight:500}.cht{font-size:10.5px;color:var(--tx3)}
-.cho{margin-left:auto;display:flex;align-items:center;gap:4px;font-size:9.5px;color:var(--gn)}.cho::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--gn);animation:pulse 2.2s infinite}
-.ms{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
-.ms::-webkit-scrollbar{width:2px}.ms::-webkit-scrollbar-thumb{background:rgba(255,255,255,.06)}
-.m{display:flex;gap:7px;align-items:flex-start;animation:fu .18s ease}.m.u{flex-direction:row-reverse}
-.ma{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;flex-shrink:0;margin-top:2px}
-.mau{background:var(--bg3);color:var(--tx3)}
-.mb{max-width:76%;display:flex;flex-direction:column;gap:3px}.m.u .mb{align-items:flex-end}
-.bb{padding:7px 11px;font-size:12px;line-height:1.6;word-break:break-word}
-.ba{background:var(--bg3);color:var(--tx);border-radius:2px 8px 8px 8px}
-.bu{background:var(--hi);color:#fff;border-radius:8px 2px 8px 8px}
-.bb p{margin:0 0 4px}.bb p:last-child{margin:0}.bb strong{font-weight:600}
-.mt{display:flex;gap:3px;flex-wrap:wrap;margin-top:2px}
-.tg{font-size:8.5px;font-weight:500;padding:1px 5px;border-radius:3px}
-.tg-g{background:rgba(58,171,119,.07);color:var(--gn)}.tg-b{background:rgba(91,141,217,.07);color:var(--bl)}.tg-a{background:rgba(196,120,64,.07);color:var(--hi)}.tg-r{background:rgba(221,68,68,.07);color:var(--rd)}
-
-/* ─── Proactive action card — upgraded ─── */
-.xc{margin-top:5px;padding:8px 11px;background:rgba(58,171,119,.04);border:1px solid rgba(58,171,119,.14);border-left:2px solid rgba(58,171,119,.5);border-radius:0 5px 5px 0}
-.xc-t{font-size:9.5px;font-weight:600;color:var(--gn);margin-bottom:3px;display:flex;align-items:center;gap:4px}
-.xc-b{font-size:11px;color:var(--tx2);line-height:1.45}
-
-/* ─── Suggested prompts ─── */
-.es{display:flex;flex-direction:column;gap:4px;padding-top:2px}
-.esl{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:4px}
-.ess{padding:7px 11px;border:1px solid var(--ln);border-radius:5px;font-size:11.5px;color:var(--tx2);cursor:pointer;max-width:380px;transition:all .14s;line-height:1.4}
-.ess:hover{border-color:rgba(196,120,64,.25);color:var(--tx);background:rgba(196,120,64,.03)}
-
-/* ─── Typing indicator ─── */
-.tp{display:flex;gap:4px;align-items:center;padding:7px 11px}
-.tp span{width:3.5px;height:3.5px;border-radius:50%;background:var(--tx3);animation:td 1.2s ease-in-out infinite}
-.tp span:nth-child(2){animation-delay:.2s}.tp span:nth-child(3){animation-delay:.4s}
-@keyframes td{0%,100%{opacity:.2;transform:translateY(0)}50%{opacity:.7;transform:translateY(-2px)}}
-
-/* ─── Input ─── */
-.ip{padding:8px 18px 10px;border-top:1px solid var(--ln);flex-shrink:0}
-.ipr{display:flex;gap:5px;align-items:flex-end}
-.ipw{flex:1;background:var(--bg3);border:1px solid var(--ln);border-radius:7px;display:flex;align-items:flex-end;transition:border-color .12s}
-.ipw:focus-within{border-color:rgba(255,255,255,.1)}
-#mi{flex:1;background:transparent;border:none;outline:none;padding:7px 10px;font-size:12px;font-family:inherit;font-weight:400;color:var(--tx);resize:none;max-height:80px;line-height:1.4}
-#mi::placeholder{color:rgba(255,255,255,.12)}
-.sn{width:28px;height:28px;margin:3px;background:var(--hi);border:none;border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;opacity:.8;transition:opacity .1s}.sn:hover{opacity:1}.sn svg{fill:#fff}
-
-/* ─── Shared scroll container ─── */
-.scr{padding:20px 24px;flex:1;overflow-y:auto}.scr::-webkit-scrollbar{width:2px}.scr::-webkit-scrollbar-thumb{background:rgba(255,255,255,.05)}
-
-/* ─── Section label ─── */
-.sec-lbl{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;margin-top:4px}
-
-/* ─── Automations — card grid ─── */
-.au-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
-.wf-card{background:var(--bg2);border:1px solid var(--ln);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;transition:border-color .15s}
-.wf-card:hover{border-color:rgba(255,255,255,.1)}
-.wf-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
-.wf-body{flex:1;min-width:0}
-.wf-name{font-size:12px;font-weight:500;color:var(--tx);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.wf-sched{font-size:10px;color:var(--tx3)}
-.wf-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:100px;flex-shrink:0}
-.wf-badge.active{background:rgba(58,171,119,.1);color:var(--gn)}
-.wf-badge.running{background:rgba(91,141,217,.1);color:var(--bl)}
-.wf-badge.scheduled{background:rgba(196,120,64,.1);color:var(--hi)}
-.wf-badge.failed{background:rgba(221,68,68,.1);color:var(--rd)}
-.au-agent-lbl{display:flex;align-items:center;gap:6px;margin-bottom:8px;margin-top:20px}
-.au-agent-lbl:first-of-type{margin-top:0}
-.au-agent-dot{width:6px;height:6px;border-radius:3px;flex-shrink:0}
-.au-agent-nm{font-size:10.5px;font-weight:500;color:var(--tx2)}
-
-/* ─── Activity — timeline ─── */
-.act-day{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:12px;margin-top:4px}
-.act-feed{display:flex;flex-direction:column;gap:2px;margin-bottom:24px}
-.act-row{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-radius:8px;transition:background .12s}
-.act-row:hover{background:var(--bg2)}
-.act-dot-wrap{display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0;padding-top:5px}
-.act-dot-c{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.act-row-body{flex:1;min-width:0}
-.act-row-txt{font-size:11.5px;color:var(--tx2);line-height:1.4}
-.act-row-meta{font-size:10px;color:var(--tx3);margin-top:1px;display:flex;align-items:center;gap:6px}
-.act-row-agent{color:var(--tx3)}
-
-/* ─── Inbox ─── */
-.ib-scr{padding:20px 24px;flex:1;overflow-y:auto}.ib-scr::-webkit-scrollbar{width:2px}
-.ib-card{background:var(--bg2);border:1px solid var(--ln);border-radius:10px;padding:14px 16px;margin-bottom:8px;transition:border-color .15s}
-.ib-card:last-child{margin-bottom:0}
-.ib-card:hover{border-color:rgba(255,255,255,.1)}
-.ib-card.is-flagged{border-left:2px solid var(--rd)}
-.ib-card.is-urgent{border-left:2px solid var(--rd)}
-.ib-card.is-waiting{border-left:2px solid var(--yl)}
-.ib-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.ib-p{font-size:9px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
-.ib-p.waiting{color:var(--yl)}.ib-p.flagged{color:var(--rd)}.ib-p.urgent{color:var(--rd)}
-.ib-t{font-size:13px;font-weight:500;color:var(--tx);flex:1}
-.ib-a{font-size:10px;color:var(--tx3);white-space:nowrap}
-.ib-d{font-size:11.5px;color:var(--tx2);line-height:1.5;margin-bottom:10px}
-.ib-btns{display:flex;gap:6px}
-.ibtn{font-size:11px;font-weight:500;padding:5px 14px;border-radius:6px;cursor:pointer;border:none;transition:opacity .12s,background .12s}.ibtn:hover{opacity:.8}
-.ibtn-a{background:var(--gn);color:#fff}.ibtn-e{background:rgba(255,255,255,.04);color:var(--tx2);border:1px solid var(--ln)}
-
-/* ─── Integrations ─── */
-.ig-scr{padding:20px 24px;flex:1;overflow-y:auto}.ig-scr::-webkit-scrollbar{width:2px}
-.ig-section-lbl{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;margin-top:20px}
-.ig-section-lbl:first-of-type{margin-top:0}
-.ig-g{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px}
-.ig{padding:12px;background:var(--bg2);border:1px solid var(--ln);border-radius:9px;display:flex;align-items:center;gap:10px;transition:border-color .14s;cursor:default}
-.ig:hover{border-color:rgba(255,255,255,.1)}
-.ig-i{font-size:16px;flex-shrink:0;width:24px;text-align:center}
-.ig-n{font-size:11.5px;font-weight:400;color:var(--tx)}.ig-s{font-size:9.5px;margin-top:1px}
-.ig-s.live{color:var(--gn)}.ig-s.off{color:var(--tx3)}
-.ig-add{padding:12px;background:transparent;border:1px dashed rgba(255,255,255,.08);border-radius:9px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:all .14s;font-size:11px;color:var(--tx3);font-weight:400}
-.ig-add:hover{border-color:rgba(196,120,64,.2);color:var(--hi)}
-
-/* ─── Replay ─── */
-.replay-wrap{display:flex;justify-content:center;padding:4px 0 2px;animation:fu .3s ease}
-.replay-btn{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid var(--ln);color:var(--tx3);font-size:10.5px;font-weight:500;font-family:inherit;padding:5px 13px;border-radius:100px;cursor:pointer;transition:border-color .15s,color .15s,background .15s}
-.replay-btn:hover{border-color:rgba(196,120,64,.3);color:var(--hi);background:rgba(196,120,64,.04)}
-.replay-btn svg{width:10px;height:10px;flex-shrink:0;opacity:.6}
-/* ─── Filter bar ─── */
-.filter-bar{display:flex;align-items:center;gap:6px;padding:0 24px 14px;flex-wrap:wrap;flex-shrink:0}
-.filter-lbl{font-size:9.5px;color:var(--tx3);margin-right:2px;white-space:nowrap}
-.fp{font-size:10.5px;font-weight:500;padding:4px 11px;border-radius:100px;border:1px solid var(--ln);color:var(--tx3);background:transparent;cursor:pointer;transition:all .14s;white-space:nowrap}
-.fp:hover{border-color:rgba(255,255,255,.14);color:var(--tx2)}
-.fp.on{border-color:transparent;color:#fff}
-
-/* ─── Mobile: hide sidebar + agent list, show only chat ─── */
-@media(max-width:500px){
-  .sb{display:none}
-  .als{display:none}
-  .al{display:block}
-  .ch{display:flex}
-  .hd{padding:10px 14px 8px}
-  .hd-t{font-size:12px}
-  .ms{padding:10px 12px}
-  .bb{font-size:11px;padding:6px 9px}
-  .mb{max-width:90%}
-  .ip{padding:6px 12px 8px}
-  #mi{font-size:11px;padding:6px 8px}
-  .ig-g{grid-template-columns:repeat(2,1fr)}
-  .ess{font-size:10.5px}
-  .xc{padding:6px 9px}
-  .xc-b{font-size:10px}
-  .filter-bar{padding:0 12px 10px}
-}
-</style>
-</head>
-<body>
-<div class=&quot;sb&quot;>
-  <div class=&quot;sb-top&quot;>
-    <svg width=&quot;14&quot; height=&quot;14&quot; viewBox=&quot;0 0 30 30&quot; fill=&quot;none&quot;><path d=&quot;M10 3 C18 3 23 8 23 15 C23 21 18 25 13 25 C10 25 8 23 9 21 C10 19 13 20 13 18 C13 14 9 10 7 7 C5 4 7 3 10 3Z&quot; fill=&quot;#c47840&quot;/></svg>
-    Clawdified
-  </div>
-  <div class=&quot;sb-nav&quot;>
-    <div class=&quot;n on&quot; onclick=&quot;nav('ag')&quot; id=&quot;n-ag&quot;><svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.2&quot;><path d=&quot;M2 6l6-4 6 4v8H2z&quot;/><path d=&quot;M6 14V9h4v5&quot;/></svg>Agents</div>
-    <div class=&quot;n&quot; onclick=&quot;nav('au')&quot; id=&quot;n-au&quot;><svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.2&quot;><path d=&quot;M4 2v4l4 2-4 2v4&quot;/><path d=&quot;M12 8h2&quot;/></svg>Automations</div>
-    <div class=&quot;n&quot; onclick=&quot;nav('ib')&quot; id=&quot;n-ib&quot;><svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.2&quot;><rect x=&quot;2&quot; y=&quot;3&quot; width=&quot;12&quot; height=&quot;10&quot; rx=&quot;1.5&quot;/><path d=&quot;M2 6l6 4 6-4&quot;/></svg>Inbox<span class=&quot;ct&quot;>3</span></div>
-    <div class=&quot;n&quot; onclick=&quot;nav('ig')&quot; id=&quot;n-ig&quot;><svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.2&quot;><circle cx=&quot;8&quot; cy=&quot;8&quot; r=&quot;2&quot;/><path d=&quot;M8 2v2M8 12v2M2 8h2M12 8h2&quot;/></svg>Integrations</div>
-    <div class=&quot;n&quot; onclick=&quot;nav('at')&quot; id=&quot;n-at&quot;><svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.2&quot;><polyline points=&quot;2 10 5 6 8 9 11 4 14 7&quot;/></svg>Activity</div>
-  </div>
-  <div class=&quot;sb-ft&quot;>
-    <div class=&quot;sb-av&quot;>M</div>
-    <div class=&quot;sb-fn&quot;>Mike</div>
-    <div class=&quot;sb-dot&quot;></div>
-  </div>
-</div>
-
-<div class=&quot;main&quot;>
-  <div class=&quot;pg on&quot; id=&quot;p-ag&quot;>
-    <div class=&quot;al&quot;>
-      <div class=&quot;als&quot; id=&quot;als&quot;></div>
-      <div class=&quot;ch&quot;>
-        <div class=&quot;chh&quot;>
-          <div class=&quot;chd&quot; id=&quot;chd&quot;></div>
-          <div>
-            <div class=&quot;chn&quot; id=&quot;chn&quot;></div>
-            <div class=&quot;cht&quot; id=&quot;chtl&quot;></div>
+      <div class="chd-flow-col chd-flow-mid">
+        <div class="chd-conn chd-conn-l"></div>
+        <div class="chd-conn chd-conn-r"></div>
+        <div class="chd-agent">
+          <div class="chd-agent-halo"></div>
+          <div class="chd-agent-core">
+            <svg viewBox="0 0 30 30" fill="none" width="22" height="22" aria-hidden="true"><path d="M10 3 C18 3 23 8 23 15 C23 21 18 25 13 25 C10 25 8 23 9 21 C10 19 13 20 13 18 C13 14 9 10 7 7 C5 4 7 3 10 3Z" fill="#d48553"/></svg>
+            <div class="chd-agent-name">Your agent</div>
           </div>
-          <div class=&quot;cho&quot;>Online</div>
+          <ul class="chd-agent-steps">
+            <li><span class="chd-step-dot"></span>read prior thread</li>
+            <li><span class="chd-step-dot"></span>check open calendar</li>
+            <li><span class="chd-step-dot"></span>pull pricing sheet</li>
+            <li><span class="chd-step-dot"></span>draft reply in your voice</li>
+          </ul>
         </div>
-        <div class=&quot;ms&quot; id=&quot;ms&quot;></div>
-        <div class=&quot;ip&quot;>
-          <div class=&quot;ipr&quot;>
-            <div class=&quot;ipw&quot;>
-              <textarea id=&quot;mi&quot; rows=&quot;1&quot; placeholder=&quot;Message…&quot;></textarea>
-            </div>
-            <button class=&quot;sn&quot; onclick=&quot;send()&quot;>
-              <svg width=&quot;11&quot; height=&quot;11&quot; viewBox=&quot;0 0 16 16&quot;><path d=&quot;M14.5 8L2 2l2.5 6H14.5zm0 0L2 14l2.5-6H14.5z&quot;/></svg>
-            </button>
-          </div>
+      </div>
+
+      <div class="chd-flow-col chd-flow-out">
+        <div class="chd-flow-lbl">actions across your tools</div>
+        <div class="chd-out-stack">
+          <div class="chd-out"><span class="chd-out-app">Gmail</span><span class="chd-out-txt">Reply sent · Tue 2pm offered</span><span class="chd-out-tag">sent</span></div>
+          <div class="chd-out"><span class="chd-out-app">Calendar</span><span class="chd-out-txt">Hold placed · Tue 2:00–3:30 PM</span><span class="chd-out-tag">held</span></div>
+          <div class="chd-out"><span class="chd-out-app">HubSpot</span><span class="chd-out-txt">Sarah K. · stage → Contacted</span><span class="chd-out-tag">updated</span></div>
+          <div class="chd-out"><span class="chd-out-app">Slack</span><span class="chd-out-txt">#ops · new lead summary posted</span><span class="chd-out-tag">posted</span></div>
         </div>
       </div>
     </div>
-  </div>
-  <div class=&quot;pg&quot; id=&quot;p-au&quot;><div class=&quot;hd&quot;><div class=&quot;hd-t&quot;>Automations</div><div class=&quot;hd-s&quot;>Always running in the background</div></div><div class=&quot;filter-bar&quot; id=&quot;au-filters&quot;></div><div class=&quot;scr&quot; id=&quot;au-scr&quot;></div></div>
-  <div class=&quot;pg&quot; id=&quot;p-ib&quot;><div class=&quot;hd&quot;><div class=&quot;hd-t&quot;>Inbox</div><div class=&quot;hd-s&quot;>Needs your approval</div></div><div class=&quot;filter-bar&quot; id=&quot;ib-filters&quot;></div><div class=&quot;ib-scr&quot; id=&quot;ib-scr&quot;></div></div>
-  <div class=&quot;pg&quot; id=&quot;p-ig&quot;><div class=&quot;hd&quot;><div class=&quot;hd-t&quot;>Integrations</div></div><div class=&quot;ig-scr&quot; id=&quot;ig-scr&quot;></div></div>
-  <div class=&quot;pg&quot; id=&quot;p-at&quot;><div class=&quot;hd&quot;><div class=&quot;hd-t&quot;>Activity</div><div class=&quot;hd-s&quot;>Last 24 hours</div></div><div class=&quot;filter-bar&quot; id=&quot;at-filters&quot;></div><div class=&quot;scr&quot; id=&quot;at-scr&quot;></div></div>
-</div>
 
-<script>
-var AG = [
-  {
-    id: 'finance',
-    nm: 'Finance Agent',
-    ini: 'FN',
-    cl: '#7c6fb0',
-    tl: ['QuickBooks', 'Gmail', 'Sheets', 'Slack'],
-    sg: [
-      'How are we looking this month — full snapshot',
-      'Flag every invoice overdue 30+ days and start collections',
-      'Send me a job-by-job P&amp;L breakdown for Q1'
-    ],
-    pv: '💰 April snapshot — 31% margin',
-    chat: [
-      {r:'u', t:'How are we looking this month — give me the full snapshot'},
-      {r:'a', t:'Pulling live from QuickBooks...', tg:[{l:'QuickBooks — live pull',s:'b'}]},
-      {r:'a', t:'**April — Month to Date**\n\nRevenue: **$127,400** · Costs: **$87,800** · Gross margin: **31.1%**\nInvoiced: $142,000 · Collected: $114,600 · Outstanding: **$27,400**\n\n⚠️ 2 invoices overdue 30+ days:\n• Torres Roofing — $8,200 (34 days)\n• Valley Property Mgmt — $5,500 (41 days)\n\nCollections sequences started on both.', tg:[{l:'✓ QuickBooks synced',s:'g'},{l:'⚠ 2 overdue — collections on',s:'r'}]},
-      {r:'u', t:'Good. Send me the Q1 job-by-job P&amp;L'},
-      {r:'a', t:'**Q1 Job P&amp;L — sent to your inbox.**\n\nTop performers: Henderson (41% margin), Parkview (38%).\nUnderperformer: Torres job — **14% margin.** Material costs ran 22% over estimate.\n\nFull breakdown in Sheets. Slack summary in #finance. Torres margin flagged for bid review.', tg:[{l:'✓ Gmail — report sent',s:'g'},{l:'✓ Sheets — full data',s:'g'},{l:'✓ Slack — posted',s:'g'}], ac:{t:'⚡ Torres margin alert', b:'14% is below your 25% floor. Material overrun of $3,400 identified. Recommend repricing this job type on future bids — flagged in Sheets.'}}
-    ],
-    auto: [
-      {s:'active', n:'Monthly P&amp;L Report', t:'1st of month'},
-      {s:'active', n:'Overdue Invoice Collections', t:'30-day trigger'},
-      {s:'active', n:'Weekly Cash Flow Snapshot', t:'Mon 7am'}
-    ],
-    act: [
-      'April snapshot delivered · 7:02 AM',
-      'Torres &amp; Valley — collections started · auto',
-      'Q1 job P&amp;L sent · Apr 1 7:00 AM'
-    ]
-  },
-
-  {
-    id: 'estimate',
-    nm: 'Estimating Agent',
-    ini: 'EA',
-    cl: '#5b8dd9',
-    tl: ['QuickBooks', 'Gmail', 'PDF Builder', 'HubSpot'],
-    sg: [
-      'Build a proposal for the Henderson commercial HVAC job — 12,000 sq ft',
-      'Price out a full roof replacement — 4,200 sq ft residential',
-      'Send the Riverside estimate with 10% contingency added'
-    ],
-    pv: '📄 Henderson proposal — $29,490',
-    chat: [
-      {r:'u', t:'Build a full estimate for the Henderson commercial HVAC job — 12,000 sq ft office space'},
-      {r:'a', t:'On it. Pulling current material pricing and labor rates...', tg:[{l:'QuickBooks — cost data',s:'b'},{l:'Ferguson Supply — live pricing',s:'b'}]},
-      {r:'a', t:'**Henderson Commercial HVAC — Draft Estimate**\n\n• 4× Carrier 5-ton rooftop units @ $2,840 = **$11,360**\n• Ductwork, vents &amp; sheet metal: **$8,200**\n• Labor — 3-man crew × 4 days: **$6,400**\n• Permits &amp; city inspection: **$850**\n\n**Subtotal: $26,810** · Margin: 34% · Est. timeline: 4–5 days', tg:[{l:'✓ 4 line items priced',s:'g'}]},
-      {r:'u', t:'Add 10% contingency and send it to Henderson'},
-      {r:'a', t:'**Updated total: $29,490.**\n\nBranded proposal PDF built and delivered:\n• Email sent to henderson@acmeprop.com\n• HubSpot opportunity created — $29,490 · &quot;Proposal Sent&quot;\n• Auto follow-up sequence armed: Fri 10am if no open, Sun if opened but silent', tg:[{l:'✓ PDF — sent',s:'g'},{l:'✓ HubSpot — logged',s:'g'},{l:'✓ Follow-up — armed',s:'g'}], ac:{t:'⚡ Escalation logic active', b:'Opened 3× with no reply → bumped to phone-call task. Opened 0× by Friday → re-sent with alternate subject line Sunday.'}}
-    ],
-    auto: [
-      {s:'active', n:'Material Price Sync', t:'6am daily'},
-      {s:'active', n:'Proposal Follow-Up Sequences', t:'On send'},
-      {s:'scheduled', n:'Monthly Margin Report', t:'1st of month'}
-    ],
-    act: [
-      'Henderson proposal sent — $29,490 · 2:14 PM',
-      'Riverside estimate drafted — $18,750 · 11:08 AM',
-      'April margin report delivered · Apr 1 7:00 AM'
-    ]
-  },
-
-  {
-    id: 'pipeline',
-    nm: 'Lead Pipeline Agent',
-    ini: 'LP',
-    cl: '#c47840',
-    tl: ['Gmail', 'HubSpot', 'Calendar', 'Twilio SMS'],
-    sg: [
-      'New lead just came in — commercial roofing, 20k sq ft downtown Knoxville',
-      'Which deals are closest to closing this week?',
-      'Re-engage every lead that went quiet in Q1'
-    ],
-    pv: '🔥 Henderson escalated to Hot',
-    chat: [
-      {r:'u', t:'New lead just came in — commercial roofing, downtown Knoxville, roughly 20,000 sq ft'},
-      {r:'a', t:'Enriching contact and scoring...', tg:[{l:'HubSpot — enriching',s:'b'},{l:'Lead scoring model',s:'b'}]},
-      {r:'a', t:'**Lead captured: Sarah Chen · Midtown Office Park**\n\nLead score: **9.1 / 10** — High value\nEstimated project size: **$75,000 – $95,000**\nDecision timeline: 30–45 days\n\nIntro email sent. Discovery call booked **Thu 2:00 PM**. $85K opportunity created in HubSpot and assigned to you.', tg:[{l:'✓ Gmail — intro sent',s:'g'},{l:'✓ Calendar — Thu 2pm',s:'g'},{l:'✓ HubSpot — $85K opp',s:'g'}]},
-      {r:'u', t:&quot;Good. What's closest to closing right now?&quot;},
-      {r:'a', t:'**3 deals on the edge this week:**\n\n• **Henderson** — Proposal opened 4× in 48 hrs, no reply. Score: 8.8. Moved to Hot.\n• **Parkview LLC** — Site visit complete, quiet 5 days. Re-engagement sent this morning.\n• **Torres** — Verbal yes, contract unsigned. Call task on your calendar at 3pm today.', tg:[{l:'✓ HubSpot — 3 flagged',s:'g'},{l:'✓ Torres — call set',s:'g'}], ac:{t:'⚡ Henderson — high close probability', b:'4 proposal opens in 48 hours is a buying signal. Moved to Hot, flagged for same-day call. Close probability: 74%.'}}
-    ],
-    auto: [
-      {s:'active', n:'Real-Time Lead Scoring', t:'On intake'},
-      {s:'active', n:'Cold Lead Re-Engagement', t:'Mon 8am'},
-      {s:'active', n:'Close-Probability Alerts', t:'Daily 8am'}
-    ],
-    act: [
-      'Sarah Chen — discovery call booked · 1:42 PM',
-      'Henderson moved to Hot · 9:14 AM',
-      'Q1 ghost list re-engaged — 14 contacts · Mon 8:00 AM'
-    ]
-  },
-
-  {
-    id: 'coordinator',
-    nm: 'Ops Coordinator',
-    ini: 'OC',
-    cl: '#3aab77',
-    tl: ['Calendar', 'Gmail', 'Twilio SMS', 'Slack', 'Sheets'],
-    sg: [
-      'Morning briefing — full rundown on every active job today',
-      'Miller job is running 2 days behind — handle client comms and reschedule crew',
-      'Generate a formal progress report for the Parkview client'
-    ],
-    pv: '📋 Morning briefing delivered',
-    chat: [
-      {r:'u', t:'Morning briefing — full rundown on every active job'},
-      {r:'a', t:'Pulling job status, crew schedules, and open flags...', tg:[{l:'Sheets — job data',s:'b'},{l:'Calendar',s:'b'}]},
-      {r:'a', t:'**Active Jobs — Monday Briefing**\n\n✅ **Henderson HVAC** — Day 2 of 4. On schedule. All 3 crew confirmed.\n⚠️ **Miller Roofing** — Supplier delayed materials 1 day. Crew shift needed.\n🔄 **Parkview Office** — Inspection at 2pm today. Permit cleared Friday.\n\nAll crews texted. Miller client notified of 1-day adjustment and given revised completion date.', tg:[{l:'✓ 3 jobs synced',s:'g'},{l:'✓ Crews texted',s:'g'},{l:'✓ Miller — client notified',s:'g'}]},
-      {r:'u', t:'Generate a progress report for Parkview'},
-      {r:'a', t:'**Parkview Progress Report — sent.**\n\nCovered: phases completed, inspection status, revised timeline, next milestones, crew schedule.\n\nDelivered to parkview@mgmt.com · Logged in Sheets · Slack summary posted to #active-jobs.\n\nParkview contact replied confirmed within 8 minutes.', tg:[{l:'✓ Gmail — delivered',s:'g'},{l:'✓ Sheets — logged',s:'g'},{l:'✓ Slack — posted',s:'g'}], ac:{t:'🔁 Weekly client reports — always on', b:'Every Friday at 4pm, progress reports auto-sent to every active job client. No action needed from you.'}}
-    ],
-    auto: [
-      {s:'active', n:'Daily Job Briefing', t:'6:30am daily'},
-      {s:'active', n:'Crew SMS Dispatch', t:'7am daily'},
-      {s:'active', n:'Weekly Client Progress Reports', t:'Fri 4pm'}
-    ],
-    act: [
-      'Miller client notified — 1-day delay · 6:31 AM',
-      'Parkview inspection confirmed · 6:31 AM',
-      'All crews dispatched · 7:00 AM'
-    ]
-  }
-];
-
-var IB = [
-  {p:'flagged', t:'Henderson — high close signal', d:'Opened proposal 4× in 48 hrs with no reply. Moved to Hot. Recommend same-day call — 74% close probability.', a:'Lead Pipeline Agent', agentId:'pipeline', tm:'9:14 AM'},
-  {p:'urgent',  t:'Torres invoice — $8,200 overdue 34 days', d:'Collections sequence started. Final notice staged. Approve send or hold for manual outreach.', a:'Finance Agent', agentId:'finance', tm:'7:02 AM'},
-  {p:'waiting', t:'Miller Roofing — revised schedule', d:'Supplier delay resolved. Crew rescheduled to Wed. Client notified. Approve updated completion date (Fri → Mon).', a:'Ops Coordinator', agentId:'coordinator', tm:'6:31 AM'}
-];
-
-var IG = [
-  {i:'💰', n:'QuickBooks', s:1},
-  {i:'✉',  n:'Gmail',     s:1},
-  {i:'📅', n:'Calendar',  s:1},
-  {i:'🔶', n:'HubSpot',   s:1},
-  {i:'💬', n:'Slack',     s:1},
-  {i:'📊', n:'Sheets',    s:1},
-  {i:'📱', n:'Twilio',    s:1},
-  {i:'📄', n:'PDF Builder',s:1},
-  {i:'📁', n:'Drive',     s:0},
-  {i:'📝', n:'Notion',    s:0},
-  {i:'☁️', n:'Salesforce',s:0},
-  {i:'🏗',  n:'Procore',  s:0},
-  {i:'🏠', n:'Jobber',   s:0},
-  {i:'🔊', n:'ElevenLabs',s:0}
-];
-
-var S = {cur:null, h:{}, timer:null, played:{}};
-AG.forEach(function(a){S.h[a.id]=[]});
-
-function nav(id) {
-  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on')});
-  document.getElementById('p-'+id).classList.add('on');
-  document.querySelectorAll('.n').forEach(function(n){n.classList.remove('on')});
-  document.getElementById('n-'+id).classList.add('on');
-  if(id==='ag'&amp;&amp;!S.cur) sel(AG[0].id);
-}
-
-function bL() {
-  var el = document.getElementById('als');
-  AG.forEach(function(a) {
-    var d = document.createElement('div');
-    d.className='ac'; d.id='ac-'+a.id;
-    d.onclick = function(){sel(a.id)};
-    d.innerHTML = '<div class=&quot;ad&quot; style=&quot;background:'+a.cl+'&quot;>'+a.ini+'</div>'
-      +'<div style=&quot;min-width:0&quot;><div class=&quot;an&quot;>'+a.nm+'</div><div class=&quot;ap&quot;>'+a.pv+'</div></div>';
-    el.appendChild(d);
-  });
-}
-
-function sel(id) {
-  var a = AG.find(function(x){return x.id===id});
-  if(!a) return;
-  S.cur = a;
-  document.querySelectorAll('.ac').forEach(function(c){c.classList.remove('on')});
-  document.getElementById('ac-'+id).classList.add('on');
-  document.getElementById('chd').textContent = a.ini;
-  document.getElementById('chd').style.background = a.cl;
-  document.getElementById('chn').textContent = a.nm;
-  document.getElementById('chtl').textContent = a.tl.join(' · ');
-  document.getElementById('mi').placeholder = 'Message '+a.nm+'…';
-  render(a);
-}
-
-function render(a) {
-  var el = document.getElementById('ms');
-  el.innerHTML = '';
-  if(S.timer){clearTimeout(S.timer); S.timer=null;}
-  if(S.played[a.id]) S.played[a.id] = false;
-
-  var es = document.createElement('div');
-  es.className='es'; es.id='es';
-  var l = document.createElement('div');
-  l.className='esl'; l.textContent='Try asking';
-  es.appendChild(l);
-  a.sg.forEach(function(s) {
-    var d = document.createElement('div');
-    d.className='ess'; d.textContent=s;
-    d.onclick = function(){document.getElementById('mi').value=s; send();};
-    es.appendChild(d);
-  });
-  el.appendChild(es);
-
-  // Demo plays on user interaction only — prompts stay visible until clicked
-}
-
-function play(a, ms, i) {
-  if(i>=ms.length || S.cur.id!==a.id) return;
-  var m = ms[i];
-  if(i===0){var e=document.getElementById('es'); if(e) e.remove();}
-  if(m.r==='u') {
-    addM('u', m.t, a, 1);
-    S.timer = setTimeout(function(){play(a, ms, i+1);}, 500);
-  } else {
-    addT(a);
-    var t = Math.min(700 + m.t.length * 2.2, 2200);
-    S.timer = setTimeout(function() {
-      rmT();
-      addM('a', m.t, a, 1, m.tg, m.ac);
-      S.timer = setTimeout(function(){play(a, ms, i+1);}, m.ac ? 1600 : 800);
-    }, t);
-  }
-  if(i===ms.length-1) {
-    S.played[a.id]=true;
-    S.timer = setTimeout(function(){ showReplay(a); }, m.ac ? 2000 : 1200);
-  }
-}
-
-function md(t) {
-  return t
-    .replace(/&amp;/g,'&amp;amp;').replace(/</g,'&amp;lt;').replace(/>/g,'&amp;gt;')
-    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
-    .replace(/\n\n/g,'</p><p>')
-    .replace(/\n• /g,'<br>• ')
-    .replace(/\n/g,'<br>');
-}
-
-function addM(r, t, a, anim, tg, ac) {
-  var el = document.getElementById('ms');
-  var d = document.createElement('div');
-  d.className = 'm'+(r==='u'?' u':'');
-  if(anim) d.style.animation='fu .18s ease';
-
-  var c = r==='u'
-    ? t.replace(/&amp;/g,'&amp;amp;').replace(/</g,'&amp;lt;')
-    : '<p>'+md(t)+'</p>';
-
-  var th = '';
-  if(tg &amp;&amp; tg.length) {
-    th = '<div class=&quot;mt&quot;>';
-    tg.forEach(function(x){th+='<span class=&quot;tg tg-'+x.s+'&quot;>'+x.l+'</span>';});
-    th += '</div>';
-  }
-
-  var ah = '';
-  if(ac) ah = '<div class=&quot;xc&quot;><div class=&quot;xc-t&quot;>'+ac.t+'</div><div class=&quot;xc-b&quot;>'+ac.b+'</div></div>';
-
-  if(r==='u') {
-    d.innerHTML = '<div class=&quot;ma mau&quot;>M</div><div class=&quot;mb&quot;><div class=&quot;bb bu&quot;>'+c+'</div></div>';
-  } else {
-    d.innerHTML = '<div class=&quot;ma&quot; style=&quot;background:'+a.cl+';color:#fff;border-radius:5px&quot;>'+a.ini+'</div>'
-      +'<div class=&quot;mb&quot;><div class=&quot;bb ba&quot;>'+c+'</div>'+th+ah+'</div>';
-  }
-  el.appendChild(d);
-  el.scrollTop = el.scrollHeight;
-}
-
-function addT(a) {
-  var el = document.getElementById('ms');
-  var d = document.createElement('div');
-  d.className='m'; d.id='tp';
-  d.innerHTML = '<div class=&quot;ma&quot; style=&quot;background:'+a.cl+';color:#fff;border-radius:5px&quot;>'+a.ini+'</div>'
-    +'<div class=&quot;mb&quot;><div class=&quot;bb ba&quot;><div class=&quot;tp&quot;><span></span><span></span><span></span></div></div></div>';
-  el.appendChild(d);
-  el.scrollTop = el.scrollHeight;
-}
-
-function rmT(){var t=document.getElementById('tp'); if(t) t.remove();}
-
-function showReplay(a) {
-  var el = document.getElementById('ms');
-  var w = document.createElement('div');
-  w.className='replay-wrap'; w.id='replay-wrap';
-  w.innerHTML = '<button class=&quot;replay-btn&quot; onclick=&quot;replayDemo()&quot;>'
-    +'<svg viewBox=&quot;0 0 16 16&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.5&quot;><path d=&quot;M2 8a6 6 0 1 0 1.5-4L2 2v4h4&quot;/></svg>'
-    +'Replay demo</button>';
-  el.appendChild(w);
-  el.scrollTop = el.scrollHeight;
-}
-
-function replayDemo() {
-  var a = S.cur;
-  if(!a) return;
-  S.played[a.id] = false;
-  if(S.timer){clearTimeout(S.timer); S.timer=null;}
-  var el = document.getElementById('ms');
-  el.innerHTML = '';
-  S.timer = setTimeout(function(){play(a, a.chat, 0);}, 400);
-}
-
-function send() {
-  var t = document.getElementById('mi').value.trim();
-  if(!t || !S.cur) return;
-  document.getElementById('mi').value='';
-  var e = document.getElementById('es'); if(e) e.remove();
-  var a = S.cur;
-  if(a.chat &amp;&amp; a.chat.length &amp;&amp; !S.played[a.id]) {
-    if(S.timer){clearTimeout(S.timer); S.timer=null;}
-    play(a, a.chat, 0);
-    return;
-  }
-  addM('u', t, S.cur, 1);
-  addT(S.cur);
-  setTimeout(function() {
-    rmT();
-    addM('a', 'On it — pulling from your connected tools now.', S.cur, 1, [{l:'Working…',s:'b'}]);
-  }, 900);
-}
-
-function bAu(filter) {
-  filter = filter || 'all';
-  var el = document.getElementById('au-scr');
-  el.innerHTML = '';
-  var icons = ['⚡','📅','📊','🔄','✉','📋'];
-  var ic = 0;
-  AG.forEach(function(a) {
-    if(!a.auto || !a.auto.length) return;
-    if(filter !== 'all' &amp;&amp; a.id !== filter) { ic += a.auto.length; return; }
-    var lbl = document.createElement('div');
-    lbl.className = 'au-agent-lbl';
-    lbl.innerHTML = '<div class=&quot;au-agent-dot&quot; style=&quot;background:'+a.cl+'&quot;></div>'
-      +'<div class=&quot;au-agent-nm&quot;>'+a.nm+'</div>';
-    el.appendChild(lbl);
-    var grid = document.createElement('div');
-    grid.className = 'au-grid';
-    a.auto.forEach(function(w) {
-      var icon = icons[ic % icons.length]; ic++;
-      grid.innerHTML += '<div class=&quot;wf-card&quot;>'
-        +'<div class=&quot;wf-icon&quot; style=&quot;background:rgba(255,255,255,.03)&quot;>'+icon+'</div>'
-        +'<div class=&quot;wf-body&quot;><div class=&quot;wf-name&quot;>'+w.n+'</div><div class=&quot;wf-sched&quot;>'+w.t+'</div></div>'
-        +'<div class=&quot;wf-badge '+w.s+'&quot;>'+w.s.charAt(0).toUpperCase()+w.s.slice(1)+'</div>'
-        +'</div>';
-    });
-    el.appendChild(grid);
-  });
-}
-
-function bAuFilters() {
-  var bar = document.getElementById('au-filters');
-  var active = 'all';
-  function render() {
-    bar.innerHTML = '<span class=&quot;filter-lbl&quot;>Agent</span>';
-    var pills = [{id:'all',nm:'All'}].concat(AG.map(function(a){return {id:a.id,nm:a.nm,cl:a.cl};}));
-    pills.forEach(function(p) {
-      var el = document.createElement('button');
-      el.className = 'fp' + (active===p.id?' on':'');
-      el.textContent = p.nm;
-      if(active===p.id &amp;&amp; p.cl) el.style.background = p.cl;
-      el.onclick = function(){ active = p.id; render(); bAu(active); };
-      bar.appendChild(el);
-    });
-  }
-  render();
-}
-
-function bAt(filter) {
-  filter = filter || 'all';
-  var el = document.getElementById('at-scr');
-  el.innerHTML = '';
-  var lbl = document.createElement('div');
-  lbl.className = 'act-day'; lbl.textContent = 'Today';
-  el.appendChild(lbl);
-  var feed = document.createElement('div');
-  feed.className = 'act-feed';
-  AG.forEach(function(a) {
-    if(!a.act || !a.act.length) return;
-    if(filter !== 'all' &amp;&amp; a.id !== filter) return;
-    a.act.forEach(function(x) {
-      var p = x.split(' · ');
-      feed.innerHTML += '<div class=&quot;act-row&quot;>'
-        +'<div class=&quot;act-dot-wrap&quot;><div class=&quot;act-dot-c&quot; style=&quot;background:'+a.cl+'&quot;></div></div>'
-        +'<div class=&quot;act-row-body&quot;>'
-        +'<div class=&quot;act-row-txt&quot;>'+p[0]+'</div>'
-        +'<div class=&quot;act-row-meta&quot;><span class=&quot;act-row-agent&quot;>'+a.nm+'</span>'+(p[1]?' · <span>'+p[1]+'</span>':'')+'</div>'
-        +'</div></div>';
-    });
-  });
-  el.appendChild(feed);
-}
-
-function bAtFilters() {
-  var bar = document.getElementById('at-filters');
-  var active = 'all';
-  function render() {
-    bar.innerHTML = '<span class=&quot;filter-lbl&quot;>Agent</span>';
-    var pills = [{id:'all',nm:'All'}].concat(AG.map(function(a){return {id:a.id,nm:a.nm,cl:a.cl};}));
-    pills.forEach(function(p) {
-      var el = document.createElement('button');
-      el.className = 'fp' + (active===p.id?' on':'');
-      el.textContent = p.nm;
-      if(active===p.id &amp;&amp; p.cl) el.style.background = p.cl;
-      el.onclick = function(){ active = p.id; render(); bAt(active); };
-      bar.appendChild(el);
-    });
-  }
-  render();
-}
-
-function bIb(filter) {
-  filter = filter || 'all';
-  var el = document.getElementById('ib-scr');
-  el.innerHTML = '';
-  var items = filter === 'all' ? IB : IB.filter(function(x){ return x.agentId === filter; });
-  if(!items.length) {
-    el.innerHTML = '<div style=&quot;padding:32px 24px;font-size:12px;color:var(--tx3)&quot;>No items for this agent.</div>';
-    return;
-  }
-  items.forEach(function(x) {
-    var d = document.createElement('div');
-    d.className='ib-card is-'+x.p;
-    d.innerHTML = '<div class=&quot;ib-top&quot;>'
-      +'<div class=&quot;ib-p '+x.p+'&quot;>'+x.p+'</div>'
-      +'<div class=&quot;ib-t&quot;>'+x.t+'</div>'
-      +'<div class=&quot;ib-a&quot;>'+x.tm+'</div>'
-      +'</div>'
-      +'<div class=&quot;ib-d&quot;>'+x.d+'</div>'
-      +'<div style=&quot;font-size:10px;color:var(--tx3);margin-bottom:10px&quot;>'+x.a+'</div>'
-      +'<div class=&quot;ib-btns&quot;><button class=&quot;ibtn ibtn-a&quot;>Approve</button><button class=&quot;ibtn ibtn-e&quot;>Edit</button></div>';
-    el.appendChild(d);
-  });
-}
-
-function bIbFilters() {
-  var bar = document.getElementById('ib-filters');
-  var active = 'all';
-  function render() {
-    bar.innerHTML = '<span class=&quot;filter-lbl&quot;>Agent</span>';
-    var agentIds = [];
-    IB.forEach(function(x){ if(agentIds.indexOf(x.agentId)<0) agentIds.push(x.agentId); });
-    var pills = [{id:'all',nm:'All'}].concat(agentIds.map(function(id){
-      var a = AG.find(function(x){return x.id===id;}); return a ? {id:a.id,nm:a.nm,cl:a.cl} : null;
-    }).filter(Boolean));
-    pills.forEach(function(p) {
-      var el = document.createElement('button');
-      el.className = 'fp' + (active===p.id?' on':'');
-      el.textContent = p.nm;
-      if(active===p.id &amp;&amp; p.cl) el.style.background = p.cl;
-      el.onclick = function(){ active = p.id; render(); bIb(active); };
-      bar.appendChild(el);
-    });
-  }
-  render();
-}
-
-function bIg() {
-  var scr = document.getElementById('ig-scr');
-  // Connected
-  var lbl1 = document.createElement('div');
-  lbl1.className='ig-section-lbl'; lbl1.textContent='Connected';
-  scr.appendChild(lbl1);
-  var g1 = document.createElement('div'); g1.className='ig-g';
-  IG.filter(function(x){return x.s;}).forEach(function(x) {
-    var d = document.createElement('div'); d.className='ig';
-    d.innerHTML = '<div class=&quot;ig-i&quot;>'+x.i+'</div>'
-      +'<div><div class=&quot;ig-n&quot;>'+x.n+'</div><div class=&quot;ig-s live&quot;>✓ Live</div></div>';
-    g1.appendChild(d);
-  });
-  scr.appendChild(g1);
-  // Available
-  var lbl2 = document.createElement('div');
-  lbl2.className='ig-section-lbl'; lbl2.textContent='Available';
-  scr.appendChild(lbl2);
-  var g2 = document.createElement('div'); g2.className='ig-g';
-  IG.filter(function(x){return !x.s;}).forEach(function(x) {
-    var d = document.createElement('div'); d.className='ig';
-    d.innerHTML = '<div class=&quot;ig-i&quot;>'+x.i+'</div>'
-      +'<div><div class=&quot;ig-n&quot;>'+x.n+'</div><div class=&quot;ig-s off&quot;>Available</div></div>';
-    g2.appendChild(d);
-  });
-  var add = document.createElement('div');
-  add.className='ig-add'; add.textContent='+ Request integration';
-  g2.appendChild(add);
-  scr.appendChild(g2);
-}
-
-var inp = document.getElementById('mi');
-inp.addEventListener('input', function(){this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,80)+'px';});
-inp.addEventListener('keydown', function(e){if(e.key==='Enter'&amp;&amp;!e.shiftKey){e.preventDefault(); send();}});
-
-bL(); bAuFilters(); bAu(); bAtFilters(); bAt(); bIbFilters(); bIb(); bIg();
-sel(AG[0].id);
-</script>
-</body>
-</html>
-" style="width:100%;height:520px;border:none;display:block;background:#000;flex:1;"></iframe>
-      </div>
-
-      <!-- iPhone demo -->
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div style="position:relative;width:200px;">
-          <div style="background:#111;border-radius:38px;padding:8px;box-shadow:0 0 0 1px rgba(255,255,255,.1),inset 0 0 0 1px rgba(255,255,255,.04),0 32px 64px rgba(0,0,0,.7);">
-            <div style="background:#000;border-radius:32px;overflow:hidden;">
-              <!-- dynamic island -->
-              <div style="height:30px;display:flex;align-items:center;justify-content:center;background:#000;">
-                <div style="width:68px;height:18px;background:#0a0a0a;border:1px solid rgba(255,255,255,.08);border-radius:20px;"></div>
-              </div>
-              <!-- screen — #000 like demo -->
-              <div style="background:#000;display:flex;flex-direction:column;height:460px;font-family:'DM Sans',system-ui,sans-serif;">
-                <!-- status bar -->
-                <div style="padding:2px 12px 3px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-                  <span style="font-size:9px;font-weight:600;color:rgba(255,255,255,.8);">9:41</span>
-                  <div style="display:flex;gap:4px;align-items:center;">
-                    <svg width="11" height="8" viewBox="0 0 12 8" fill="none"><rect x="0" y="3" width="2" height="5" rx="1" fill="rgba(255,255,255,.6)"/><rect x="3" y="2" width="2" height="6" rx="1" fill="rgba(255,255,255,.6)"/><rect x="6" y="1" width="2" height="7" rx="1" fill="rgba(255,255,255,.6)"/><rect x="9" y="0" width="2" height="8" rx="1" fill="rgba(255,255,255,.6)"/></svg>
-                    <svg width="17" height="8" viewBox="0 0 18 8" fill="none"><rect x="0.5" y="0.5" width="15" height="7" rx="2.5" stroke="rgba(255,255,255,.3)"/><rect x="1.5" y="1.5" width="11" height="5" rx="1.5" fill="rgba(255,255,255,.65)"/><path d="M17 2.5v3c.8-.4.8-2.6 0-3z" fill="rgba(255,255,255,.35)"/></svg>
-                  </div>
-                </div>
-                <!-- app header — matches .chh from demo exactly -->
-                <div style="padding:7px 10px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:8px;flex-shrink:0;background:#080808;">
-                  <!-- .chd — colored avatar with initials -->
-                  <div style="width:22px;height:22px;border-radius:6px;background:#5b8dd9;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;color:#fff;flex-shrink:0;">EA</div>
-                  <div style="flex:1;min-width:0;">
-                    <!-- .chn -->
-                    <div style="font-size:11px;font-weight:500;color:#fff;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Executive Assistant</div>
-                    <!-- .cht — tool list -->
-                    <div style="font-size:9px;color:rgba(255,255,255,.22);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Gmail · Calendar · HubSpot · Slack</div>
-                  </div>
-                  <!-- .cho -->
-                  <div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#3aab77;flex-shrink:0;"><span style="width:4px;height:4px;border-radius:50%;background:#3aab77;display:inline-block;animation:pulse 2.2s infinite;"></span>Online</div>
-                </div>
-                <!-- messages — .ms from demo -->
-                <div id="mobile-chat" style="flex:1;padding:8px 8px 4px;display:flex;flex-direction:column;gap:7px;overflow:hidden;background:#000;"></div>
-                <!-- input — .ip from demo -->
-                <div style="padding:5px 8px 7px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:5px;align-items:center;flex-shrink:0;background:#080808;">
-                  <div style="flex:1;background:#0e0e0e;border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:5px 8px;font-size:9px;color:rgba(255,255,255,.12);">Message your agent...</div>
-                  <div style="width:24px;height:24px;background:#c47840;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.85;">
-                    <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M1 9L9 1M9 1H3M9 1V7" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </div>
-                </div>
-              </div>
-              <!-- home bar -->
-              <div style="height:18px;background:#000;display:flex;align-items:center;justify-content:center;">
-                <div style="width:48px;height:3px;background:rgba(255,255,255,.18);border-radius:10px;"></div>
-              </div>
-            </div>
-          </div>
-          <!-- side buttons -->
-          <div style="position:absolute;right:-3px;top:90px;width:3px;height:44px;background:#1a1a1a;border-radius:0 2px 2px 0;"></div>
-          <div style="position:absolute;left:-3px;top:80px;width:3px;height:30px;background:#1a1a1a;border-radius:2px 0 0 2px;"></div>
-          <div style="position:absolute;left:-3px;top:120px;width:3px;height:30px;background:#1a1a1a;border-radius:2px 0 0 2px;"></div>
-          <div style="position:absolute;left:-3px;top:160px;width:3px;height:50px;background:#1a1a1a;border-radius:2px 0 0 2px;"></div>
+    <div class="chd-beat r">
+      <div class="chd-beat-side chd-beat-before">
+        <span class="chd-beat-lbl">before</span>
+        <div class="chd-beat-vis chd-beat-tangle">
+          <span></span><span></span><span></span><span></span><span></span>
         </div>
+        <p>5 apps. You in the middle of all of it.</p>
       </div>
-
+      <div class="chd-beat-side chd-beat-after">
+        <span class="chd-beat-lbl">after</span>
+        <div class="chd-beat-vis chd-beat-line">
+          <span></span>
+        </div>
+        <p>One agent. Real work, done.</p>
+      </div>
     </div>
   </div>
 </section>
-<!-- HOW IT WORKS — PROCESS -->
-<section class="sec process-sec" id="how-it-works">
+
+<!-- BUILD + MANAGED — system map + showroom teaser -->
+<section class="sec chd-sec chd-managed" id="process">
   <div class="si">
-    <h2 class="sec-h r">From conversation<br>to live agent.</h2>
-
-    <div class="process-steps">
-
-      <!-- FOUR STEPS HORIZONTAL -->
-      <div class="proc-row r">
-
-        <div class="proc-step">
-          <div class="proc-num">01</div>
-          <div class="proc-label">Discovery</div>
-          <div class="proc-title">We listen. Then we get to work.</div>
-          <p class="proc-body">30 minutes — Zoom or in person. You walk us through your week. We ask the questions. No AI knowledge required. <span style="color:var(--hi);"><a href="#in-person" style="color:var(--hi);text-decoration:none;">Reach out to arrange an in-person session.</a></span></p>
-        </div>
-
-        <div class="proc-divider"></div>
-
-        <div class="proc-step proc-step-hi" id="proc-step-02">
-          <div class="proc-num proc-num-hi">02</div>
-          <div class="proc-label">Build</div>
-          <div class="proc-title">Your agent, live.</div>
-          <p class="proc-body">We build what you actually need — connected to your real tools, tested, and running.</p>
-        </div>
-
-        <div class="proc-divider"></div>
-
-        <div class="proc-step">
-          <div class="proc-num">03</div>
-          <div class="proc-label">Maintain</div>
-          <div class="proc-title">We keep it sharp.</div>
-          <p class="proc-body">Model updates, new skills, bug fixes — we push updates to your agent as things improve. You never touch it.</p>
-        </div>
-
-        <div class="proc-divider"></div>
-
-        <div class="proc-step">
-          <div class="proc-num">04</div>
-          <div class="proc-label">Expand</div>
-          <div class="proc-title">Ready for more? Just ask.</div>
-          <p class="proc-body">When you want another agent or a new workflow, we scope it with you. On your timeline, no pressure.</p>
-        </div>
-
-      </div>
-
-      <!-- VISUALS ROW — drops from 02, 03, 04 -->
-      <div class="proc-vis-row r" id="proc-vis-row">
-
-        <!-- spacer under 01 -->
-        <div></div><div></div>
-
-        <!-- 02: chat assistant -->
-        <div class="proc-vis-col" id="pv-col-02">
-          <div class="proc-vis-line" id="pv-line-02"></div>
-          <div class="proc-vis-node" id="pv-node-02"></div>
-          <div class="proc-vis-card" id="pv-card-02">
-            <div class="pdc-header">
-              <div class="ad-avatar">EA</div>
-              <div>
-                <div class="ad-name">Executive Assistant</div>
-                <div class="ad-status"><span class="ad-status-dot"></span>online</div>
-              </div>
-            </div>
-            <div class="pdc-messages" id="proc-msgs"></div>
-          </div>
-        </div>
-
-        <div></div>
-
-        <!-- 03: maintenance panel -->
-        <div class="proc-vis-col" id="pv-col-03">
-          <div class="proc-vis-line" id="pv-line-03"></div>
-          <div class="proc-vis-node" id="pv-node-03"></div>
-          <div class="proc-vis-card" id="pv-card-03">
-            <div class="pv-panel-hd">
-              <span class="pv-panel-dot"></span>
-              <span class="pv-panel-title">Agent updates</span>
-            </div>
-            <div class="pv-updates" id="pv-updates"></div>
-          </div>
-        </div>
-
-        <div></div>
-
-        <!-- 04: new agent expanding -->
-        <div class="proc-vis-col" id="pv-col-04">
-          <div class="proc-vis-line" id="pv-line-04"></div>
-          <div class="proc-vis-node" id="pv-node-04"></div>
-          <div class="proc-vis-card" id="pv-card-04">
-            <div class="pv-panel-hd">
-              <span class="pv-panel-dot"></span>
-              <span class="pv-panel-title">Your agents</span>
-            </div>
-            <div class="pv-agents-list" id="pv-agents"></div>
-          </div>
-        </div>
-
-      </div>
-
+    <div class="chd-head r">
+      <span class="sec-eyebrow">Built around you</span>
+      <h2 class="sec-h">Built around your workflow.<br><em>Managed</em> by us.</h2>
+      <p class="sec-sub">No platforms to learn. No settings to babysit. We build it, ship it into your stack, and keep it sharp.</p>
     </div>
+
+    <div class="chd-map r">
+      <div class="chd-map-rail"></div>
+      <div class="chd-node">
+        <div class="chd-node-num">01</div>
+        <div class="chd-node-lbl">discovery</div>
+        <div class="chd-node-art chd-art-disc">
+          <div class="chd-art-line"></div>
+          <div class="chd-art-line"></div>
+          <div class="chd-art-line short"></div>
+          <div class="chd-art-line"></div>
+          <div class="chd-art-line short"></div>
+        </div>
+        <div class="chd-node-cap">we listen to your week</div>
+      </div>
+      <div class="chd-node">
+        <div class="chd-node-num">02</div>
+        <div class="chd-node-lbl">connect</div>
+        <div class="chd-node-art chd-art-conn">
+          <span>Gmail</span><span>Cal</span><span>HubSpot</span><span>Slack</span><span>Sheets</span><span>+1k</span>
+        </div>
+        <div class="chd-node-cap">we wire it into your tools</div>
+      </div>
+      <div class="chd-node">
+        <div class="chd-node-num">03</div>
+        <div class="chd-node-lbl">guardrails</div>
+        <div class="chd-node-art chd-art-guard">
+          <div class="chd-art-rule"><span class="chd-rule-k">if</span> reply needed <span class="chd-rule-tag">draft</span></div>
+          <div class="chd-art-rule"><span class="chd-rule-k">if</span> &gt; $5k <span class="chd-rule-tag">flag</span></div>
+          <div class="chd-art-rule"><span class="chd-rule-k">if</span> new lead <span class="chd-rule-tag">act</span></div>
+        </div>
+        <div class="chd-node-cap">we set what it can and can't do</div>
+      </div>
+      <div class="chd-node">
+        <div class="chd-node-num">04</div>
+        <div class="chd-node-lbl">maintain</div>
+        <div class="chd-node-art chd-art-maint">
+          <div class="chd-maint-row"><span></span>model update</div>
+          <div class="chd-maint-row"><span></span>new skill added</div>
+          <div class="chd-maint-row"><span></span>weekly tuning</div>
+        </div>
+        <div class="chd-node-cap">we keep it sharp · you never touch it</div>
+      </div>
+    </div>
+
+    <a class="chd-teaser r" href="/agents/">
+      <div class="chd-teaser-grid">
+        <div class="chd-teaser-glow"></div>
+        <div class="chd-teaser-left">
+          <span class="chd-teaser-eyebrow">visual workflow proof</span>
+          <div class="chd-teaser-h">Try live examples</div>
+          <div class="chd-teaser-sub">Walk the showroom — real agents responding to real prompts.</div>
+        </div>
+        <div class="chd-teaser-mid">
+          <div class="chd-mini"><span class="chd-mini-dot"></span>SEO operator</div>
+          <div class="chd-mini"><span class="chd-mini-dot"></span>Reputation</div>
+          <div class="chd-mini"><span class="chd-mini-dot"></span>Daily assistant</div>
+          <div class="chd-mini"><span class="chd-mini-dot"></span>Market research</div>
+        </div>
+        <div class="chd-teaser-cta">
+          Enter showroom
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+    </a>
   </div>
 </section>
 
@@ -2295,738 +1761,6 @@ window.addEventListener('DOMContentLoaded', function() {
   function hwNext() { hwIdx = (hwIdx + 1) % hwPhrases.length; hwErase(function() { hwType(hwPhrases[hwIdx], hwNext); }); }
   setTimeout(function() { hwType(hwPhrases[0], hwNext); }, 800);
 
-  /* ══════════════════════════════════════════════
-     TAB SYSTEM — scroll-triggered + auto-advance
-  ══════════════════════════════════════════════ */
-  var tabRunners = {}, tabResets = {};
-  var agentsTabKeys  = ['mr','ci','rep','assist'];
-  var agentsVisible  = false;
-  var agentsStarted  = false;
-  var agentsUserLock = false;
-  var autoAdvTimer   = null;
-
-  function switchAgentTab(key, fromUser) {
-    if (fromUser) { agentsUserLock = true; clearTimeout(autoAdvTimer); }
-    document.querySelectorAll('.agent-tab').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.agent-panel').forEach(function(p) { p.classList.remove('active'); });
-    var tab = document.querySelector('.agent-tab[data-tab="' + key + '"]');
-    var panel = document.getElementById('panel-' + key);
-    if (tab)   tab.classList.add('active');
-    if (panel) panel.classList.add('active');
-    if (tabResets[key]) tabResets[key]();
-    var result = tabRunners[key] ? tabRunners[key]() : null;
-    if (!fromUser && result && result.then) {
-      result.then(function() {
-        if (agentsUserLock || !agentsVisible) return;
-        var currentIdx = agentsTabKeys.indexOf(key);
-        var isLast = currentIdx === agentsTabKeys.length - 1;
-        if (isLast) return; /* stop after last tab — restart only on scroll back */
-        autoAdvTimer = setTimeout(function() {
-          if (agentsUserLock || !agentsVisible) return;
-          switchAgentTab(agentsTabKeys[currentIdx + 1], false);
-        }, 1800);
-      }).catch(function() {});
-    }
-  }
-
-  document.getElementById('agent-tabs').addEventListener('click', function(e) {
-    var tab = e.target.closest('.agent-tab');
-    if (!tab) return;
-    switchAgentTab(tab.dataset.tab, true);
-  });
-
-  var agentsSecObs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        agentsVisible = true;
-        agentsUserLock = false;
-        if (!agentsStarted) { agentsStarted = true; switchAgentTab('mr', false); }
-      } else {
-        agentsVisible = false;
-        agentsStarted = false;
-        clearTimeout(autoAdvTimer);
-      }
-    });
-  }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
-  var agentsSec = document.getElementById('what-it-does');
-  if (agentsSec) agentsSecObs.observe(agentsSec);
-
-  function switchInner(prefix, tabs, panels, tabId) {
-    tabs.forEach(function(t) {
-      var el = document.getElementById(prefix + t);
-      if (el) { el.classList.remove('active'); }
-      var dot = document.getElementById(prefix.replace('tab','dot') + t);
-      if (dot) dot.classList.remove('here');
-      var panel = document.getElementById(prefix.replace('-tab-','-').replace('ci-tab-','cip-').replace('mr-tab-','mrp-').replace('rep-tab-','repp-') + t);
-    });
-    // simpler approach
-  }
-
-  function mkSwitch(tabPrefix, panelPrefix, keys) {
-    return function(key) {
-      keys.forEach(function(k) {
-        var tb = document.getElementById(tabPrefix + k);
-        var pn = document.getElementById(panelPrefix + k);
-        var dt = document.getElementById(tabPrefix.replace('tab','dot') + k);
-        if (tb) tb.classList.remove('active');
-        if (pn) pn.classList.remove('show');
-        if (dt) dt.classList.remove('here');
-      });
-      var tb = document.getElementById(tabPrefix + key);
-      var pn = document.getElementById(panelPrefix + key);
-      var dt = document.getElementById(tabPrefix.replace('tab','dot') + key);
-      if (tb) tb.classList.add('active');
-      if (pn) pn.classList.add('show');
-      if (dt) dt.classList.add('here');
-    };
-  }
-
-  /* ══════════════════════════════════════════════
-     MARKET RESEARCH AGENT
-  ══════════════════════════════════════════════ */
-  var mrSwitch = mkSwitch('mr-tab-','mrp-',['src','ins','brx']);
-  var mrSources = [
-    { icon:'📌', src:'r/HomeImprovement', txt:'"Anyone else\'s AC dying this summer? Getting 3 quotes next week"' },
-    { icon:'📈', src:'Google Trends', txt:'"HVAC replacement Knoxville" — +64% search volume vs last month' },
-    { icon:'🔍', src:'Facebook Ad Library', txt:'Top competitor running "Free tune-up" — 3.2k engagements' },
-    { icon:'📰', src:'Local News', txt:'Record heat forecast TN — June 12–18 hottest stretch in 5 years' },
-  ];
-  var mrInsights = [
-    { tag:'Demand spike', c:'#c47840', txt:'Search volume 64% above baseline — people shopping now' },
-    { tag:'Competitor gap', c:'#3aab77', txt:'Top competitor leading with price, not quality or trust' },
-    { tag:'Timing window', c:'#7c6fb0', txt:'"Before the heat hits" framing outperforms discount messaging' },
-  ];
-  var mrBrief = [
-    { label:'Target', val:'Homeowners 35–55, TN, pre-2010 homes' },
-    { label:'Headline', val:'"Beat the heat — quote before June 12"' },
-    { label:'Channels', val:'Facebook 60% · Google 30% · SMS 10%' },
-    { label:'Budget', val:'$1,200/wk for 3 weeks · expect 18–24 leads' },
-    { label:'CTA', val:'Free same-week quote — limited slots' },
-  ];
-
-  function mrReset() {
-    mrSwitch('src');
-    ['mrp-src','mrp-ins','mrp-brx'].forEach(function(id) { var el=document.getElementById(id); if(el) el.innerHTML=''; });
-  }
-  function mrRun() {
-    mrReset();
-    mrSources.forEach(function(s,i) {
-      setTimeout(function() {
-        var el = document.getElementById('mrp-src'); if(!el) return;
-        var row = document.createElement('div');
-        row.style.cssText='display:flex;gap:8px;align-items:flex-start;padding:7px 10px;border:1px solid var(--line);border-radius:7px;background:var(--bg-3);opacity:0;transform:translateY(4px);transition:opacity .28s ease,transform .28s ease;';
-        row.innerHTML='<span style="font-size:14px;flex-shrink:0;margin-top:1px;">'+s.icon+'</span><div><div style="font-size:10px;font-weight:600;color:var(--faint);letter-spacing:.06em;margin-bottom:2px;">'+s.src+'</div><div style="font-size:11px;color:var(--muted);line-height:1.45;">'+s.txt+'</div></div>';
-        el.appendChild(row);
-        setTimeout(function(){row.style.opacity='1';row.style.transform='translateY(0)';},30);
-      }, 300 + i*350);
-    });
-    var p = wait(300 + mrSources.length*350 + 500)
-    .then(function() {
-      mrSwitch('ins');
-      mrInsights.forEach(function(item,i) {
-        setTimeout(function() {
-          var el=document.getElementById('mrp-ins'); if(!el) return;
-          var row=document.createElement('div');
-          row.style.cssText='display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);opacity:0;transition:opacity .3s ease;';
-          row.innerHTML='<span style="font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;background:'+item.c+'18;color:'+item.c+';white-space:nowrap;flex-shrink:0;margin-top:2px;">'+item.tag+'</span><span style="font-size:12px;color:var(--muted);font-weight:300;line-height:1.5;">'+item.txt+'</span>';
-          el.appendChild(row);
-          setTimeout(function(){row.style.opacity='1';},30);
-        }, i*400);
-      });
-      return wait(mrInsights.length*400+600);
-    })
-    .then(function() {
-      mrSwitch('brx');
-      mrBrief.forEach(function(item,i) {
-        setTimeout(function() {
-          var el=document.getElementById('mrp-brx'); if(!el) return;
-          var row=document.createElement('div');
-          row.style.cssText='display:grid;grid-template-columns:80px 1fr;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);opacity:0;transform:translateX(-4px);transition:opacity .28s ease,transform .28s ease;';
-          row.innerHTML='<span style="font-size:10px;font-weight:600;color:var(--faint);letter-spacing:.06em;text-transform:uppercase;padding-top:1px;">'+item.label+'</span><span style="font-size:12px;color:var(--ink);line-height:1.45;">'+item.val+'</span>';
-          el.appendChild(row);
-          setTimeout(function(){row.style.opacity='1';row.style.transform='translateX(0)';},30);
-        }, i*320);
-      });
-      return wait(mrBrief.length*320+400);
-    });
-    return p;
-  }
-  tabRunners['mr'] = mrRun;
-  tabResets['mr'] = mrReset;
-
-  /* ══════════════════════════════════════════════
-     COMPETITIVE INTEL AGENT
-  ══════════════════════════════════════════════ */
-  var ciSwitch = mkSwitch('ci-tab-','cip-',['sc','ch','mv']);
-  var ciComps = [
-    { name:'Elite HVAC Knoxville', checks:['Google My Business','Pricing page','Recent reviews'] },
-    { name:'TN Comfort Systems',   checks:['Google My Business','Facebook Ads','Service list'] },
-    { name:'Appalachian Air',      checks:['Google My Business','Yelp profile','Website copy'] },
-  ];
-  var ciChanges = [
-    { sev:'high',   icon:'⚡', txt:'Elite HVAC dropped tune-up from $129 → $89 this week' },
-    { sev:'medium', icon:'📉', txt:'TN Comfort: 6 new 1-star reviews mentioning "no-show"' },
-    { sev:'low',    icon:'➕', txt:'Appalachian Air added "same-day emergency" to their site' },
-    { sev:'medium', icon:'📢', txt:'Elite HVAC running "Free quote" Facebook ad — 2.1k reach' },
-  ];
-  var ciMoves = [
-    { action:'Price anchor', txt:'Your $129 now looks premium vs Elite. Lead with quality.' },
-    { action:'Capture demand', txt:'TN Comfort failing on reliability — highlight your arrival guarantee.' },
-    { action:'Match & beat', txt:'Counter Elite\'s Facebook ad on Google Search with their brand keywords.' },
-  ];
-
-  function ciReset() {
-    ciSwitch('sc');
-    ['cip-sc','cip-ch','cip-mv'].forEach(function(id){ var el=document.getElementById(id); if(el) el.innerHTML=''; });
-  }
-  function ciRun() {
-    ciReset();
-    var sc = document.getElementById('cip-sc');
-    ciComps.forEach(function(comp,ci) {
-      if(!sc) return;
-      var wrap=document.createElement('div');
-      wrap.style.cssText='border:1px solid var(--line);border-radius:8px;overflow:hidden;opacity:0;transition:opacity .3s ease;margin-bottom:5px;';
-      wrap.innerHTML='<div style="padding:7px 10px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--line);font-size:12px;font-weight:500;color:var(--ink);">'+comp.name+'</div><div style="padding:6px 10px;display:flex;flex-direction:column;gap:3px;" id="ci-c-'+ci+'"></div>';
-      sc.appendChild(wrap);
-      setTimeout(function(){wrap.style.opacity='1';},ci*200+30);
-    });
-
-    var p = wait(300);
-    ciComps.forEach(function(comp,ci) {
-      comp.checks.forEach(function(check) {
-        p = p.then(function() {
-          var cont=document.getElementById('ci-c-'+ci); if(!cont) return wait(0);
-          var row=document.createElement('div');
-          row.style.cssText='display:flex;align-items:center;gap:6px;font-size:11px;color:var(--faint);';
-          row.innerHTML='<span style="width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 1s infinite;flex-shrink:0;"></span>'+check;
-          cont.appendChild(row);
-          return wait(200);
-        }).then(function() {
-          var cont=document.getElementById('ci-c-'+ci); if(!cont) return wait(0);
-          var rows=cont.querySelectorAll('div'), last=rows[rows.length-1];
-          if(last){last.style.color='var(--green)';last.innerHTML='<span style="font-size:10px;font-weight:700;color:var(--green);">✓</span> '+check;}
-          return wait(150);
-        });
-      });
-    });
-
-    p = p.then(function(){ return wait(400); }).then(function() {
-      ciSwitch('ch');
-      ciChanges.forEach(function(item,i) {
-        setTimeout(function() {
-          var el=document.getElementById('cip-ch'); if(!el) return;
-          var sev=item.sev==='high'?'rgba(180,60,40,.1)':item.sev==='medium'?'rgba(196,120,64,.1)':'rgba(255,255,255,.03)';
-          var row=document.createElement('div');
-          row.style.cssText='display:flex;gap:9px;align-items:flex-start;padding:8px 10px;border-radius:7px;background:'+sev+';border:1px solid rgba(255,255,255,.06);opacity:0;transform:translateX(-4px);transition:opacity .28s ease,transform .28s ease;margin-bottom:4px;';
-          row.innerHTML='<span style="font-size:14px;flex-shrink:0;margin-top:1px;">'+item.icon+'</span><span style="font-size:12px;color:var(--ink);font-weight:300;line-height:1.5;">'+item.txt+'</span>';
-          el.appendChild(row);
-          setTimeout(function(){row.style.opacity='1';row.style.transform='translateX(0)';},30);
-        }, i*400);
-      });
-      return wait(ciChanges.length*400+700);
-    }).then(function() {
-      ciSwitch('mv');
-      ciMoves.forEach(function(item,i) {
-        setTimeout(function() {
-          var el=document.getElementById('cip-mv'); if(!el) return;
-          var row=document.createElement('div');
-          row.style.cssText='padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg-3);opacity:0;transform:translateY(4px);transition:opacity .3s ease,transform .3s ease;margin-bottom:5px;';
-          row.innerHTML='<div style="font-size:10px;font-weight:600;color:var(--green);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;">'+item.action+'</div><div style="font-size:12px;color:var(--muted);font-weight:300;line-height:1.5;">'+item.txt+'</div>';
-          el.appendChild(row);
-          setTimeout(function(){row.style.opacity='1';row.style.transform='translateY(0)';},30);
-        }, i*420);
-      });
-      return wait(ciMoves.length*420+400);
-    });
-    return p;
-  }
-  tabRunners['ci'] = ciRun;
-  tabResets['ci'] = ciReset;
-
-  /* ══════════════════════════════════════════════
-     REPUTATION AGENT
-  ══════════════════════════════════════════════ */
-  var repLog = [
-    { time:' 9:12 PM', txt:'Scanning Google My Business · 3 new reviews', cls:'' },
-    { time:' 9:14 PM', txt:'Responses drafted & posted — Sarah K. (5★), James R. (5★)', cls:'' },
-    { time:'10:02 PM', txt:'Scanning Yelp · 2 new reviews',                cls:'' },
-    { time:'10:04 PM', txt:'Both responded — 5★ reviews',                   cls:'green' },
-    { time:'11:30 PM', txt:'Scanning Angi + HomeAdvisor · 3 new reviews',   cls:'' },
-    { time:'11:33 PM', txt:'2 posted · 1 flagged — needs your voice',        cls:'' },
-    { time:' 6:48 AM', txt:'Referral follow-ups sent to 4 happy clients ✓', cls:'green' },
-  ];
-  var repReport = [
-    { check:'✓', green:true,  title:'8 new reviews responded to',    sub:'Google, Yelp, Angi, HomeAdvisor' },
-    { check:'✓', green:true,  title:'Rating up 0.2★ this week',       sub:'Consistent responses lifting your score' },
-    { check:'✓', green:true,  title:'4 clients asked for referrals',  sub:'Follow-up with referral link sent' },
-    { check:'!', green:false, title:'1 review needs your voice',       sub:'Complaint flagged — draft ready' },
-  ];
-
-  function repReset() {
-    var log=document.getElementById('rep-log'), rpt=document.getElementById('rep-report');
-    if(log) log.innerHTML=''; if(rpt) rpt.innerHTML='';
-  }
-  function repRun() {
-    repReset();
-    repLog.forEach(function(entry,i) {
-      setTimeout(function() {
-        var el=document.getElementById('rep-log'); if(!el) return;
-        var row=document.createElement('div');
-        row.style.cssText='display:flex;gap:10px;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--line);opacity:0;transform:translateX(-4px);transition:opacity .3s ease,transform .3s ease;';
-        row.innerHTML='<span style="font-size:10px;color:var(--faint);font-variant-numeric:tabular-nums;flex-shrink:0;min-width:52px;">'+entry.time+'</span><span style="font-size:11px;color:'+(entry.cls==='green'?'var(--green)':'var(--muted)')+';font-weight:'+(entry.cls==='green'?'500':'300')+';">'+entry.txt+'</span>';
-        el.appendChild(row);
-        setTimeout(function(){row.style.opacity='1';row.style.transform='translateX(0)';},30);
-      }, 300 + i*420);
-    });
-    var reportStart = 300 + repLog.length*420 + 300;
-    repReport.forEach(function(item,i) {
-      setTimeout(function() {
-        var el=document.getElementById('rep-report'); if(!el) return;
-        var row=document.createElement('div');
-        row.style.cssText='display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);opacity:0;transform:translateY(4px);transition:opacity .35s ease,transform .35s ease;';
-        row.innerHTML='<span style="font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px;color:'+(item.green?'var(--green)':'var(--muted)')+';">'+item.check+'</span><div><div style="font-size:12px;font-weight:500;color:var(--ink);margin-bottom:1px;">'+item.title+'</div><div style="font-size:11px;color:var(--faint);">'+item.sub+'</div></div>';
-        el.appendChild(row);
-        setTimeout(function(){row.style.opacity='1';row.style.transform='translateY(0)';},30);
-      }, reportStart + i*680);
-    });
-    return wait(reportStart + repReport.length*680 + 300);
-  }
-  tabRunners['rep'] = repRun;
-  tabResets['rep'] = repReset;
-
-  /* ══════════════════════════════════════════════
-     DAILY ASSISTANT AGENT (tab panel)
-  ══════════════════════════════════════════════ */
-  var assistMsgs = [
-    { role:'agent', text:'Good morning. You have 4 meetings today. I noticed a conflict — I moved Jason\'s call from 2pm to 3:30pm and sent him an update.' },
-    { role:'user',  text:'Send the Q2 goals doc to the whole team.' },
-    { role:'agent', text:'Done. Emailed 11 employees with the attachment. Subject: "Q2 Goals — please review before Friday."', tags:['✓ 11 sent','✓ Gmail'] },
-    { role:'user',  text:'Tell Sarah her 2pm is cancelled.' },
-    { role:'agent', text:'Texted Sarah. She confirmed she got it.', tags:['✓ SMS','✓ Calendar updated'] },
-    { role:'user',  text:'What\'s my 4pm?' },
-    { role:'agent', text:'4pm is your call with David Chen re: the Henderson project. I\'ve pulled his last 3 emails so you\'re caught up.' },
-  ];
-
-  function assistReset() { var el=document.getElementById('assist-chat'); if(el) el.innerHTML=''; }
-
-  function assistRun() {
-    assistReset();
-    var p = wait(300);
-    assistMsgs.forEach(function(msg) {
-      p = p.then(function() {
-        var el=document.getElementById('assist-chat'); if(!el) return wait(0);
-        var wrap=document.createElement('div');
-        wrap.className='ad-msg'+(msg.role==='user'?' user':'');
-        wrap.style.cssText='opacity:0;transform:translateY(6px);transition:opacity .3s ease,transform .3s ease;';
-        var tags='';
-        if(msg.tags) tags='<div class="ad-tags">'+msg.tags.map(function(t){return'<span class="ad-tag">'+t+'</span>';}).join('')+'</div>';
-        var bubble=document.createElement('div');
-        bubble.className='ad-bubble '+(msg.role==='agent'?'agent':'user');
-        bubble.innerHTML='<span class="ad-txt"></span>'+tags;
-        wrap.appendChild(bubble);
-        el.appendChild(wrap);
-        setTimeout(function(){wrap.style.opacity='1';wrap.style.transform='translateY(0)';},30);
-        return wait(80);
-      }).then(function() {
-        var el=document.getElementById('assist-chat'); if(!el) return wait(0);
-        var bubbles=el.querySelectorAll('.ad-bubble');
-        var last=bubbles[bubbles.length-1];
-        var span=last?last.querySelector('.ad-txt'):null;
-        if(!span) return wait(0);
-        return new Promise(function(resolve) {
-          var allMsgs=assistMsgs;
-          var rendered=el.querySelectorAll('.ad-msg').length;
-          var currentMsg=allMsgs[rendered-1];
-          if(currentMsg && span.textContent==='') {
-            var txt=currentMsg.text, i=0;
-            var iv=setInterval(function(){
-              span.textContent+=txt[i++];
-              if(i>=txt.length){clearInterval(iv);setTimeout(resolve,msg.role==='agent'?700:400);}
-            }, msg.role==='agent'?18:24);
-          } else { resolve(); }
-        });
-      });
-    });
-    return p;
-  }
-  tabRunners['assist'] = assistRun;
-  tabResets['assist'] = assistReset;
-
-  /* ══════════════════════════════════════════════
-     PROCESS SECTION — three visual panels
-  ══════════════════════════════════════════════ */
-  var procMsgs = [
-    { role:'agent', text:'Good morning. 6 items today — proposal due at 3pm, board call at 4pm. Briefing docs prepped for both.' },
-    { role:'user',  text:'Thank you! Push the 10am with Derek to Thursday.' },
-    { role:'agent', text:'Done. Derek confirmed Thu 10am. Morning clear until noon.', tags:['✓ Calendar','✓ Gmail'] },
-    { role:'user',  text:'Draft a follow-up to the Henderson proposal.' },
-    { role:'agent', text:'Draft ready in Gmail. Pulled context from your last 3 emails with them.', tags:['✓ Gmail','✓ Drive'] },
-    { role:'user',  text:'What\'s my outstanding invoice total?' },
-    { role:'agent', text:'$34,200 across 4 clients. Apex Corp 22 days overdue. Want me to send a reminder?', tags:['✓ QuickBooks'] },
-    { role:'user',  text:'Yes — send them a nudge.' },
-    { role:'agent', text:'Sent. Invoice attached. I\'ll flag you if no reply by Friday.', tags:['✓ Gmail'] },
-  ];
-
-  var pvMaintainItems = [
-    { ico:'🤖', title:'Model updated', sub:'Opus 4.6 — 1M context', badge:'✓ Live' },
-    { ico:'⚡', title:'New skill added', sub:'Document generator v2', badge:'✓ Live' },
-    { ico:'🔗', title:'QuickBooks connected', sub:'Invoice sync enabled', badge:'✓ Live' },
-    { ico:'🛡️', title:'Security patch applied', sub:'Auth token rotated', badge:'✓ Live' },
-  ];
-
-  var procDone = false;
-  var procVisible = false;
-  var tbVisible = false;
-  var tbStarted = false;
-
-  function procRunOnce() {
-    var msgEl = document.getElementById('proc-msgs'); if (!msgEl) return;
-    msgEl.innerHTML = '';
-    var p = wait(300);
-    procMsgs.forEach(function(msg) {
-      p = p.then(function() {
-        var wrap = document.createElement('div');
-        wrap.className = 'ad-msg' + (msg.role==='user' ? ' user' : '');
-        wrap.style.cssText = 'opacity:0;transform:translateY(5px);transition:opacity .28s ease,transform .28s ease;';
-        var bubble = document.createElement('div');
-        bubble.className = 'ad-bubble ' + (msg.role==='agent' ? 'agent' : 'user');
-        var span = document.createElement('span'); span.className = 'ad-txt';
-        bubble.appendChild(span);
-        if (msg.tags) {
-          var td = document.createElement('div');
-          td.className = 'ad-tags'; td.style.opacity = '0';
-          msg.tags.forEach(function(t) { var s=document.createElement('span'); s.className='ad-tag'; s.textContent=t; td.appendChild(s); });
-          bubble.appendChild(td);
-        }
-        wrap.appendChild(bubble); msgEl.appendChild(wrap);
-        /* sliding window: remove oldest if more than 4 messages showing */
-        var allMsgs = msgEl.querySelectorAll('.ad-msg');
-        if (allMsgs.length > 4) {
-          var oldest = allMsgs[0];
-          oldest.style.transition = 'opacity .2s ease';
-          oldest.style.opacity = '0';
-          setTimeout(function() { if (oldest.parentNode) oldest.parentNode.removeChild(oldest); }, 200);
-        }
-        setTimeout(function(){wrap.style.opacity='1';wrap.style.transform='translateY(0)';},30);
-        return wait(80);
-      }).then(function() {
-        var bubbles=msgEl.querySelectorAll('.ad-bubble');
-        var lb=bubbles[bubbles.length-1];
-        var span=lb?lb.querySelector('.ad-txt'):null; if(!span) return wait(0);
-        var txt=msg.text;
-        return new Promise(function(resolve) {
-          var i=0, iv=setInterval(function(){
-            span.textContent+=txt[i++];
-            if(i>=txt.length){
-              clearInterval(iv);
-              var td=lb.querySelector('.ad-tags');
-              if(td) setTimeout(function(){td.style.opacity='1';td.style.transition='opacity .3s';},180);
-              setTimeout(resolve, msg.role==='agent' ? 500 : 220);
-            }
-          }, msg.role==='agent' ? 12 : 18);
-        });
-      });
-    });
-    p.then(function(){return wait(1600);}).then(function(){ /* play once, stop — restarts on scroll back */ });
-  }
-
-  function pvMaintainRun() {
-    var el = document.getElementById('pv-updates'); if(!el) return;
-    el.innerHTML = '';
-    pvMaintainItems.forEach(function(item, i) {
-      setTimeout(function() {
-        var row = document.createElement('div'); row.className = 'pv-update';
-        row.innerHTML = '<span class="pv-update-ico">'+item.ico+'</span>'
-          +'<div class="pv-update-body"><div class="pv-update-title">'+item.title+'</div><div class="pv-update-sub">'+item.sub+'</div></div>'
-          +'<span class="pv-update-badge">'+item.badge+'</span>';
-        el.appendChild(row);
-        setTimeout(function(){row.classList.add('show');},30);
-      }, i * 600);
-    });
-    setTimeout(function(){
-      el.innerHTML='';
-      pvMaintainItems.forEach(function(item,i){
-        setTimeout(function(){
-          var row=document.createElement('div'); row.className='pv-update';
-          row.innerHTML='<span class="pv-update-ico">'+item.ico+'</span>'
-            +'<div class="pv-update-body"><div class="pv-update-title">'+item.title+'</div><div class="pv-update-sub">'+item.sub+'</div></div>'
-            +'<span class="pv-update-badge">'+item.badge+'</span>';
-          el.appendChild(row);
-          setTimeout(function(){row.classList.add('show');},30);
-        }, i*600);
-      });
-      setTimeout(function(){ /* play once, stop */ }, pvMaintainItems.length*600 + 2000);
-    }, pvMaintainItems.length*600 + 2000);
-  }
-
-  function pvExpandRun() {
-    var el = document.getElementById('pv-agents'); if(!el) return;
-    el.innerHTML = '';
-    var row1 = document.createElement('div');
-    row1.className = 'pv-agent';
-    row1.style.cssText = 'opacity:0;transform:translateY(4px);transition:opacity .35s ease,transform .35s ease;';
-    row1.innerHTML = '<div class="pv-agent-av">SA</div>'
-      +'<div><div class="pv-agent-name">Sales Assistant</div><div class="pv-agent-role">Lead response · calendar · CRM</div></div>'
-      +'<div class="pv-agent-status"><span class="pv-agent-status-dot"></span>active</div>';
-    el.appendChild(row1);
-    setTimeout(function(){row1.style.opacity='1';row1.style.transform='translateY(0)';},100);
-
-    setTimeout(function() {
-      var row2 = document.createElement('div');
-      row2.className = 'pv-agent pv-agent-new';
-      row2.style.cssText = 'opacity:0;transform:translateY(4px);transition:opacity .35s ease,transform .35s ease;';
-      row2.innerHTML = '<div class="pv-agent-av" style="background:rgba(196,120,64,.3);animation:pulse 1.2s infinite;">OA</div>'
-        +'<div><div class="pv-agent-name">Ops Agent</div><div class="pv-agent-role" style="color:var(--hi);">Building now...</div></div>'
-        +'<span class="pv-agent-new-badge">New</span>';
-      el.appendChild(row2);
-      setTimeout(function(){row2.style.opacity='1';row2.style.transform='translateY(0)';},30);
-      setTimeout(function(){
-        row2.classList.remove('pv-agent-new');
-        row2.innerHTML = '<div class="pv-agent-av">OA</div>'
-          +'<div><div class="pv-agent-name">Ops Agent</div><div class="pv-agent-role">Overnight ops · CRM · reporting</div></div>'
-          +'<div class="pv-agent-status"><span class="pv-agent-status-dot"></span>active</div>';
-      }, 2200);
-      setTimeout(function(){ if(procVisible) pvExpandRun(); }, 5200);
-    }, 1400);
-  }
-
-  var procObs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        procVisible = true;
-        if (!procDone) {
-          procDone = true;
-          [['02',200],['03',500],['04',800]].forEach(function(pair) {
-            var id=pair[0], delay=pair[1];
-            setTimeout(function() {
-              var line=document.getElementById('pv-line-'+id);
-              var node=document.getElementById('pv-node-'+id);
-              var card=document.getElementById('pv-card-'+id);
-              if(line) line.classList.add('drawn');
-              setTimeout(function(){
-                if(node) node.classList.add('show');
-                if(card) card.classList.add('show');
-              }, 550);
-            }, delay);
-          });
-          setTimeout(procRunOnce, 900);
-          setTimeout(pvMaintainRun, 1200);
-          setTimeout(pvExpandRun, 1500);
-        }
-      } else {
-        procVisible = false;
-        procDone = false;
-      }
-    });
-  }, { threshold: 0.1 });
-  var pvRow = document.getElementById('proc-vis-row');
-  if (pvRow) procObs.observe(pvRow);
-
-
-  function tbSwitch(key) {
-    ['gmail','cal','hs','slack'].forEach(function(k) {
-      var t = document.getElementById('tb-tab-' + k);
-      var p = document.getElementById('tb-panel-' + k);
-      var c = document.getElementById('chip-' + k);
-      if (t) t.classList.remove('active');
-      if (p) p.classList.remove('show');
-      if (c) c.classList.remove('lit');
-    });
-    var t = document.getElementById('tb-tab-' + key);
-    var p = document.getElementById('tb-panel-' + key);
-    var c = document.getElementById('chip-' + key);
-    if (t) t.classList.add('active');
-    if (p) p.classList.add('show');
-    if (c) c.classList.add('lit');
-  }
-
-  function tbReset() {
-    tbSwitch('gmail');
-    var gt = document.getElementById('tb-gmail-txt');
-    var gc = document.getElementById('tb-gmail-cur');
-    var gs = document.getElementById('tb-send');
-    var gst = document.getElementById('tb-sent');
-    if (gt) gt.textContent = '';
-    if (gc) gc.style.opacity = '0';
-    if (gs) gs.classList.remove('show');
-    if (gst) gst.classList.remove('show');
-    var sp = document.getElementById('tb-slot-pick');
-    var cc = document.getElementById('tb-cal-confirm');
-    if (sp) { sp.classList.remove('hover'); sp.classList.remove('booked'); }
-    if (cc) cc.classList.remove('show');
-    ['tb-hs-v1','tb-hs-v2','tb-hs-v3','tb-hs-v4'].forEach(function(id) {
-      var el = document.getElementById(id); if (el) el.textContent = '';
-    });
-    var sa = document.getElementById('tb-slack-ai');
-    if (sa) sa.classList.remove('show');
-  }
-
-  function tbRun() {
-    tbReset();
-    var emailText = 'Hi Sarah — your quote is ready. I\'ve set aside Tue 2pm for the site visit. Does that work for you?';
-
-    var p = wait(400)
-    .then(function() {
-      var gc = document.getElementById('tb-gmail-cur');
-      if (gc) gc.style.opacity = '1';
-      return typeInto(document.getElementById('tb-gmail-txt'), emailText, 20);
-    })
-    .then(function() {
-      var gs = document.getElementById('tb-send');
-      if (gs) gs.classList.add('show');
-      return wait(700);
-    })
-    .then(function() {
-      var gs = document.getElementById('tb-send');
-      var gst = document.getElementById('tb-sent');
-      var gc = document.getElementById('tb-gmail-cur');
-      if (gs) gs.classList.remove('show');
-      if (gst) gst.classList.add('show');
-      if (gc) gc.style.opacity = '0';
-      return wait(900);
-    })
-    /* calendar */
-    .then(function() {
-      tbSwitch('cal');
-      return wait(700);
-    })
-    .then(function() {
-      var sp = document.getElementById('tb-slot-pick');
-      if (sp) sp.classList.add('hover');
-      return wait(700);
-    })
-    .then(function() {
-      var sp = document.getElementById('tb-slot-pick');
-      if (sp) { sp.classList.remove('hover'); sp.classList.add('booked'); }
-      return wait(500);
-    })
-    .then(function() {
-      var cc = document.getElementById('tb-cal-confirm');
-      if (cc) cc.classList.add('show');
-      return wait(1200);
-    })
-    /* hubspot */
-    .then(function() {
-      tbSwitch('hs');
-      return wait(500);
-    });
-
-    var hsFields = [
-      { id:'tb-hs-v1', val:'Contacted' },
-      { id:'tb-hs-v2', val:'9 / 10' },
-      { id:'tb-hs-v3', val:'Tue 2:00 PM' },
-      { id:'tb-hs-v4', val:'AI Agent ✓' },
-    ];
-    hsFields.forEach(function(f) {
-      p = p.then(function() {
-        var el = document.getElementById(f.id);
-        if (el) el.textContent = f.val;
-        return wait(550);
-      });
-    });
-
-    /* slack */
-    p = p.then(function() {
-      tbSwitch('slack');
-      return wait(700);
-    })
-    .then(function() {
-      var sa = document.getElementById('tb-slack-ai');
-      if (sa) sa.classList.add('show');
-    });
-  }
-
-  /* ── Mobile demo ── */
-  var mobileMsgs = [
-    { role:'user',  text:'Follow up with Dave about the proposal' },
-    { role:'agent', text:'On it — email sent to Dave. Subject: "Quick follow-up on your proposal."', tags:['✓ Gmail'] },
-    { role:'user',  text:'What\'s my schedule look like tomorrow?' },
-    { role:'agent', text:'3 meetings: 9am standup, 1pm client call, 4pm review. I blocked 11–12 for deep work.', tags:['✓ Calendar'] },
-    { role:'user',  text:'Push the 4pm to Thursday' },
-    { role:'agent', text:'Done. Review moved to Thu 4pm. Invites updated.', tags:['✓ Done'] },
-  ];
-  var mobileStarted = false;
-  var mobileVisible = false;
-
-  function mobileChatRun() {
-    var el = document.getElementById('mobile-chat');
-    if (!el) return;
-    el.innerHTML = '';
-    var p = wait(400);
-    mobileMsgs.forEach(function(msg) {
-      var capturedTxt = null;
-      var capturedTagWrap = null;
-      p = p.then(function() {
-        if (!mobileVisible) return wait(0);
-        var wrap = document.createElement('div');
-        wrap.style.cssText = 'display:flex;flex-direction:column;align-items:'+(msg.role==='user'?'flex-end':'flex-start')+';opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s;';
-        var bubble = document.createElement('div');
-        bubble.style.cssText = 'max-width:85%;padding:7px 10px;border-radius:'+(msg.role==='user'?'8px 2px 8px 8px':'2px 8px 8px 8px')+';background:'+(msg.role==='user'?'#c47840':'#0e0e0e')+';font-family:\'DM Sans\',system-ui,sans-serif;';
-        capturedTxt = document.createElement('span');
-        capturedTxt.style.cssText = 'font-size:11px;line-height:1.5;color:'+(msg.role==='user'?'#fff':'rgba(255,255,255,.88)')+';display:block;font-family:\'DM Sans\',system-ui,sans-serif;';
-        bubble.appendChild(capturedTxt);
-        if (msg.tags) {
-          capturedTagWrap = document.createElement('div');
-          capturedTagWrap.style.cssText = 'display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;opacity:0;transition:opacity .3s;';
-          msg.tags.forEach(function(t) {
-            var s = document.createElement('span');
-            s.style.cssText = 'font-size:8.5px;font-weight:500;padding:1px 5px;border-radius:3px;background:rgba(58,171,119,.07);color:#3aab77;font-family:\'DM Sans\',sans-serif;';
-            s.textContent = t;
-            capturedTagWrap.appendChild(s);
-          });
-          bubble.appendChild(capturedTagWrap);
-        }
-        wrap.appendChild(bubble);
-        el.appendChild(wrap);
-        el.scrollTop = el.scrollHeight;
-        setTimeout(function(){ wrap.style.opacity='1'; wrap.style.transform='translateY(0)'; }, 30);
-        return wait(60);
-      }).then(function() {
-        if (!capturedTxt) return wait(0);
-        var full = msg.text, i = 0;
-        return new Promise(function(resolve) {
-          var iv = setInterval(function() {
-            capturedTxt.textContent += full[i++];
-            el.scrollTop = el.scrollHeight;
-            if (i >= full.length) {
-              clearInterval(iv);
-              if (capturedTagWrap) setTimeout(function(){ capturedTagWrap.style.opacity='1'; }, 150);
-              setTimeout(resolve, msg.role==='agent' ? 600 : 300);
-            }
-          }, msg.role==='agent' ? 14 : 20);
-        });
-      });
-    });
-  }
-
-  var mobileObs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        mobileVisible = true;
-        if (!mobileStarted) { mobileStarted = true; mobileChatRun(); }
-      } else {
-        mobileVisible = false;
-        mobileStarted = false;
-      }
-    });
-  }, { threshold: 0.3 });
-  var mobileEl = document.getElementById('mobile-chat');
-  if (mobileEl) mobileObs.observe(mobileEl.closest('div[style*="flex-shrink"]') || mobileEl);
-
-
-  var tbObs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        tbVisible = true;
-        if (!tbStarted) { tbStarted = true; tbRun(); }
-      } else {
-        tbVisible = false;
-        tbStarted = false;
-      }
-    });
-  }, { threshold: 0.3 });
-  var tbEl = document.querySelector('.tools-browser');
-  if (tbEl) tbObs.observe(tbEl);
 
 });
 </script>
