@@ -124,12 +124,17 @@ h2{font-family:var(--sans);font-weight:700;font-size:17px;margin:0 0 6px;letter-
 .service-chip.slack::before{background:#56d364}
 .service-chip.hubspot::before{background:#ff7a59}
 .service-select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 52%,calc(100% - 12px) 52%;background-size:6px 6px;background-repeat:no-repeat}
+.connector-picker{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:stretch}
 .connector-checklist{display:grid;gap:8px}
-.connector-option{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:rgba(8,7,5,.46);border-radius:14px;padding:11px 12px;color:var(--muted);cursor:pointer}
+.connector-option{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);background:rgba(8,7,5,.46);border-radius:14px;padding:11px 12px;color:var(--muted)}
 .connector-option:hover{border-color:var(--line-strong);color:var(--ink)}
 .connector-option input{accent-color:var(--gold);width:16px;height:16px}
 .connector-option b{display:block;color:var(--ink);font-size:13px}
 .connector-option span{display:block;color:var(--faint);font-size:12px;text-transform:none;letter-spacing:0}
+.connector-remove{border:1px solid var(--line);background:transparent;color:var(--faint);border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800;cursor:pointer}
+.connector-remove:hover{border-color:rgba(255,141,125,.32);color:var(--red);background:rgba(255,141,125,.045)}
+.empty-connectors{border:1px dashed var(--line);border-radius:14px;padding:12px;color:var(--faint);font-size:13px;background:rgba(8,7,5,.28)}
+.connector-request-shortcut{justify-self:start;margin-top:-2px}
 .service-error{border:1px solid rgba(255,141,125,.24);border-radius:16px;padding:12px 14px;background:rgba(255,141,125,.045);color:var(--red);font-size:13px;margin-bottom:12px}
 .request-card{margin:20px 0 2px;display:grid;gap:14px}
 .request-form{display:grid;gap:12px;margin-top:4px}
@@ -213,6 +218,7 @@ textarea.input{min-height:110px;resize:vertical}
   main{padding:30px 16px 60px}
   .top{padding:16px}
   .grid{grid-template-columns:1fr}
+  .connector-picker{grid-template-columns:1fr}
   .card{padding:20px;border-radius:20px}
   .login-card{padding:24px}
 }
@@ -275,12 +281,16 @@ textarea.input{min-height:110px;resize:vertical}
       <h2 style="margin-top:6px">Create client connector page</h2>
       <div class="field">
         <span>Software connectors this client needs</span>
-        <div class="connector-checklist" id="connectorChecklist" aria-label="Software connectors">
-          <label class="connector-option"><span><b>Gmail</b><span>Email send/reply access</span></span><input type="checkbox" name="connectors" value="gmail" checked /></label>
-          <label class="connector-option"><span><b>Facebook + Instagram</b><span>Meta Page/social access</span></span><input type="checkbox" name="connectors" value="meta" /></label>
-          <label class="connector-option"><span><b>Slack</b><span>Workspace alerts and approvals</span></span><input type="checkbox" name="connectors" value="slack" /></label>
-          <label class="connector-option"><span><b>HubSpot</b><span>CRM contacts and companies</span></span><input type="checkbox" name="connectors" value="hubspot" /></label>
+        <div class="connector-picker" aria-label="Add software connector">
+          <select class="input service-select" id="connectorPicker" aria-label="Available software connectors">
+            <option value="">Select connector to add…</option>
+          </select>
+          <button class="button secondary" id="addConnectorButton" type="button">Add connector</button>
         </div>
+        <div class="connector-checklist" id="connectorChecklist" aria-label="Selected software connectors">
+          <div class="empty-connectors">Choose connectors from the bar above. Nothing is preselected.</div>
+        </div>
+        <button class="button ghost connector-request-shortcut" id="newConnectorShortcut" type="button">Connector not listed? Create one</button>
       </div>
       <label class="field">
         <span>Client / business name</span>
@@ -298,7 +308,7 @@ textarea.input{min-height:110px;resize:vertical}
     </div>
   </section>
 
-  <section class="card request-card" aria-labelledby="connectorRequestHeading">
+  <section class="card request-card" id="connectorRequestPanel" aria-labelledby="connectorRequestHeading">
     <div>
       <div class="eyebrow">Connector request agent</div>
       <h2 id="connectorRequestHeading" style="margin-top:6px">Need another app?</h2>
@@ -439,6 +449,10 @@ textarea.input{min-height:110px;resize:vertical}
   const invitePreview  = document.getElementById('invitePreview');
   const serviceStrip   = document.getElementById('serviceStrip');
   const connectorChecklist = document.getElementById('connectorChecklist');
+  const connectorPicker = document.getElementById('connectorPicker');
+  const addConnectorButton = document.getElementById('addConnectorButton');
+  const newConnectorShortcut = document.getElementById('newConnectorShortcut');
+  const connectorRequestPanel = document.getElementById('connectorRequestPanel');
   const connectorRequestForm = document.getElementById('connectorRequestForm');
   const requestClientName = document.getElementById('requestClientName');
   const requestSoftwareName = document.getElementById('requestSoftwareName');
@@ -454,6 +468,7 @@ textarea.input{min-height:110px;resize:vertical}
   let lastRows = [];
   let serviceErrors = [];
   let lastCreatedInvite = null;
+  let selectedConnectorSet = new Set();
 
   // --- Utilities ---
   const safeText = (v, fallback = '—') => {
@@ -505,23 +520,54 @@ textarea.input{min-height:110px;resize:vertical}
   }
 
   function selectedConnectorKeys() {
-    if (!connectorChecklist) return [];
-    return Array.from(connectorChecklist.querySelectorAll('input[name="connectors"]:checked'))
-      .map((input) => input.value)
-      .filter((key) => SERVICES[key]?.connector);
+    return Array.from(selectedConnectorSet).filter((key) => SERVICES[key]?.connector);
   }
 
   function renderConnectorChecklist() {
     if (!connectorChecklist) return;
     const entries = Object.entries(SERVICES).filter(([, service]) => service.connector);
-    const existing = new Set(selectedConnectorKeys());
-    const checked = existing.size ? existing : new Set(entries.slice(0, 1).map(([key]) => key));
-    connectorChecklist.innerHTML = entries.map(([key, service]) => `
+    const availableKeys = new Set(entries.map(([key]) => key));
+    selectedConnectorSet = new Set(selectedConnectorKeys().filter((key) => availableKeys.has(key)));
+
+    const available = entries.filter(([key]) => !selectedConnectorSet.has(key));
+    if (connectorPicker) {
+      connectorPicker.innerHTML = `
+        <option value="">${available.length ? 'Select connector to add…' : 'All listed connectors added'}</option>
+        ${available.map(([key, service]) => `<option value="${escapeHtml(key)}">${escapeHtml(service.label)}</option>`).join('')}
+      `;
+    }
+    if (addConnectorButton) addConnectorButton.disabled = available.length === 0;
+
+    const selected = selectedConnectorKeys();
+    if (!selected.length) {
+      connectorChecklist.innerHTML = '<div class="empty-connectors">Choose connectors from the bar above. Nothing is preselected.</div>';
+      return;
+    }
+
+    connectorChecklist.innerHTML = selected.map((key) => {
+      const service = SERVICES[key];
+      return `
       <label class="connector-option">
         <span><b>${escapeHtml(service.label)}</b><span>${escapeHtml(service.serviceKind || 'connector')}</span></span>
-        <input type="checkbox" name="connectors" value="${escapeHtml(key)}" ${checked.has(key) ? 'checked' : ''} />
+        <button class="connector-remove" type="button" data-remove-connector="${escapeHtml(key)}" aria-label="Remove ${escapeHtml(service.label)}">Remove</button>
       </label>
-    `).join('');
+    `;
+    }).join('');
+  }
+
+  function addSelectedConnector() {
+    const key = connectorPicker?.value || '';
+    if (!key || !SERVICES[key]?.connector || selectedConnectorSet.has(key)) return;
+    selectedConnectorSet.add(key);
+    renderConnectorChecklist();
+    resetInvitePreview();
+  }
+
+  function removeSelectedConnector(key) {
+    if (!selectedConnectorSet.has(key)) return;
+    selectedConnectorSet.delete(key);
+    renderConnectorChecklist();
+    resetInvitePreview();
   }
 
   function renderServiceStrip() {
@@ -778,6 +824,14 @@ textarea.input{min-height:110px;resize:vertical}
     updateInvitePreview();
   }
 
+  function jumpToConnectorRequest() {
+    if (!requestClientName.value.trim() && clientName.value.trim()) requestClientName.value = clientName.value.trim();
+    if (!requestWorkflowName.value.trim() && workflowName.value.trim()) requestWorkflowName.value = workflowName.value.trim();
+    setConnectorRequestStatus('Add the missing software/API below and save it for the connector-builder workflow.');
+    connectorRequestPanel?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => requestSoftwareName.focus(), 180);
+  }
+
   async function createClientInvite() {
     const payload = invitePayload();
     if (!payload.client_name) throw new Error('Add the client/business name first.');
@@ -903,7 +957,19 @@ textarea.input{min-height:110px;resize:vertical}
     }
   });
 
-  connectorChecklist.addEventListener('change', resetInvitePreview);
+  addConnectorButton.addEventListener('click', addSelectedConnector);
+  connectorPicker.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addSelectedConnector();
+    }
+  });
+  connectorChecklist.addEventListener('click', (event) => {
+    const removeButton = event.target.closest('[data-remove-connector]');
+    if (!removeButton) return;
+    removeSelectedConnector(removeButton.dataset.removeConnector || '');
+  });
+  newConnectorShortcut.addEventListener('click', jumpToConnectorRequest);
   clientName.addEventListener('input', resetInvitePreview);
   workflowName.addEventListener('input', resetInvitePreview);
   refreshButton.addEventListener('click', loadConnections);

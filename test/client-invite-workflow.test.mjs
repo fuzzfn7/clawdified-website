@@ -149,6 +149,10 @@ test('invite UI and OAuth starts preserve invite context back to the client conn
 
   assert.match(adminDashboard, /ROUTE_CLIENT_INVITES\s*=\s*'\/api\/admin\/client-invites'/);
   assert.match(adminDashboard, /connectorChecklist/);
+  assert.match(adminDashboard, /connectorPicker/);
+  assert.match(adminDashboard, /Add connector/);
+  assert.match(adminDashboard, /Connector not listed\? Create one/);
+  assert.doesNotMatch(adminDashboard, /name="connectors" value="gmail" checked/);
   assert.match(adminDashboard, /Create client connector page/);
   assert.match(clientConnectorPage, /\/api\/client-invites\//);
   assert.match(clientConnectorPage, /Connect required tools/);
