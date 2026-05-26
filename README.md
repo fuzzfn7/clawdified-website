@@ -16,6 +16,7 @@ Canonical local source for `clawdified.com` Cloudflare Pages static site and Pag
 - SEO & Competitor Intelligence embeds the fresh-input, client-facing operator UI at `/agents/seo-competitor/` (redesigned in the Lead Growth + Robert/ZC UI family and shipped in `c054be3`). It must open blank for each visitor, collect website/service area/search terms, then populate site read, search coverage, competitors, first fixes, and evidence-style rows. Do not revert it to a preloaded named-client dashboard or bespoke dark SEO dashboard.
 - Workflow & Proposal Automation is still coming soon. The `/agents/` card may be clicked, but it must show only a centered coming-soon holding panel — no sample/proposal UI, no draft preview, and no unrelated embedded interface until the real workflow UI is ready.
 - The `/agents/` systems card section should stay copy-light and prospect-facing: no internal rationale/explainer headline above the cards; cards should read like a compact menu.
+- The `/agents/` hero subcopy should stay short/human; avoid product-taxonomy phrases like “three realistic product surfaces,” “capped,” “redacted,” or “approval-gated” in the main visible pitch.
 
 ## Current connector status
 
