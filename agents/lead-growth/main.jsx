@@ -27,6 +27,7 @@ async function apiJson(path, options = {}) {
   return body;
 }
 
+// REAL_LEADGEN_PUBLIC_SEARCH_20260526
 function runSummaryMessage(result) {
   if (result?.demoReplay) {
     const total = Number(result?.run?.total || result?.summary?.demoLeadsQueued || 20);
@@ -175,16 +176,18 @@ const DEFAULT_RUN_CRITERIA = {
 };
 
 const PUBLIC_DEMO_PROVIDERS = {
-  publicWrapper: { provider: "Public demo wrapper", purpose: "Input validation + capped result shaping", configured: true, required: true, status: "no external writes" },
-  leadgenMcp: { provider: "LeadGen MCP", purpose: "Private-run handoff", configured: true, required: false, status: "gated behind approval" },
-  apollo: { provider: "Apollo reveal", purpose: "Paid direct-contact enrichment", configured: false, required: false, status: "disabled in public demo" },
+  // REAL_LEADGEN_PUBLIC_SEARCH_20260526 — providers reflect the capped real public-search wrapper, not a static sample/demo source.
+  publicWrapper: { provider: "Capped public search wrapper", purpose: "Server-side input validation + Serper Places/Search call + capped public result shaping", configured: true, required: true, status: "real public search; no external writes" },
+  serper: { provider: "Serper (public search)", purpose: "Real public business/web search server-side", configured: true, required: true, status: "capped at 10 inspected / 3 returned" },
+  leadgenMcp: { provider: "LeadGen MCP", purpose: "Private-run handoff (paid reveal, person-level enrichment, outreach)", configured: true, required: false, status: "gated behind approval" },
+  apollo: { provider: "Apollo reveal", purpose: "Paid direct-contact enrichment", configured: false, required: false, status: "disabled in public search" },
 };
 
 function publicDemoStatus(criteria = {}, latestResult = null) {
   return {
     status: "idle",
     demoReplayMode: true,
-    mode: "public_demo_capped",
+    mode: "public_capped_real_search",
     scheduler: {
       enabled: false,
       criteria: {
@@ -205,15 +208,16 @@ function publicDemoStatus(criteria = {}, latestResult = null) {
 
 function leadgenTrialToRawLead(lead, result, index) {
   const business = result?.business_read || {};
-  const companyDomain = String(lead.website || lead.company || `demo-${index + 1}.example`).replace(/^https?:\/\//, "").replace(/^www\./, "");
+  const rawDomain = lead.domain || lead.website || lead.company || "";
+  const companyDomain = String(rawDomain).replace(/^https?:\/\//, "").replace(/^www\./, "").split(/[\s/?#]/)[0];
   const sources = Array.isArray(lead.sourceProof) ? lead.sourceProof : [];
   return {
-    id: lead.id || `public-demo-${index + 1}`,
-    companyName: lead.company || `Target account ${index + 1}`,
-    website: companyDomain.includes(".") ? `https://${companyDomain}` : companyDomain,
+    id: lead.id || `public-search-${index + 1}`,
+    companyName: lead.company || `Public search result ${index + 1}`,
+    website: companyDomain.includes(".") ? `https://${companyDomain}` : (lead.website || ""),
     domain: companyDomain,
-    personName: lead.contactName || "Demo contact",
-    title: lead.title || "Decision maker",
+    personName: lead.contactName || "Gated until private run",
+    title: lead.title || "Public business contact",
     roleCategory: lead.roleGroup || "Operations",
     departmentFunction: lead.roleGroup || "Operations",
     industryCategory: lead.industry || "Local services",
@@ -231,16 +235,16 @@ function leadgenTrialToRawLead(lead, result, index) {
     compatibilityConfidence: lead.status === "save" ? "HIGH" : "MEDIUM",
     isFinishedEnrichedLead: lead.status === "save",
     researchStatus: lead.status === "save" ? "finished" : "incomplete",
-    missingFields: Array.isArray(lead.risks) ? lead.risks.join("; ") : "Direct email/private reveal gated in public demo",
-    scoreReasons: Array.isArray(lead.reasons) ? lead.reasons.join("; ") : "Public demo score reason",
-    scoreRisks: Array.isArray(lead.risks) ? lead.risks.join("; ") : "Private enrichment required before outreach",
+    missingFields: Array.isArray(lead.risks) ? lead.risks.join("; ") : "Direct email/personal phone gated until private run",
+    scoreReasons: Array.isArray(lead.reasons) ? lead.reasons.join("; ") : "Capped public search fit",
+    scoreRisks: Array.isArray(lead.risks) ? lead.risks.join("; ") : "Person-level fit must be verified privately before outreach",
     workflowPainClues: lead.outreachAngle || business.lead_angle || "Follow-up, scheduling, and review workflows",
     reasonToContact: lead.outreachAngle || "Likely repeatable workflow pain",
     suggestedFirstCallAngle: lead.outreachAngle || "Ask where follow-up and admin work slows revenue.",
-    suggestedAgent: lead.recommendedAgent || "Follow-up + admin cleanup agent",
+    suggestedAgent: lead.recommendedAgent || `${business.name || "Visitor"} outreach follow-up agent`,
     sourceUrls: sources.join("; "),
-    sourceQuality: "PUBLIC_DEMO_PREVIEW",
-    providerSourceUsed: "Public demo wrapper; capped sample rows",
+    sourceQuality: "PUBLIC_CAPPED_REAL_SEARCH",
+    providerSourceUsed: "Serper Places/Search (server-side); capped public results",
     publicDemoForVisitor: true,
     visitorCompanyName: business.name || "the visitor's company",
     visitorWebsite: business.website || "",
@@ -262,27 +266,30 @@ function leadgenTrialToRawLead(lead, result, index) {
 
 function publicRunFromResult(result) {
   const now = new Date().toISOString();
+  const leads = result?.leads || [];
   return {
     runAt: now,
     completedAt: now,
-    trigger: "Public demo wrapper",
-    runId: result?.run_id || "public-demo",
-    searchGeographySegment: result?.business_read?.geography || "visitor search area",
-    searchQuery: result?.business_read?.icp || "visitor ICP",
-    rawCompaniesFound: result?.leads?.length || 0,
-    peopleFound: result?.leads?.length || 0,
-    finishedEnrichedLeadsAdded: (result?.leads || []).filter((lead) => lead.status === "save").length,
-    incompleteAccountsSaved: (result?.leads || []).filter((lead) => lead.status !== "save").length,
+    trigger: "Capped public search",
+    runId: result?.run_id || "public-search",
+    searchGeographySegment: result?.business_read?.geography || "(inferred or not set)",
+    searchQuery: result?.business_read?.search_target_term || result?.business_read?.icp || "visitor ICP",
+    rawCompaniesFound: leads.length,
+    peopleFound: 0,
+    finishedEnrichedLeadsAdded: leads.filter((lead) => lead.status === "save").length,
+    incompleteAccountsSaved: leads.filter((lead) => lead.status !== "save").length,
     duplicatesMerged: 0,
-    sourcesUsed: ["Public demo wrapper", "LeadGen MCP gated path"],
+    sourcesUsed: ["Serper Places/Search (server-side)", "LeadGen MCP gated path (private runs only)"],
     providerFailuresBlocks: [],
-    emailCoverage: "0% public demo gated",
-    phoneCoverage: "business route preview",
-    linkedInCoverage: "preview",
-    contactPageCoverage: "preview",
-    revenueConfidenceCoverage: "0% public demo gated",
-    sourceCoverageSummary: "Public-safe sample output; no Apollo reveal, no provider spend, no outbound send.",
-    shortfall: "private live trial required for real contacts",
+    emailCoverage: "0% — direct email gated until private run",
+    phoneCoverage: "public business phone only when listed publicly",
+    linkedInCoverage: "gated until private run",
+    contactPageCoverage: "public website / contact page only",
+    revenueConfidenceCoverage: "0% — paid reveal disabled",
+    sourceCoverageSummary: result?.status === "shortfall"
+      ? (result.shortfall_reason || "Capped public search found no strong real leads. No fake rows were padded in.")
+      : "Capped real public search; no Apollo reveal, no provider spend beyond Serper, no outbound send.",
+    shortfall: result?.status === "shortfall" ? (result.shortfall_reason || "no strong leads") : "private run required for direct contacts",
     mainSkipReasons: [],
   };
 }
@@ -293,9 +300,9 @@ const PublicDemoIntake = ({ runCriteria, onRunCriteriaChange, onRunNow, runBusy 
       <div className="icon"><Icon name="target" /></div>
       <div style={{ flex: 1 }}>
         <h3 className="card-title">Public lead search intake</h3>
-        <div className="card-sub">This is the real Lead Sheet UI. Enter a website; ICP and search area can be blank and the wrapper will infer them from the visitor's business. No Apollo reveal, provider spend, or outbound sends.</div>
+        <div className="card-sub">Enter your business website. ICP and search area are optional — leave them blank and the wrapper infers them. This runs a capped real public search (Serper) server-side and returns up to 3 real public-safe leads. No Apollo reveal, no outbound sends, direct contacts gated.</div>
       </div>
-      <span className="status-pill ok"><span className="d" />Actual UI demo</span>
+      <span className="status-pill ok"><span className="d" />Capped real public search</span>
     </div>
     <div className="card-body automation-control-body">
       <div className="manual-control-grid" style={{ gridTemplateColumns: "1fr 1.35fr .9fr auto" }}>
@@ -420,11 +427,11 @@ const App = () => {
       const geography = String(runCriteria.geography || "").trim();
       if (!website) {
         setRunNotice("");
-        setError("Enter a business website. ICP and search area can be blank; the public demo will infer them from that site.");
+        setError("Enter a business website. ICP and search area are optional — the public search will infer them from that site.");
         setRunBusy(false);
         return;
       }
-      setRunNotice("Running public-safe Lead Growth demo…");
+      setRunNotice("Running capped real public search (Serper, server-side)…");
       try {
         const result = await apiJson("/api/leadgen-trial", {
           method: "POST",
@@ -439,7 +446,11 @@ const App = () => {
         setSelectedId(mappedLeads[0]?.id || null);
         setPanelOpen(false);
         setPage("sheet");
-        setRunNotice(`Public demo complete: ${mappedLeads.length} rows populated in the actual Lead Sheet UI. Direct reveal and outreach stay gated.`);
+        if (result.status === "shortfall") {
+          setRunNotice(`Capped public search ran but did not return strong real leads. ${result.shortfall_reason || "Refine ICP or search area and try again."} No fake sample rows were padded in.`);
+        } else {
+          setRunNotice(`Capped real public search complete: ${mappedLeads.length} public-safe lead${mappedLeads.length === 1 ? "" : "s"} in the Lead Sheet UI. Direct contacts and outreach stay gated.`);
+        }
       } catch (err) {
         setRunNotice("");
         setError(err.message || String(err));
@@ -492,7 +503,7 @@ const App = () => {
       setRuns([]);
       setSelectedId(null);
       setPanelOpen(false);
-      setRunNotice("Public demo sheet cleared. Enter a business website to populate it again; ICP and search area can stay blank for inference.");
+      setRunNotice("Sheet cleared. Enter a business website to run the capped real public search again; ICP and search area can stay blank for inference.");
       setError("");
       return;
     }
@@ -533,7 +544,7 @@ const App = () => {
   function exportCsv() {
     if (PUBLIC_DEMO_MODE) {
       if (!leads.length) {
-        setRunNotice("Run the public demo before exporting preview rows.");
+        setRunNotice("Run the public lead search before exporting rows.");
         return;
       }
       const header = ["fit_score", "company", "domain", "contact", "title", "industry", "geography", "phone", "social", "suggested_agent", "outreach_angle"];
@@ -554,10 +565,10 @@ const App = () => {
       const blob = new Blob([csv], { type: "text/csv" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = "clawdified-lead-growth-public-demo.csv";
+      a.download = "clawdified-lead-growth-public-search.csv";
       a.click();
       URL.revokeObjectURL(a.href);
-      setRunNotice("Preview CSV exported from the public demo rows.");
+      setRunNotice("Public-search CSV exported from the capped real search rows.");
       return;
     }
     window.location.href = "/api/export/csv";

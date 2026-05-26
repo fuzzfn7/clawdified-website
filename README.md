@@ -12,7 +12,7 @@ Canonical local source for `clawdified.com` Cloudflare Pages static site and Pag
 ## Current live agent showroom status
 
 - `/agents/` is the public agent systems showroom.
-- Lead Growth embeds the actual public-safe Lead Growth UI at `/agents/lead-growth/`. Its public demo should require only a visitor website; blank ICP/geography are inferred from the submitted website, and provider spend, paid reveal, and outbound sends stay disabled.
+- Lead Growth embeds the actual public-safe Lead Growth UI at `/agents/lead-growth/`. The public demo uses `/api/leadgen-trial` as a capped real public-search wrapper: it requires only a visitor website (ICP/geography optional and inferred when blank), calls Serper Places/Search server-side when `SERPER_API_KEY` is configured (returns `503` when not), and returns up to 3 real public-safe leads. No Clawdified/.example sample rows are returned. Apollo paid reveal, outbound sends, and raw provider payloads stay disabled; direct contacts remain gated to a private run. Source marker: `REAL_LEADGEN_PUBLIC_SEARCH_20260526`.
 - SEO & Competitor Intelligence embeds the fresh-input, client-facing operator UI at `/agents/seo-competitor/` (redesigned in the Lead Growth + Robert/ZC UI family and shipped in `c054be3`). It must open blank for each visitor, collect website/service area/search terms, then populate site read, search coverage, competitors, first fixes, and evidence-style rows. Do not revert it to a preloaded named-client dashboard or bespoke dark SEO dashboard.
 - Workflow & Proposal Automation is still a preview flow, not a full embedded real UI.
 

@@ -366,15 +366,15 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
             <div className="card-head">
               <div className="icon"><Icon name="target" /></div>
               <div>
-                <h3 className="card-title">Public demo intake, provider order, and guardrails</h3>
-                <div className="card-sub">Same actual agent control area, with public-safe website/ICP/geography inputs.</div>
+                <h3 className="card-title">Capped public search intake, provider order, and guardrails</h3>
+                <div className="card-sub">Same actual agent control area, with website/ICP/geography inputs for the real public-search wrapper.</div>
               </div>
             </div>
             <div className="card-body automation-control-body">
               <div className="manual-control-grid">
                 <div className="input-row" style={{ margin: 0 }}>
                   <div className="input-label">Business website</div>
-                  <div className="input-desc">Used by the public-safe demo wrapper before rows populate.</div>
+                  <div className="input-desc">Used by the capped public-search wrapper before rows populate.</div>
                   <input type="url" placeholder="https://yourcompany.com" value={runCriteria.website || ""} onChange={(event) => onRunCriteriaChange?.("website", event.target.value)} />
                 </div>
                 <div className="input-row" style={{ margin: 0 }}>
@@ -402,8 +402,8 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
               </div>
 
               <div className="agent-do-list compact">
-                <div><Icon name="check" />Find target companies and one high-standing person per company.</div>
-                <div><Icon name="check" />Write people-level rows only with evidence and missing-field labels.</div>
+                <div><Icon name="check" />Find target companies and public contact routes from capped search.</div>
+                <div><Icon name="check" />Write public-safe rows with evidence and missing-field labels.</div>
                 <div><Icon name="x" />No outreach, private sources, or invented contact data.</div>
               </div>
 
@@ -552,7 +552,7 @@ const AgentHealth = ({ providers, runs, agentStatus }) => {
             <div className="icon"><Icon name="history" /></div>
             <div>
               <h3 className="card-title">Recent runs</h3>
-              <div className="card-sub">Manual demo runs and scheduled autonomous runs in one place.</div>
+              <div className="card-sub">Manual capped searches and scheduled autonomous runs in one place.</div>
             </div>
           </div>
           <div>
