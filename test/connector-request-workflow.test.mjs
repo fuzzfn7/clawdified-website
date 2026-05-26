@@ -132,6 +132,7 @@ test('admin dashboard clearly separates unsupported connector build requests fro
   assert.match(dashboard, /Unsupported connector/);
   assert.match(dashboard, /Request a new connector build/);
   assert.match(dashboard, /does not create a client link until the connector adapter is built and deployed/);
+  assert.match(dashboard, /connectorRequestBackdrop[^>]+hidden/);
   assert.match(dashboard, /Save build request/);
   assert.doesNotMatch(dashboard, /Need another app\?/);
   assert.match(dashboard, /ROUTE_CONNECTOR_REQUESTS\s*=\s*'\/api\/admin\/connector-requests'/);

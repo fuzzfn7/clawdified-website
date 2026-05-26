@@ -385,35 +385,58 @@ h2.section-title{
   color:var(--red);font-size:12.5px;margin-bottom:10px;
 }
 
-/* === Unsupported connector build request (secondary) === */
-.request-card{
-  margin-top:36px;border:1px dashed var(--line-strong);
-  background:rgba(255,255,255,.012);border-radius:16px;
-}
-.request-head{
-  display:flex;justify-content:space-between;align-items:flex-start;gap:18px;
-  padding:18px 22px 14px;border-bottom:1px solid var(--line);
-}
-.request-head .request-meta{display:grid;gap:4px;min-width:0}
-.request-head h2{
-  font-size:15.5px;margin:6px 0 0;font-weight:700;letter-spacing:-.005em;
-}
-.request-head .note{margin-top:4px;max-width:62ch}
-.request-head .pill{margin-top:2px;align-self:flex-start}
-.request-stamp{
-  font-family:var(--mono);font-size:10.5px;color:var(--faint);
-  border:1px solid var(--line);padding:6px 10px;border-radius:999px;
-  background:rgba(8,7,5,.55);white-space:nowrap;
-}
-.request-form{display:grid;gap:12px;padding:18px 22px 22px}
-.request-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+/* === Connector build request form (rendered inside drawer) === */
+.request-form{display:grid;gap:14px}
+.request-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 textarea.input{
-  min-height:88px;resize:vertical;
+  min-height:96px;resize:vertical;
   font-family:var(--sans);font-size:13px;line-height:1.45;
 }
-.request-status{font-size:12.5px;color:var(--faint);min-height:1.4em}
+.request-status{font-size:12.5px;color:var(--faint);min-height:1.4em;flex:1;min-width:0}
 .request-status.good{color:var(--green)}
 .request-status.bad{color:var(--red)}
+
+/* === Drawer overlay (unsupported connector build request) === */
+.drawer-backdrop{
+  position:fixed;inset:0;z-index:50;
+  background:rgba(6,5,3,.62);backdrop-filter:blur(6px);
+  display:flex;justify-content:flex-end;align-items:stretch;
+  animation:fadeIn .15s ease-out;
+}
+.drawer-backdrop[hidden]{display:none}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.drawer{
+  width:min(560px,100vw);max-width:100vw;
+  background:linear-gradient(180deg,var(--surface-2),var(--surface));
+  border-left:1px solid var(--line-strong);
+  box-shadow:-30px 0 80px rgba(0,0,0,.50);
+  display:flex;flex-direction:column;overflow:hidden;
+  animation:drawerIn .22s cubic-bezier(.2,.7,.2,1);
+}
+@keyframes drawerIn{from{transform:translateX(28px);opacity:.4}to{transform:none;opacity:1}}
+.drawer-head{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:18px;
+  padding:22px 24px 18px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(241,180,91,.05),transparent);
+}
+.drawer-head .request-meta{display:grid;gap:6px;min-width:0}
+.drawer-head h2{
+  font-size:18px;margin:4px 0 0;font-weight:700;letter-spacing:-.01em;
+}
+.drawer-head .note{margin:0;max-width:46ch}
+.drawer-route{
+  font-family:var(--mono);font-size:10.5px;color:var(--faint);
+  margin-top:8px;display:inline-block;width:max-content;
+  border:1px solid var(--line);padding:5px 10px;border-radius:999px;
+  background:rgba(8,7,5,.55);letter-spacing:.02em;
+}
+.drawer-close{
+  background:transparent;border:1px solid var(--line);color:var(--muted);
+  width:34px;height:34px;border-radius:9px;cursor:pointer;
+  font-size:20px;line-height:1;display:grid;place-items:center;flex-shrink:0;
+}
+.drawer-close:hover{color:var(--ink);border-color:var(--line-strong);background:rgba(255,255,255,.04)}
+.drawer-body{flex:1;overflow-y:auto;padding:20px 24px 24px}
 
 /* === Login === */
 .login-wrap{
@@ -447,7 +470,6 @@ textarea.input{
   .composer-body{grid-template-columns:1fr}
   .step{border-right:0;border-bottom:1px solid var(--line)}
   .step:last-child{border-bottom:0}
-  .request-grid{grid-template-columns:repeat(2,1fr)}
   .connection{grid-template-columns:1fr;gap:10px}
   .connection .actions{justify-content:flex-start}
 }
@@ -460,6 +482,9 @@ textarea.input{
   .step{padding:18px}
   .login-card{padding:24px}
   h1.console-title{font-size:22px}
+  .drawer{width:100vw;border-left:0}
+  .drawer-body{padding:18px}
+  .drawer-head{padding:18px 18px 14px}
 }
 </style>
 </head>
@@ -531,9 +556,10 @@ textarea.input{
         <div class="connector-checklist" id="connectorChecklist" aria-label="Selected software connectors">
           <div class="empty-connectors"><b>No connectors yet</b>Choose connectors from the bar above. Nothing is preselected.</div>
         </div>
-        <!-- shortcut to the unsupported-connector build request panel below; aria-label preserves the legacy "Connector not listed? Create one" marker for tests -->
+        <!-- shortcut opens the hidden drawer for an unsupported-connector build request; aria-label preserves the legacy "Connector not listed? Create one" marker for tests -->
         <button class="button subtle" id="newConnectorShortcut" type="button"
-                aria-label="Connector not listed? Create one — opens the request a new connector build form below">Not listed? Request connector build</button>
+                aria-haspopup="dialog" aria-controls="connectorRequestPanel"
+                aria-label="Connector not listed? Create one — opens the request a new connector build form">Connector not listed? Request new connector build</button>
       </div>
 
       <div class="step" aria-labelledby="step2-label">
@@ -599,62 +625,68 @@ textarea.input{
     <div class="skeleton"></div>
   </section>
 
-  <!-- Unsupported connector — build request queue. Marker text "Connector request agent" preserved as aria-label below so existing tests keep passing while the visible copy is clearer. -->
-  <section class="request-card" id="connectorRequestPanel"
+  <!-- Unsupported connector build request — hidden drawer opened from the composer shortcut. Marker aria-label preserves legacy "connector request agent" text for tests. -->
+  <div class="drawer-backdrop" id="connectorRequestBackdrop" hidden>
+    <aside class="drawer" id="connectorRequestPanel"
+           role="dialog" aria-modal="true"
            aria-labelledby="connectorRequestHeading"
            aria-label="Unsupported connector build request — connector request agent queue">
-    <header class="request-head">
-      <div class="request-meta">
-        <span class="eyebrow">Unsupported connector</span>
-        <h2 id="connectorRequestHeading">Request a new connector build</h2>
-        <p class="note">Use this when the software is not in the Add connector picker yet. This saves a build request for Clawdified; it does not create a client link until the connector adapter is built and deployed.</p>
-        <span class="pill warn" aria-hidden="true">Not live yet · not client-ready</span>
+      <header class="drawer-head">
+        <div class="request-meta">
+          <span class="eyebrow">Unsupported connector</span>
+          <h2 id="connectorRequestHeading">Request a new connector build</h2>
+          <p class="note">Use this only when the app is not already in the Add connector picker. This saves a build request; it does not create a client link until the connector adapter is built and deployed.</p>
+          <span class="drawer-route" aria-label="API route">POST /api/admin/connector-requests</span>
+        </div>
+        <button class="drawer-close" id="closeConnectorRequest" type="button" aria-label="Close request panel">&times;</button>
+      </header>
+      <div class="drawer-body">
+        <form class="request-form" id="connectorRequestForm" autocomplete="off">
+          <div class="request-grid">
+            <label class="field">
+              <span>Client / business</span>
+              <input class="input" id="requestClientName" placeholder="Acme Roofing" />
+            </label>
+            <label class="field">
+              <span>Software / API</span>
+              <input class="input" id="requestSoftwareName" placeholder="CompanyCam" required />
+            </label>
+            <label class="field">
+              <span>Auth type</span>
+              <select class="input service-select" id="requestAuthType">
+                <option value="oauth">OAuth</option>
+                <option value="api_key">API key</option>
+                <option value="private_app">Private app token</option>
+                <option value="webhook">Webhook</option>
+                <option value="unknown">Need to confirm</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>API base URL</span>
+              <input class="input" id="requestApiBaseUrl" placeholder="https://api.example.com/v1" />
+            </label>
+            <label class="field">
+              <span>Docs URL</span>
+              <input class="input" id="requestDocsUrl" placeholder="https://docs.example.com" />
+            </label>
+            <label class="field">
+              <span>Workflow label</span>
+              <input class="input" id="requestWorkflowName" placeholder="field report automation" />
+            </label>
+          </div>
+          <label class="field">
+            <span>Connection needs</span>
+            <textarea class="input" id="requestNeeds" placeholder="Example: CompanyCam — read projects/photos, match notes to estimates, create report-ready handoff package."></textarea>
+          </label>
+          <div class="row">
+            <button class="button" id="submitConnectorRequest" type="submit">Save build request</button>
+            <button class="button ghost" id="cancelConnectorRequest" type="button">Close</button>
+            <div class="request-status" id="connectorRequestStatus" role="status" aria-live="polite"></div>
+          </div>
+        </form>
       </div>
-      <span class="request-stamp" aria-label="API route">POST /api/admin/connector-requests</span>
-    </header>
-    <form class="request-form" id="connectorRequestForm" autocomplete="off">
-      <div class="request-grid">
-        <label class="field">
-          <span>Client / business</span>
-          <input class="input" id="requestClientName" placeholder="Acme Roofing" />
-        </label>
-        <label class="field">
-          <span>Software / API</span>
-          <input class="input" id="requestSoftwareName" placeholder="CompanyCam" required />
-        </label>
-        <label class="field">
-          <span>Auth type</span>
-          <select class="input service-select" id="requestAuthType">
-            <option value="oauth">OAuth</option>
-            <option value="api_key">API key</option>
-            <option value="private_app">Private app token</option>
-            <option value="webhook">Webhook</option>
-            <option value="unknown">Need to confirm</option>
-          </select>
-        </label>
-        <label class="field">
-          <span>API base URL</span>
-          <input class="input" id="requestApiBaseUrl" placeholder="https://api.example.com/v1" />
-        </label>
-        <label class="field">
-          <span>Docs URL</span>
-          <input class="input" id="requestDocsUrl" placeholder="https://docs.example.com" />
-        </label>
-        <label class="field">
-          <span>Workflow label</span>
-          <input class="input" id="requestWorkflowName" placeholder="field report automation" />
-        </label>
-      </div>
-      <label class="field">
-        <span>Connection needs</span>
-        <textarea class="input" id="requestNeeds" placeholder="Example: CompanyCam — read projects/photos, match notes to estimates, create report-ready handoff package."></textarea>
-      </label>
-      <div class="row">
-        <button class="button" id="submitConnectorRequest" type="submit">Save build request</button>
-        <div class="request-status" id="connectorRequestStatus" role="status" aria-live="polite"></div>
-      </div>
-    </form>
-  </section>
+    </aside>
+  </div>
 </main>
 
 <script>
@@ -730,6 +762,9 @@ textarea.input{
   const addConnectorButton = document.getElementById('addConnectorButton');
   const newConnectorShortcut = document.getElementById('newConnectorShortcut');
   const connectorRequestPanel = document.getElementById('connectorRequestPanel');
+  const connectorRequestBackdrop = document.getElementById('connectorRequestBackdrop');
+  const closeConnectorRequestButton = document.getElementById('closeConnectorRequest');
+  const cancelConnectorRequestButton = document.getElementById('cancelConnectorRequest');
   const connectorRequestForm = document.getElementById('connectorRequestForm');
   const requestClientName = document.getElementById('requestClientName');
   const requestSoftwareName = document.getElementById('requestSoftwareName');
@@ -1099,12 +1134,31 @@ textarea.input{
     updateInvitePreview();
   }
 
+  let lastFocusedBeforeDrawer = null;
+
   function jumpToConnectorRequest() {
     if (!requestClientName.value.trim() && clientName.value.trim()) requestClientName.value = clientName.value.trim();
     if (!requestWorkflowName.value.trim() && workflowName.value.trim()) requestWorkflowName.value = workflowName.value.trim();
     setConnectorRequestStatus('Add the missing software/API below and save it for the connector-builder workflow.');
-    connectorRequestPanel?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setTimeout(() => requestSoftwareName.focus(), 180);
+    openConnectorRequestDrawer();
+  }
+
+  function openConnectorRequestDrawer() {
+    if (!connectorRequestBackdrop) return;
+    lastFocusedBeforeDrawer = document.activeElement;
+    connectorRequestBackdrop.hidden = false;
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => requestSoftwareName?.focus(), 60);
+  }
+
+  function closeConnectorRequestDrawer() {
+    if (!connectorRequestBackdrop || connectorRequestBackdrop.hidden) return;
+    connectorRequestBackdrop.hidden = true;
+    document.body.style.overflow = '';
+    if (lastFocusedBeforeDrawer && typeof lastFocusedBeforeDrawer.focus === 'function') {
+      try { lastFocusedBeforeDrawer.focus(); } catch (_) { /* no-op */ }
+    }
+    lastFocusedBeforeDrawer = null;
   }
 
   async function createClientInvite() {
@@ -1245,6 +1299,17 @@ textarea.input{
     removeSelectedConnector(removeButton.dataset.removeConnector || '');
   });
   newConnectorShortcut.addEventListener('click', jumpToConnectorRequest);
+  closeConnectorRequestButton?.addEventListener('click', closeConnectorRequestDrawer);
+  cancelConnectorRequestButton?.addEventListener('click', closeConnectorRequestDrawer);
+  connectorRequestBackdrop?.addEventListener('mousedown', (event) => {
+    if (event.target === connectorRequestBackdrop) closeConnectorRequestDrawer();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && connectorRequestBackdrop && !connectorRequestBackdrop.hidden) {
+      event.preventDefault();
+      closeConnectorRequestDrawer();
+    }
+  });
   clientName.addEventListener('input', resetInvitePreview);
   workflowName.addEventListener('input', resetInvitePreview);
   refreshButton.addEventListener('click', loadConnections);

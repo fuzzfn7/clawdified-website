@@ -151,7 +151,7 @@ test('invite UI and OAuth starts preserve invite context back to the client conn
   assert.match(adminDashboard, /connectorChecklist/);
   assert.match(adminDashboard, /connectorPicker/);
   assert.match(adminDashboard, /Add connector/);
-  assert.match(adminDashboard, /Not listed\? Request connector build/);
+  assert.match(adminDashboard, /Connector not listed\? Request new connector build/);
   assert.doesNotMatch(adminDashboard, /Public connector pages/);
   assert.doesNotMatch(adminDashboard, /name="connectors" value="gmail" checked/);
   assert.match(adminDashboard, /Create client connector page/);
