@@ -127,9 +127,13 @@ test('connector request endpoint can dispatch to an optional Hermes builder webh
   }
 });
 
-test('admin dashboard includes a connector request agent panel for unsupported tools', () => {
+test('admin dashboard clearly separates unsupported connector build requests from client invites', () => {
   const dashboard = readFileSync(new URL('../admin/connections/index.html', import.meta.url), 'utf8');
-  assert.match(dashboard, /Connector request agent/);
+  assert.match(dashboard, /Unsupported connector/);
+  assert.match(dashboard, /Request a new connector build/);
+  assert.match(dashboard, /does not create a client link until the connector adapter is built and deployed/);
+  assert.match(dashboard, /Save build request/);
+  assert.doesNotMatch(dashboard, /Need another app\?/);
   assert.match(dashboard, /ROUTE_CONNECTOR_REQUESTS\s*=\s*'\/api\/admin\/connector-requests'/);
   assert.match(dashboard, /connectorRequestForm/);
   assert.match(dashboard, /CompanyCam/);
