@@ -31,7 +31,7 @@ async function apiJson(path, options = {}) {
 function runSummaryMessage(result) {
   if (result?.demoReplay) {
     const total = Number(result?.run?.total || result?.summary?.demoLeadsQueued || 20);
-    return `Demo replay started — ${total} saved lead examples will appear over the next few minutes. No live Serper/BrowserBase/Apollo/Hunter providers will run.`;
+    return `Demo replay started — ${total} Clawdified example lead rows will appear in the sheet.`;
   }
   const summary = result?.summary || result?.run?.summary || result?.run || {};
   const runId = result?.run?.runId || result?.run?.id || result?.runId || "Run";
@@ -165,160 +165,335 @@ function mapProvider(provider) {
 }
 
 const PUBLIC_DEMO_MODE = true;
+// CLAWDIFIED_LEAD_AGENT_SHOWROOM_20260528
+
+const CLAWDIFIED_AGENT_PROFILE = {
+  name: "Clawdified lead agent",
+  company: "Clawdified",
+  offer: "practical AI agents that remove repetitive employee workflows for Knoxville-area SMBs",
+  icp: "owner-led service businesses around $1M-$10M with visible follow-up, intake, scheduling, reviews, estimating, or admin handoff pain",
+  geography: "Knoxville + East Tennessee",
+  targetTitles: "Owner, Founder, President, CEO, General Manager, Operations Manager, Office Manager, Practice Manager",
+  output: "a scored lead sheet with decision-maker, contact routes, source evidence, fit reasons, risks, and a suggested first-call angle",
+};
 
 const DEFAULT_RUN_CRITERIA = {
-  website: "",
-  icp: "",
-  geography: "",
-  searchQuery: "",
-  geographySegment: "",
-  targetWeeklyVolume: 3,
+  searchQuery: CLAWDIFIED_AGENT_PROFILE.icp,
+  geographySegment: CLAWDIFIED_AGENT_PROFILE.geography,
+  targetWeeklyVolume: 20,
 };
 
-const PUBLIC_DEMO_PROVIDERS = {
-  // REAL_LEADGEN_PUBLIC_SEARCH_20260526 — providers reflect the capped real public-search wrapper, not a static sample/demo source.
-  publicWrapper: { provider: "Capped public search wrapper", purpose: "Server-side input validation + Serper Places/Search call + capped public result shaping", configured: true, required: true, status: "real public search; no external writes" },
-  serper: { provider: "Serper (public search)", purpose: "Real public business/web search server-side", configured: true, required: true, status: "capped at 10 inspected / 3 returned" },
-  leadgenMcp: { provider: "LeadGen MCP", purpose: "Private-run handoff (paid reveal, person-level enrichment, outreach)", configured: true, required: false, status: "gated behind approval" },
-  apollo: { provider: "Apollo reveal", purpose: "Paid direct-contact enrichment", configured: false, required: false, status: "disabled in public search" },
+const CLAWDIFIED_SHOWROOM_PROVIDERS = {
+  publicDiscovery: { provider: "Public discovery", purpose: "Find companies that match the Clawdified ICP", configured: true, required: true, status: "ready" },
+  websiteReview: { provider: "Website + source review", purpose: "Read public pages and keep source evidence attached", configured: true, required: true, status: "ready" },
+  apollo: { provider: "Apollo direct-contact enrichment", purpose: "Direct email/phone enrichment for qualified demo rows", configured: true, required: true, status: "ready" },
+  sheetScoring: { provider: "Lead sheet scoring", purpose: "Apply fit gates, missing-field labels, and outreach angle notes", configured: true, required: true, status: "ready" },
 };
 
-function publicDemoStatus(criteria = {}, latestResult = null) {
+function nextShowroomRunIso(reference = new Date()) {
+  const next = new Date(reference);
+  next.setDate(next.getDate() + 1);
+  next.setHours(9, 0, 0, 0);
+  return next.toISOString();
+}
+
+function publicDemoStatus(_criteria = {}, latestRun = null) {
   return {
-    status: "idle",
+    status: "ready",
     demoReplayMode: true,
-    mode: "public_capped_real_search",
+    mode: "clawdified_agent_showroom",
     scheduler: {
-      enabled: false,
-      criteria: {
-        searchQuery: criteria.icp || "inferred from visitor website",
-        geographySegment: criteria.geography || "inferred from visitor website",
-        targetWeeklyVolume: 3,
-      },
+      enabled: true,
+      intervalMinutes: 1440,
+      nextRunAt: nextShowroomRunIso(),
+      lastRun: latestRun ? { runAt: latestRun.rawAt || latestRun.runAt || new Date().toISOString(), runId: latestRun.runId || "clawdified-showroom" } : null,
+      criteria: { ...DEFAULT_RUN_CRITERIA },
+      overlapSkips: 0,
     },
-    providerStatus: PUBLIC_DEMO_PROVIDERS,
+    providerStatus: CLAWDIFIED_SHOWROOM_PROVIDERS,
     publicSafety: {
       external_writes_enabled: false,
-      paid_reveal_enabled: false,
+      paid_reveal_enabled: true,
       auto_send_enabled: false,
     },
-    lastRun: latestResult ? { runAt: new Date().toISOString(), runId: latestResult.run_id } : null,
+    lastRun: latestRun ? { runAt: latestRun.rawAt || latestRun.runAt || new Date().toISOString(), runId: latestRun.runId || "clawdified-showroom" } : null,
+    showroomProfile: CLAWDIFIED_AGENT_PROFILE,
   };
 }
 
-function leadgenTrialToRawLead(lead, result, index) {
-  const business = result?.business_read || {};
-  const rawDomain = lead.domain || lead.website || lead.company || "";
-  const companyDomain = String(rawDomain).replace(/^https?:\/\//, "").replace(/^www\./, "").split(/[\s/?#]/)[0];
-  const sources = Array.isArray(lead.sourceProof) ? lead.sourceProof : [];
-  return {
-    id: lead.id || `public-search-${index + 1}`,
-    companyName: lead.company || `Public search result ${index + 1}`,
-    website: companyDomain.includes(".") ? `https://${companyDomain}` : (lead.website || ""),
-    domain: companyDomain,
-    personName: lead.contactName || "Gated until private run",
-    title: lead.title || "Public business contact",
-    roleCategory: lead.roleGroup || "Operations",
-    departmentFunction: lead.roleGroup || "Operations",
-    industryCategory: lead.industry || "Local services",
-    geographySegment: lead.geography || business.geography || "Target area",
-    city: String(lead.geography || business.geography || "").split(",")[0],
-    state: String(lead.geography || business.geography || "").split(",")[1]?.trim() || "",
-    phone: lead.phone || "",
-    phoneType: lead.phone && /^\(?\d/.test(lead.phone) ? "company" : "",
-    linkedInUrl: String(lead.linkedin || "").startsWith("linkedin") ? `https://${lead.linkedin}` : (lead.linkedin || ""),
-    email: "",
-    contactConfidence: lead.status === "save" ? "HIGH" : "MEDIUM",
-    emailConfidence: "UNVERIFIED",
-    clawdifiedCompatibilityScore: Number(lead.score || 0),
-    tamFitScore: Number(lead.score || 0),
-    compatibilityConfidence: lead.status === "save" ? "HIGH" : "MEDIUM",
-    isFinishedEnrichedLead: lead.status === "save",
-    researchStatus: lead.status === "save" ? "finished" : "incomplete",
-    missingFields: Array.isArray(lead.risks) ? lead.risks.join("; ") : "Direct email/personal phone gated until private run",
-    scoreReasons: Array.isArray(lead.reasons) ? lead.reasons.join("; ") : "Capped public search fit",
-    scoreRisks: Array.isArray(lead.risks) ? lead.risks.join("; ") : "Person-level fit must be verified privately before outreach",
-    workflowPainClues: lead.outreachAngle || business.lead_angle || "Follow-up, scheduling, and review workflows",
-    reasonToContact: lead.outreachAngle || "Likely repeatable workflow pain",
-    suggestedFirstCallAngle: lead.outreachAngle || "Ask where follow-up and admin work slows revenue.",
-    suggestedAgent: lead.recommendedAgent || `${business.name || "Visitor"} outreach follow-up agent`,
-    sourceUrls: sources.join("; "),
-    sourceQuality: "PUBLIC_CAPPED_REAL_SEARCH",
-    providerSourceUsed: "Serper Places/Search (server-side); capped public results",
-    publicDemoForVisitor: true,
-    visitorCompanyName: business.name || "the visitor's company",
-    visitorWebsite: business.website || "",
-    visitorOffer: business.offer || "the visitor's offer",
-    visitorIcp: business.icp || "",
-    visitorGeography: business.geography || "",
-    icpSource: business.icp_source || "visitor_input",
-    geographySource: business.geography_source || "visitor_input",
-    customerFitHeadline: lead.customerFitHeadline || `Potential customer for ${business.name || "the visitor"}`,
-    customerFitSummary: lead.customerFitSummary || lead.reasons?.[0] || "Public-safe customer fit preview",
-    customerFitWhy: lead.customerFitWhy || lead.outreachAngle || "Customer fit should be reviewed before outreach.",
-    estimatedRevenueBand: "UNVERIFIED",
-    revenueConfidence: "UNVERIFIED",
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    lastEnrichedDate: new Date().toISOString(),
-  };
-}
+const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
+  {
+    id: "clawdified-demo-001",
+    companyName: "Volunteer Mechanical Services",
+    domain: "volunteer-mechanical.demo",
+    website: "https://clawdified.com/demo/volunteer-mechanical",
+    personName: "Chris Morgan",
+    title: "Owner",
+    roleCategory: "Owner",
+    departmentFunction: "Leadership",
+    industryCategory: "HVAC / mechanical service",
+    estimatedRevenueBand: "$1M-$10M",
+    geographySegment: "Knoxville, TN",
+    city: "Knoxville",
+    state: "TN",
+    email: "chris@volunteer-mechanical.demo",
+    emailConfidence: "HIGH",
+    phone: "(865) 555-0141",
+    phoneType: "direct",
+    contactConfidence: "HIGH",
+    linkedInUrl: "https://linkedin.com/in/demo-chris-morgan",
+    clawdifiedCompatibilityScore: 92,
+    tamFitScore: 92,
+    compatibilityConfidence: "HIGH",
+    isFinishedEnrichedLead: true,
+    researchStatus: "finished",
+    missingFields: "",
+    scoreReasons: "Owner-led service company; recurring calls and estimates; enough operational complexity for a practical AI agent; likely ROI at $600/mo",
+    scoreRisks: "Confirm current call volume before pitching",
+    workflowPainClues: "Missed-call follow-up; estimate reminders; post-job review requests",
+    reasonToContact: "Ask where service-call follow-up or estimate chasing falls through the cracks.",
+    suggestedFirstCallAngle: "Open on missed-call and estimate follow-up the office should not have to chase manually.",
+    suggestedAgent: "Missed-call + estimate follow-up agent",
+    sourceUrls: "Company website; Google Business profile; LinkedIn profile",
+    sourceQuality: "SHOWROOM_DEMO_PROFILED",
+    providerSourceUsed: "Public discovery; website review; Apollo direct-contact enrichment; sheet scoring",
+    emailVerificationStatus: "DEMO_VERIFIED",
+    revenueConfidence: "DIRECTIONAL",
+  },
+  {
+    id: "clawdified-demo-002",
+    companyName: "Smoky Mountain Roof & Exterior",
+    domain: "smoky-mountain-roof.demo",
+    website: "https://clawdified.com/demo/smoky-mountain-roof",
+    personName: "Dana Hill",
+    title: "Operations Manager",
+    roleCategory: "Operations Manager",
+    departmentFunction: "Operations",
+    industryCategory: "Roofing / exterior services",
+    estimatedRevenueBand: "$1M-$10M",
+    geographySegment: "Maryville, TN",
+    city: "Maryville",
+    state: "TN",
+    email: "dana@smoky-mountain-roof.demo",
+    emailConfidence: "HIGH",
+    phone: "(865) 555-0187",
+    phoneType: "mobile",
+    contactConfidence: "HIGH",
+    linkedInUrl: "https://linkedin.com/in/demo-dana-hill",
+    facebookUrl: "https://facebook.com/demo-smoky-mountain-roof",
+    clawdifiedCompatibilityScore: 89,
+    tamFitScore: 89,
+    compatibilityConfidence: "HIGH",
+    isFinishedEnrichedLead: true,
+    researchStatus: "finished",
+    missingFields: "",
+    scoreReasons: "Seasonal lead flow; quote follow-up matters; reviews and job updates create repeat admin work",
+    scoreRisks: "Confirm they are not franchise/corporate-only",
+    workflowPainClues: "Storm-season quote requests; inspection scheduling; review follow-up",
+    reasonToContact: "Lead with the cost of slow inspection/quote follow-up after busy weather weeks.",
+    suggestedFirstCallAngle: "Ask how many roof inspection requests go cold before someone follows up twice.",
+    suggestedAgent: "Inspection request + quote follow-up agent",
+    sourceUrls: "Company website; review profile; Facebook page",
+    sourceQuality: "SHOWROOM_DEMO_PROFILED",
+    providerSourceUsed: "Public discovery; website review; Apollo direct-contact enrichment; sheet scoring",
+    emailVerificationStatus: "DEMO_VERIFIED",
+    revenueConfidence: "DIRECTIONAL",
+  },
+  {
+    id: "clawdified-demo-003",
+    companyName: "Knoxville CleanPro",
+    domain: "knoxville-cleanpro.demo",
+    website: "https://clawdified.com/demo/knoxville-cleanpro",
+    personName: "Alex Rivera",
+    title: "Office Manager",
+    roleCategory: "Office Manager",
+    departmentFunction: "Administration",
+    industryCategory: "Commercial cleaning",
+    estimatedRevenueBand: "$1M-$10M",
+    geographySegment: "Knoxville, TN",
+    city: "Knoxville",
+    state: "TN",
+    email: "alex@knoxville-cleanpro.demo",
+    emailConfidence: "HIGH",
+    phone: "(865) 555-0166",
+    phoneType: "direct",
+    contactConfidence: "HIGH",
+    linkedInUrl: "https://linkedin.com/in/demo-alex-rivera",
+    clawdifiedCompatibilityScore: 84,
+    tamFitScore: 84,
+    compatibilityConfidence: "HIGH",
+    isFinishedEnrichedLead: true,
+    researchStatus: "finished",
+    missingFields: "",
+    scoreReasons: "Recurring-service buyer; scheduling and quality check-ins repeat; office/admin role is likely close to the pain",
+    scoreRisks: "Validate number of recurring accounts before outreach",
+    workflowPainClues: "Recurring schedule changes; quality check-ins; quote renewal reminders",
+    reasonToContact: "Position a small agent around recurring-client check-ins and schedule-change cleanup.",
+    suggestedFirstCallAngle: "Ask whether client check-ins and schedule changes are still handled manually.",
+    suggestedAgent: "Recurring client check-in agent",
+    sourceUrls: "Company website; local listing; contact page",
+    sourceQuality: "SHOWROOM_DEMO_PROFILED",
+    providerSourceUsed: "Public discovery; website review; Apollo direct-contact enrichment; sheet scoring",
+    emailVerificationStatus: "DEMO_VERIFIED",
+    revenueConfidence: "DIRECTIONAL",
+  },
+  {
+    id: "clawdified-demo-004",
+    companyName: "Cedar Ridge Property Management",
+    domain: "cedar-ridge-property.demo",
+    website: "https://clawdified.com/demo/cedar-ridge-property",
+    personName: "Morgan Lee",
+    title: "President",
+    roleCategory: "President",
+    departmentFunction: "Leadership",
+    industryCategory: "Property management",
+    estimatedRevenueBand: "$1M-$10M",
+    geographySegment: "East Tennessee",
+    city: "Knoxville",
+    state: "TN",
+    email: "morgan@cedar-ridge-property.demo",
+    emailConfidence: "HIGH",
+    phone: "(865) 555-0199",
+    phoneType: "mobile",
+    contactConfidence: "HIGH",
+    linkedInUrl: "https://linkedin.com/in/demo-morgan-lee",
+    facebookUrl: "https://facebook.com/demo-cedar-ridge-property",
+    clawdifiedCompatibilityScore: 87,
+    tamFitScore: 87,
+    compatibilityConfidence: "HIGH",
+    isFinishedEnrichedLead: true,
+    researchStatus: "finished",
+    missingFields: "",
+    scoreReasons: "Owner-led operations; tenant/vendor coordination is repetitive; likely high value from faster follow-up",
+    scoreRisks: "Confirm portfolio size and owner decision path",
+    workflowPainClues: "Maintenance intake; owner updates; vendor follow-up; tenant reminders",
+    reasonToContact: "Frame the agent as a maintenance-intake and vendor-follow-up helper.",
+    suggestedFirstCallAngle: "Ask how maintenance requests move from tenant message to vendor completion today.",
+    suggestedAgent: "Maintenance intake + vendor follow-up agent",
+    sourceUrls: "Company website; contact page; public profile",
+    sourceQuality: "SHOWROOM_DEMO_PROFILED",
+    providerSourceUsed: "Public discovery; website review; Apollo direct-contact enrichment; sheet scoring",
+    emailVerificationStatus: "DEMO_VERIFIED",
+    revenueConfidence: "DIRECTIONAL",
+  },
+  {
+    id: "clawdified-demo-005",
+    companyName: "Blue Ridge Dental Group",
+    domain: "blue-ridge-dental.demo",
+    website: "https://clawdified.com/demo/blue-ridge-dental",
+    personName: "Taylor Brooks",
+    title: "Practice Manager",
+    roleCategory: "Practice Manager",
+    departmentFunction: "Operations",
+    industryCategory: "Dental practice",
+    estimatedRevenueBand: "$1M-$10M",
+    geographySegment: "Knoxville, TN",
+    city: "Knoxville",
+    state: "TN",
+    email: "taylor@blue-ridge-dental.demo",
+    emailConfidence: "HIGH",
+    phone: "(865) 555-0154",
+    phoneType: "direct",
+    contactConfidence: "HIGH",
+    linkedInUrl: "https://linkedin.com/in/demo-taylor-brooks",
+    clawdifiedCompatibilityScore: 81,
+    tamFitScore: 81,
+    compatibilityConfidence: "HIGH",
+    isFinishedEnrichedLead: true,
+    researchStatus: "finished",
+    missingFields: "",
+    scoreReasons: "Appointment-heavy practice; front-office reminders and review requests repeat; practice manager is a strong operator target",
+    scoreRisks: "Check whether they already use a full patient communication suite",
+    workflowPainClues: "Appointment reminders; missed-call routing; review requests; recall follow-up",
+    reasonToContact: "Lead with front-office workload around missed calls, reminders, and reviews.",
+    suggestedFirstCallAngle: "Ask whether the front desk still handles recall/reminder follow-up manually.",
+    suggestedAgent: "Appointment reminder + review follow-up agent",
+    sourceUrls: "Company website; reviews; contact page",
+    sourceQuality: "SHOWROOM_DEMO_PROFILED",
+    providerSourceUsed: "Public discovery; website review; Apollo direct-contact enrichment; sheet scoring",
+    emailVerificationStatus: "DEMO_VERIFIED",
+    revenueConfidence: "DIRECTIONAL",
+  },
+];
 
-function publicRunFromResult(result) {
+function buildClawdifiedShowroomLeads() {
   const now = new Date().toISOString();
-  const leads = result?.leads || [];
+  return CLAWDIFIED_SHOWROOM_RAW_LEADS.map((lead) => mapLead({
+    ...lead,
+    createdAt: lead.createdAt || now,
+    updatedAt: now,
+    lastEnrichedDate: now,
+    publicDemoForVisitor: true,
+    visitorCompanyName: "Clawdified",
+    visitorWebsite: "clawdified.com",
+    visitorOffer: CLAWDIFIED_AGENT_PROFILE.offer,
+    visitorIcp: CLAWDIFIED_AGENT_PROFILE.icp,
+    visitorGeography: CLAWDIFIED_AGENT_PROFILE.geography,
+  }));
+}
+
+function buildClawdifiedShowroomRun(leads = CLAWDIFIED_SHOWROOM_RAW_LEADS) {
+  const now = new Date().toISOString();
   return {
     runAt: now,
     completedAt: now,
-    trigger: "Capped public search",
-    runId: result?.run_id || "public-search",
-    searchGeographySegment: result?.business_read?.geography || "(inferred or not set)",
-    searchQuery: result?.business_read?.search_target_term || result?.business_read?.icp || "visitor ICP",
-    rawCompaniesFound: leads.length,
-    peopleFound: 0,
-    finishedEnrichedLeadsAdded: leads.filter((lead) => lead.status === "save").length,
-    incompleteAccountsSaved: leads.filter((lead) => lead.status !== "save").length,
-    duplicatesMerged: 0,
-    sourcesUsed: ["Serper Places/Search (server-side)", "LeadGen MCP gated path (private runs only)"],
+    trigger: "Manual Clawdified agent run",
+    runId: `clawdified-demo-${Date.now().toString(36)}`,
+    searchGeographySegment: CLAWDIFIED_AGENT_PROFILE.geography,
+    searchQuery: CLAWDIFIED_AGENT_PROFILE.icp,
+    rawCompaniesFound: 34,
+    companiesExcluded: 18,
+    peopleFound: 9,
+    finishedEnrichedLeadsAdded: leads.length,
+    incompleteAccountsSaved: 2,
+    duplicatesMerged: 3,
+    sourcesUsed: ["Public discovery", "Website/source review", "Apollo direct-contact enrichment", "Lead sheet scoring"],
     providerFailuresBlocks: [],
-    emailCoverage: "0% — direct email gated until private run",
-    phoneCoverage: "public business phone only when listed publicly",
-    linkedInCoverage: "gated until private run",
-    contactPageCoverage: "public website / contact page only",
-    revenueConfidenceCoverage: "0% — paid reveal disabled",
-    sourceCoverageSummary: result?.status === "shortfall"
-      ? (result.shortfall_reason || "Capped public search found no strong real leads. No fake rows were padded in.")
-      : "Capped real public search; no Apollo reveal, no provider spend beyond Serper, no outbound send.",
-    shortfall: result?.status === "shortfall" ? (result.shortfall_reason || "no strong leads") : "private run required for direct contacts",
-    mainSkipReasons: [],
+    emailCoverage: `${leads.length}/${leads.length} direct demo routes`,
+    phoneCoverage: `${leads.length}/${leads.length} direct/mobile demo routes`,
+    linkedInCoverage: `${leads.length}/${leads.length} profile routes`,
+    facebookCoverage: "2/5 business/social routes",
+    instagramOrOtherSocialCoverage: "0/5 optional routes",
+    contactPageCoverage: "5/5 company routes",
+    revenueConfidenceCoverage: "directional demo bands",
+    linkedInSocialCoverage: `${leads.length}/${leads.length} profile routes`,
+    duplicateIdCount: 0,
+    badSourceCount: 0,
+    badSourceDomains: [],
+    sourceCoverageSummary: "Showroom run: the Clawdified lead agent scores ICP fit, finds decision-makers, checks contact routes, and returns a usable sheet for Wesley to review.",
+    shortfall: "None in showroom run",
+    mainSkipReasons: ["Competitors/software vendors removed", "No owner/operator signal removed", "No clear workflow pain removed"],
   };
 }
 
-const PublicDemoIntake = ({ runCriteria, onRunCriteriaChange, onRunNow, runBusy }) => (
+const ClawdifiedShowroomBrief = ({ onRunNow, runBusy }) => (
   <div className="card" style={{ margin: "12px 12px 0", borderColor: "var(--accent-border)", background: "linear-gradient(180deg, var(--accent-soft), var(--surface))" }}>
     <div className="card-head" style={{ alignItems: "flex-start" }}>
       <div className="icon"><Icon name="target" /></div>
       <div style={{ flex: 1 }}>
-        <h3 className="card-title">Public lead search intake</h3>
-        <div className="card-sub">Enter your business website. ICP and search area are optional — leave them blank and the wrapper infers them. This runs a capped real public search (Serper) server-side and returns up to 3 real public-safe leads. No Apollo reveal, no outbound sends, direct contacts gated.</div>
+        <h3 className="card-title">Clawdified lead agent showroom</h3>
+        <div className="card-sub">This is the Clawdified lead agent already configured for Wesley’s offer, ICP, and review workflow. Click Run agent to populate the example sheet — visitors do not enter their own website or get a free lead list here.</div>
       </div>
-      <span className="status-pill ok"><span className="d" />Capped real public search</span>
+      <span className="status-pill ok"><span className="d" />Demo live</span>
     </div>
     <div className="card-body automation-control-body">
-      <div className="manual-control-grid" style={{ gridTemplateColumns: "1fr 1.35fr .9fr auto" }}>
-        <div className="input-row" style={{ margin: 0 }}>
-          <div className="input-label">Business website</div>
-          <input type="url" placeholder="https://yourcompany.com" value={runCriteria.website || ""} onChange={(event) => onRunCriteriaChange?.("website", event.target.value)} />
+      <div className="kpi-row automation-kpis">
+        <div className="kpi">
+          <div className="kpi-label">Agent knows</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>Clawdified</div>
+          <div className="kpi-foot">offer + price logic</div>
         </div>
-        <div className="input-row" style={{ margin: 0 }}>
-          <div className="input-label">Ideal customer / ICP <span style={{ color: "var(--fg-3)", fontWeight: 500 }}>(optional)</span></div>
-          <input type="text" placeholder="e.g. dental offices, manufacturers, property managers" value={runCriteria.icp || ""} onChange={(event) => onRunCriteriaChange?.("icp", event.target.value)} />
+        <div className="kpi">
+          <div className="kpi-label">ICP</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>$1M-$10M SMBs</div>
+          <div className="kpi-foot">workflow-heavy operators</div>
         </div>
-        <div className="input-row" style={{ margin: 0 }}>
-          <div className="input-label">Search area <span style={{ color: "var(--fg-3)", fontWeight: 500 }}>(optional)</span></div>
-          <input type="text" placeholder="e.g. Knoxville, East TN, Southeast" value={runCriteria.geography || ""} onChange={(event) => onRunCriteriaChange?.("geography", event.target.value)} />
+        <div className="kpi">
+          <div className="kpi-label">Output</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>Lead sheet</div>
+          <div className="kpi-foot">fit, routes, angle</div>
         </div>
-        <button className="btn btn-primary" style={{ alignSelf: "end", height: 34 }} onClick={() => onRunNow?.({ mode: "public_demo" })} disabled={runBusy}><Icon name="refresh" />{runBusy ? "Running…" : "Run lead search"}</button>
+        <button className="btn btn-primary" style={{ alignSelf: "center", height: 34 }} onClick={() => onRunNow?.({ mode: "showroom" })} disabled={runBusy}><Icon name="refresh" />{runBusy ? "Running…" : "Run agent"}</button>
       </div>
     </div>
   </div>
@@ -390,7 +565,7 @@ const App = () => {
 
   async function refresh() {
     if (PUBLIC_DEMO_MODE) {
-      setProviders(Object.values(PUBLIC_DEMO_PROVIDERS).map(mapProvider));
+      setProviders(Object.values(CLAWDIFIED_SHOWROOM_PROVIDERS).map(mapProvider));
       setAgentStatus((prev) => prev || publicDemoStatus(runCriteria));
       setError("");
       setLoading(false);
@@ -422,35 +597,19 @@ const App = () => {
     setError("");
 
     if (PUBLIC_DEMO_MODE) {
-      const website = String(runCriteria.website || "").trim();
-      const icp = String(runCriteria.icp || "").trim();
-      const geography = String(runCriteria.geography || "").trim();
-      if (!website) {
-        setRunNotice("");
-        setError("Enter a business website. ICP and search area are optional — the public search will infer them from that site.");
-        setRunBusy(false);
-        return;
-      }
-      setRunNotice("Running capped real public search (Serper, server-side)…");
+      setRunNotice("Running the Clawdified lead agent showroom…");
       try {
-        const result = await apiJson("/api/leadgen-trial", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ website, icp, geography }),
-        });
-        const mappedLeads = (result.leads || []).map((lead, index) => mapLead(leadgenTrialToRawLead(lead, result, index)));
-        const mappedRun = mapRun(publicRunFromResult(result));
+        await new Promise((resolve) => window.setTimeout(resolve, 450));
+        const mappedLeads = buildClawdifiedShowroomLeads();
+        const mappedRun = mapRun(buildClawdifiedShowroomRun(mappedLeads));
+        setProviders(Object.values(CLAWDIFIED_SHOWROOM_PROVIDERS).map(mapProvider));
         setLeads(mappedLeads);
         setRuns([mappedRun]);
-        setAgentStatus(publicDemoStatus({ ...runCriteria, website, icp, geography }, result));
+        setAgentStatus(publicDemoStatus(runCriteria, mappedRun));
         setSelectedId(mappedLeads[0]?.id || null);
         setPanelOpen(false);
         setPage("sheet");
-        if (result.status === "shortfall") {
-          setRunNotice(`Capped public search ran but did not return strong real leads. ${result.shortfall_reason || "Refine ICP or search area and try again."} No fake sample rows were padded in.`);
-        } else {
-          setRunNotice(`Capped real public search complete: ${mappedLeads.length} public-safe lead${mappedLeads.length === 1 ? "" : "s"} in the Lead Sheet UI. Direct contacts and outreach stay gated.`);
-        }
+        setRunNotice(`Clawdified showroom run complete: ${mappedLeads.length} example leads populated with ICP fit, contact routes, source evidence, and first-call angles.`);
       } catch (err) {
         setRunNotice("");
         setError(err.message || String(err));
@@ -472,7 +631,7 @@ const App = () => {
           setError(blockedReason);
           return;
         }
-        const approved = window.confirm("Run Agent now? This may spend Serper/BrowserBase/Apollo/Hunter credits and write to the lead sheet. Apollo is fallback-only.");
+        const approved = window.confirm("Run Agent now? This may use configured enrichment credits and write to the lead sheet. Apollo enrichment is enabled for qualified rows.");
         if (!approved) {
           setRunNotice("");
           return;
@@ -503,7 +662,7 @@ const App = () => {
       setRuns([]);
       setSelectedId(null);
       setPanelOpen(false);
-      setRunNotice("Sheet cleared. Enter a business website to run the capped real public search again; ICP and search area can stay blank for inference.");
+      setRunNotice("Demo sheet cleared. Click Run agent to replay the Clawdified lead-agent example rows.");
       setError("");
       return;
     }
@@ -544,7 +703,7 @@ const App = () => {
   function exportCsv() {
     if (PUBLIC_DEMO_MODE) {
       if (!leads.length) {
-        setRunNotice("Run the public lead search before exporting rows.");
+        setRunNotice("Run the Clawdified demo agent before exporting rows.");
         return;
       }
       const header = ["fit_score", "company", "domain", "contact", "title", "industry", "geography", "phone", "social", "suggested_agent", "outreach_angle"];
@@ -565,22 +724,17 @@ const App = () => {
       const blob = new Blob([csv], { type: "text/csv" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
-      a.download = "clawdified-lead-growth-public-search.csv";
+      a.download = "clawdified-lead-growth-demo.csv";
       a.click();
       URL.revokeObjectURL(a.href);
-      setRunNotice("Public-search CSV exported from the capped real search rows.");
+      setRunNotice("Clawdified demo CSV exported from the showroom lead rows.");
       return;
     }
     window.location.href = "/api/export/csv";
   }
 
   function updateRunCriteria(key, value) {
-    setRunCriteria((prev) => {
-      const next = { ...prev, [key]: value };
-      if (key === "icp") next.searchQuery = value;
-      if (key === "geography") next.geographySegment = value;
-      return next;
-    });
+    setRunCriteria((prev) => ({ ...prev, [key]: value }));
   }
 
 
@@ -628,7 +782,7 @@ const App = () => {
       <Rail page={page} setPage={setPage} leads={leads} />
       <div className="main">
         <Topbar page={page} agent={agentLabel} onRunNow={runNow} runBusy={runBusy} onClearDemo={clearDemoSheet} clearBusy={clearBusy} showDemoClear={PUBLIC_DEMO_MODE || Boolean(agentStatus?.demoReplayMode)} demoClearDisabledReason={demoClearDisabledReason} onExport={exportCsv} searchQuery={searchQuery} onSearchChange={setSearchQuery} liveRunDisabledReason={liveRunDisabledReason} />
-        {PUBLIC_DEMO_MODE && <PublicDemoIntake runCriteria={runCriteria} onRunCriteriaChange={updateRunCriteria} onRunNow={runNow} runBusy={runBusy} />}
+        {PUBLIC_DEMO_MODE && <ClawdifiedShowroomBrief onRunNow={runNow} runBusy={runBusy} />}
         {runNotice && <div className="callout" style={{ margin: 12, color: "var(--ok)" }}><Icon name="check" className="ico" />{runNotice}</div>}
         {error && <div className="callout" style={{ margin: 12, color: "var(--err)" }}><Icon name="info" className="ico" />{error}</div>}
         {page === "sheet" && <ContactSheet leads={visibleLeads} onSelect={onSelect} selectedId={selectedId} searchQuery={searchQuery} lastRunAt={lastRunAt} />}

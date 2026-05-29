@@ -118,7 +118,7 @@ function buildAgentChatAnswer(question, context = {}) {
     : "the background schedule is off, so it should only run when you manually confirm it";
   const providerLine = requiredMissing.length
     ? `The thing I would check first is provider setup: ${requiredMissing.map((p) => p.name).join(", ")} ${requiredMissing.length === 1 ? "is" : "are"} missing.`
-    : "The required public-first path looks available from the status I can see.";
+    : "The lead agent stack is showing ready: discovery, source review, Apollo enrichment, and sheet scoring are all available in this demo state.";
 
   if (!q) {
     return "Ask me like you would ask a normal operator. I can explain Clawdified, the lead rules, the provider flow, or what the current sheet/run status means.";
@@ -141,11 +141,11 @@ function buildAgentChatAnswer(question, context = {}) {
   }
 
   if (agentQuestionHas(q, [/how.*(system|it|agent).*work/, /workflow/, /process/, /pipeline/, /how.*find/, /how.*search/])) {
-    return `The system works public-first. It searches for target companies, checks whether they look like a real Clawdified prospect, finds one strong person at that company, then searches public contact/profile paths before using paid fallback data. Serper handles search/source discovery, BrowserBase checks public website pages, Hunter can add email confidence, and Apollo is only a last fallback for missing direct email or phone. Right now I see ${totals.total} sheet row(s): ${totals.finished} finished and ${totals.incomplete} still incomplete.`;
+    return `The system starts from Clawdified’s ICP, finds companies with likely operational/admin pain, checks source evidence, identifies one strong decision-maker, enriches contact routes, then writes only scored rows to the sheet. Apollo enrichment is enabled in this demo state, but outreach still stays review-only. Right now I see ${totals.total} sheet row(s): ${totals.finished} finished and ${totals.incomplete} still incomplete.`;
   }
 
   if (agentQuestionHas(q, [/provider/, /serper/, /browserbase/, /apollo/, /hunter/, /api key/, /configured/, /missing key/])) {
-    return `Provider path: Serper first, BrowserBase second, Hunter optional, Apollo last-resort fallback. ${providerLine}
+    return `Provider readiness: ${providerLine}
 
 Current status: ${agentProviderSummary(providers)}`;
   }
@@ -164,7 +164,7 @@ Current sheet: ${totals.total} total row(s), ${totals.finished} finished, ${tota
   }
 
   if (agentQuestionHas(q, [/\b(run|start|launch)\b.*\b(agent|search|lead|job)\b/, /\bkick off\b/, /^run\b/, /^start\b/, /^launch\b/])) {
-    return "I can talk through the run, but I will not start provider work from chat. Use the Run agent button so the app can show the confirmation and avoid surprise Serper, BrowserBase, Apollo, or Hunter spend.";
+    return "I can talk through the run, but I will not start work from chat. Use the Run agent button so the app can show the visible run state and populate the sheet intentionally.";
   }
 
   if (agentQuestionHas(q, [/outreach/, /send/, /email/, /dm/, /sms/, /call/, /message/, /linkedin message/, /facebook message/])) {
@@ -236,7 +236,7 @@ const AgentChatPanel = ({ agentStatus, providers = [], runs = [], leads = [], ru
         <div>
           <div className="agent-chat-kicker"><span className="pulse" /> Agent chat</div>
           <h3>{compact ? "Ask the lead agent" : "Talk to the Clawdified agent"}</h3>
-          <p>{compact ? "Normal Q&A about the agent and current state." : "Ask in plain English. I’ll answer from the Clawdified spec, the workflow rules, and the live app state — without sending outreach or starting provider spend from chat."}</p>
+          <p>{compact ? "Normal Q&A about the agent and current state." : "Ask in plain English. I’ll answer from the Clawdified offer, ICP rules, current sheet, and run health — without sending outreach from chat."}</p>
         </div>
         <div className="agent-chat-status-stack">
           <span className={"status-pill " + (agentStatus?.currentRunId ? "degraded" : agentStatus?.scheduler?.enabled ? "ok" : "blocked")}><span className="d" />{agentStatusLabel(agentStatus)}</span>
@@ -313,7 +313,7 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
       <div className="page-header">
         <div>
           <h1 className="page-title">Agent</h1>
-          <div className="page-sub">Schedule, manual-run criteria, provider order, and a compact agent chat panel.</div>
+          <div className="page-sub">Schedule, Clawdified ICP knowledge, provider readiness, and a compact agent chat panel.</div>
         </div>
       </div>
 
@@ -366,52 +366,39 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
             <div className="card-head">
               <div className="icon"><Icon name="target" /></div>
               <div>
-                <h3 className="card-title">Capped public search intake, provider order, and guardrails</h3>
-                <div className="card-sub">Same actual agent control area, with website/ICP/geography inputs for the real public-search wrapper.</div>
+                <h3 className="card-title">Clawdified lead agent knowledge</h3>
+                <div className="card-sub">This demo is already configured for Clawdified. It shows what the finished agent workspace looks like — not a public intake form.</div>
               </div>
             </div>
             <div className="card-body automation-control-body">
-              <div className="manual-control-grid">
-                <div className="input-row" style={{ margin: 0 }}>
-                  <div className="input-label">Business website</div>
-                  <div className="input-desc">Used by the capped public-search wrapper before rows populate.</div>
-                  <input type="url" placeholder="https://yourcompany.com" value={runCriteria.website || ""} onChange={(event) => onRunCriteriaChange?.("website", event.target.value)} />
+              <div className="kpi-row automation-kpis">
+                <div className="kpi">
+                  <div className="kpi-label">Knows the offer</div>
+                  <div className="kpi-value" style={{ fontSize: 18 }}>AI agents for SMB workflows</div>
+                  <div className="kpi-foot">follow-up, intake, reviews, admin</div>
                 </div>
-                <div className="input-row" style={{ margin: 0 }}>
-                  <div className="input-label">Ideal customer / ICP</div>
-                  <div className="input-desc">Who should the agent score against?</div>
-                  <input type="text" placeholder="Owner-led service businesses needing follow-up" value={runCriteria.icp || runCriteria.searchQuery || ""} onChange={(event) => onRunCriteriaChange?.("icp", event.target.value)} />
+                <div className="kpi">
+                  <div className="kpi-label">Scores for</div>
+                  <div className="kpi-value" style={{ fontSize: 18 }}>$600/mo ROI</div>
+                  <div className="kpi-foot">saved labor or recovered leads</div>
                 </div>
-                <div className="input-row" style={{ margin: 0 }}>
-                  <div className="input-label">Search area</div>
-                  <div className="input-desc">City, region, or service area.</div>
-                  <input type="text" placeholder="Knoxville, TN" value={runCriteria.geography || runCriteria.geographySegment || ""} onChange={(event) => onRunCriteriaChange?.("geography", event.target.value)} />
+                <div className="kpi">
+                  <div className="kpi-label">Targets</div>
+                  <div className="kpi-value" style={{ fontSize: 18 }}>Owner/operators</div>
+                  <div className="kpi-foot">decision-makers near the pain</div>
                 </div>
-              </div>
-
-              <div className="automation-provider-strip">
-                {providerRows.map((provider, index) => (
-                  <div key={provider.name} className="provider-mini-card">
-                    <span>{index + 1}</span>
-                    <div>
-                      <b>{provider.name}{provider.required ? "" : " fallback"}</b>
-                      <small>{provider.configured ? "Configured" : "Missing"}</small>
-                    </div>
-                  </div>
-                ))}
               </div>
 
               <div className="agent-do-list compact">
-                <div><Icon name="check" />Find target companies and public contact routes from capped search.</div>
-                <div><Icon name="check" />Write public-safe rows with evidence and missing-field labels.</div>
-                <div><Icon name="x" />No outreach, private sources, or invented contact data.</div>
+                <div><Icon name="check" />Looks for local service SMBs with repetitive follow-up, scheduling, intake, review, estimate, or admin handoff work.</div>
+                <div><Icon name="check" />Prioritizes owners, presidents, operators, office managers, practice managers, and general managers.</div>
+                <div><Icon name="check" />Returns fit score, source evidence, contact routes, risk notes, and a first-call angle for Wesley to review.</div>
+                <div><Icon name="x" />Does not ask visitors for their website or expose an internal provider route list in the public demo.</div>
               </div>
 
-              {criteria.searchQuery && (
-                <div className="scheduled-criteria-mini">
-                  <b>Scheduled criteria snapshot:</b> {criteria.geographySegment || "Broad U.S."} · target {criteria.targetWeeklyVolume || "—"} · {compactText(criteria.searchQuery, 130)}
-                </div>
-              )}
+              <div className="scheduled-criteria-mini">
+                <b>Loaded ICP:</b> {criteria.geographySegment || "Knoxville + East Tennessee"} · target {criteria.targetWeeklyVolume || 20} · {compactText(criteria.searchQuery || "Owner-led service businesses with repetitive follow-up/admin work", 150)}
+              </div>
             </div>
           </div>
         </div>
@@ -540,7 +527,7 @@ const AgentHealth = ({ providers, runs, agentStatus }) => {
                 </div>
                 <span className={"status-pill " + p.status}>
                   <span className="d" />
-                  {p.status === "ok" ? "Configured" : p.status === "degraded" ? "Fallback/missing" : "Blocked"}
+                  {p.status === "ok" ? "Configured" : p.status === "degraded" ? "Needs review" : "Blocked"}
                 </span>
               </div>
             ))}
@@ -552,7 +539,7 @@ const AgentHealth = ({ providers, runs, agentStatus }) => {
             <div className="icon"><Icon name="history" /></div>
             <div>
               <h3 className="card-title">Recent runs</h3>
-              <div className="card-sub">Manual capped searches and scheduled autonomous runs in one place.</div>
+              <div className="card-sub">Manual showroom runs and scheduled agent runs in one place.</div>
             </div>
           </div>
           <div>
