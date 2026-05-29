@@ -81,14 +81,14 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   const uiBundle = [main, agentPages, appShell, insights, panel, leadGrowthIndex, agentsIndex].join('\n');
 
   assert.match(main, /CLAWDIFIED_LEAD_AGENT_SHOWROOM_20260528/);
-  assert.match(main, /Clawdified lead agent showroom/);
+  assert.match(main, /Lead Growth preview/);
   assert.match(main, /CLAWDIFIED_SHOWROOM_PROVIDERS/);
   assert.match(main, /Contact enrichment/);
   assert.match(main, /buildClawdifiedShowroomLeads/);
-  assert.match(agentPages, /Clawdified lead agent demo state/);
+  assert.match(agentPages, /Lead Growth preview state/);
   assert.match(agentPages, /Provider readiness/);
-  assert.match(agentsIndex, /Clawdified sample agent/);
-  assert.match(agentsIndex, /visitors do not enter their own website here/);
+  assert.match(agentsIndex, /Run the preview to see fit notes, contact routes, source proof, and outreach angles land in the sheet/);
+  assert.match(agentsIndex, /Built around your process/);
   assert.match(retiredEndpoint, /Retired public lead-search endpoint/);
 
   // The public UI should not expose the old intake/search-tool framing or private targeting/pricing recipe.
@@ -100,6 +100,12 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   assert.doesNotMatch(uiBundle, /Run lead search/);
   assert.doesNotMatch(uiBundle, /\/api\/leadgen-trial/);
   assert.doesNotMatch(uiBundle, /capped real public search/i);
+  assert.doesNotMatch(uiBundle, /capped real runs/i);
+  assert.doesNotMatch(uiBundle, /visitors do not enter/i);
+  assert.doesNotMatch(uiBundle, /This space stays simple/i);
+  assert.doesNotMatch(uiBundle, /section stays honest/i);
+  assert.doesNotMatch(uiBundle, /fake draft flow/i);
+  assert.doesNotMatch(uiBundle, /public-safe/i);
   assert.doesNotMatch(uiBundle, /provider order/i);
   assert.doesNotMatch(uiBundle, /Fallback\/missing/i);
   assert.doesNotMatch(uiBundle, /Apollo|Serper|Browserbase/i);

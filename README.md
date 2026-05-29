@@ -16,7 +16,7 @@ Canonical local source for `clawdified.com` Cloudflare Pages static site and Pag
 - SEO & Competitor Intelligence embeds an anonymized sample operator workspace at `/agents/seo-competitor/`, built from the Accurate Pest-style SEO competitor analysis data. It should demonstrate what the finished agent output looks like for a company that already has business context loaded: business/site read, why competitors outrank it, search coverage, competitors, action plan, evidence rows, and a full Ask Agent section. Do not revert it to a visitor website-input scanner or fabricate instant analysis for arbitrary domains.
 - Workflow & Proposal Automation is still coming soon. The `/agents/` card may be clicked, but it must show only a centered coming-soon holding panel — no sample/proposal UI, no draft preview, and no unrelated embedded interface until the real workflow UI is ready.
 - The `/agents/` systems card section should stay copy-light and prospect-facing: no internal rationale/explainer headline above the cards; cards should read like a compact menu.
-- The `/agents/` hero subcopy should stay short/human; avoid product-taxonomy phrases like “three realistic product surfaces,” “capped,” “redacted,” or “approval-gated” in the main visible pitch.
+- The `/agents/` hero and preview notes must speak to prospects, not to Wesley or internal QA. Avoid product-taxonomy / implementation-defense phrases like “capped,” “redacted,” “public-safe,” “visitors do not enter,” “this section stays honest,” “fake draft flow,” or “actual UI embedded here” in visible public copy.
 
 ## Current connector status
 

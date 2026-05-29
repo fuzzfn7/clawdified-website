@@ -141,7 +141,7 @@ function buildAgentChatAnswer(question, context = {}) {
   }
 
   if (agentQuestionHas(q, [/how.*(system|it|agent).*work/, /workflow/, /process/, /pipeline/, /how.*find/, /how.*search/])) {
-    return `The system starts from a private Clawdified profile, checks source evidence, attaches contact routes, and writes review-ready rows to the sheet. The public demo keeps qualification details redacted, and outreach stays review-only. Right now I see ${totals.total} sheet row(s): ${totals.finished} finished and ${totals.incomplete} still incomplete.`;
+    return `The system starts from a loaded fit profile, checks source evidence, attaches contact routes, and writes review-ready rows to the sheet. Outreach stays review-only. Right now I see ${totals.total} sheet row(s): ${totals.finished} finished and ${totals.incomplete} still incomplete.`;
   }
 
   if (agentQuestionHas(q, [/provider/, /data source/, /connection/, /api key/, /configured/, /missing key/])) {
@@ -363,8 +363,8 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
             <div className="card-head">
               <div className="icon"><Icon name="target" /></div>
               <div>
-                <h3 className="card-title">Clawdified lead agent demo state</h3>
-                <div className="card-sub">This demo is preconfigured with private rules redacted. It shows what the finished workspace feels like — not a public intake form or playbook leak.</div>
+                <h3 className="card-title">Lead Growth preview state</h3>
+                <div className="card-sub">This shows what the finished workspace feels like: fit notes, source notes, contact routes, and next-step angles in one sheet.</div>
               </div>
             </div>
             <div className="card-body automation-control-body">
@@ -372,17 +372,17 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
                 <div className="kpi">
                   <div className="kpi-label">Knows the offer</div>
                   <div className="kpi-value" style={{ fontSize: 18 }}>Workflow agents</div>
-                  <div className="kpi-foot">public-safe summary only</div>
+                  <div className="kpi-foot">business summary loaded</div>
                 </div>
                 <div className="kpi">
                   <div className="kpi-label">Uses</div>
-                  <div className="kpi-value" style={{ fontSize: 18 }}>Private rules</div>
-                  <div className="kpi-foot">redacted from public demo</div>
+                  <div className="kpi-value" style={{ fontSize: 18 }}>Fit rules</div>
+                  <div className="kpi-foot">set during onboarding</div>
                 </div>
                 <div className="kpi">
                   <div className="kpi-label">Shows</div>
-                  <div className="kpi-value" style={{ fontSize: 18 }}>Sample rows</div>
-                  <div className="kpi-foot">safe example data</div>
+                  <div className="kpi-value" style={{ fontSize: 18 }}>Example rows</div>
+                  <div className="kpi-foot">ready for review</div>
                 </div>
               </div>
 
@@ -390,11 +390,11 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
                 <div><Icon name="check" />Shows how a private lead run can become a review-ready sheet without publishing the scoring recipe.</div>
                 <div><Icon name="check" />Keeps the public demo focused on the workflow output, not exact target titles or thresholds.</div>
                 <div><Icon name="check" />Returns sample fit labels, source notes, contact routes, and a safe next-step angle for review.</div>
-                <div><Icon name="x" />Does not ask visitors for their website or expose an internal provider route list in the public demo.</div>
+                <div><Icon name="x" />Does not send outreach from this preview.</div>
               </div>
 
               <div className="scheduled-criteria-mini">
-                <b>Private demo profile loaded:</b> qualification details are redacted on the public site.
+                <b>Fit profile loaded:</b> service businesses with follow-up-heavy workflows.
               </div>
             </div>
           </div>

@@ -185,8 +185,8 @@ const DEFAULT_RUN_CRITERIA = {
 const CLAWDIFIED_SHOWROOM_PROVIDERS = {
   publicDiscovery: { provider: "Public discovery", purpose: "Load prequalified demo accounts for the showroom", configured: true, required: true, status: "ready" },
   websiteReview: { provider: "Website + source review", purpose: "Read public pages and keep source evidence attached", configured: true, required: true, status: "ready" },
-  contactEnrichment: { provider: "Contact enrichment", purpose: "Attach public-safe contact-route examples for demo rows", configured: true, required: true, status: "ready" },
-  sheetScoring: { provider: "Lead sheet scoring", purpose: "Apply public-safe review labels and next-step notes", configured: true, required: true, status: "ready" },
+  contactEnrichment: { provider: "Contact enrichment", purpose: "Attach contact-route examples for demo rows", configured: true, required: true, status: "ready" },
+  sheetScoring: { provider: "Lead sheet scoring", purpose: "Apply review labels and next-step notes", configured: true, required: true, status: "ready" },
 };
 
 function nextShowroomRunIso(reference = new Date()) {
@@ -247,13 +247,13 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Public demo row with private fit notes redacted.",
-    scoreRisks: "Private review notes redacted in public demo.",
-    workflowPainClues: "Private workflow notes redacted.",
-    reasonToContact: "Review private notes before outreach.",
-    suggestedFirstCallAngle: "Use the approved private prompt for outreach review.",
+    scoreReasons: "Matches the loaded fit profile and has enough source proof for review.",
+    scoreRisks: "Confirm timing, current process, and whether the owner wants outreach.",
+    workflowPainClues: "Likely handoffs across calls, email, estimates, and follow-up tasks.",
+    reasonToContact: "Review source notes before outreach.",
+    suggestedFirstCallAngle: "Open with the workflow handoff angle and keep the first message short.",
     suggestedAgent: "Workflow support agent",
-    sourceUrls: "Public source record; private notes redacted",
+    sourceUrls: "Company site; contact page; public profile",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
     providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
     emailVerificationStatus: "DEMO_VERIFIED",
@@ -286,13 +286,13 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Public demo row with private fit notes redacted.",
-    scoreRisks: "Private review notes redacted in public demo.",
-    workflowPainClues: "Private workflow notes redacted.",
-    reasonToContact: "Review private notes before outreach.",
-    suggestedFirstCallAngle: "Use the approved private prompt for outreach review.",
+    scoreReasons: "Matches the loaded fit profile and has enough source proof for review.",
+    scoreRisks: "Confirm timing, current process, and whether the owner wants outreach.",
+    workflowPainClues: "Likely handoffs across calls, email, estimates, and follow-up tasks.",
+    reasonToContact: "Review source notes before outreach.",
+    suggestedFirstCallAngle: "Open with the workflow handoff angle and keep the first message short.",
     suggestedAgent: "Workflow support agent",
-    sourceUrls: "Public source record; private notes redacted",
+    sourceUrls: "Company site; contact page; public profile",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
     providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
     emailVerificationStatus: "DEMO_VERIFIED",
@@ -324,13 +324,13 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Public demo row with private fit notes redacted.",
-    scoreRisks: "Private review notes redacted in public demo.",
-    workflowPainClues: "Private workflow notes redacted.",
-    reasonToContact: "Review private notes before outreach.",
-    suggestedFirstCallAngle: "Use the approved private prompt for outreach review.",
+    scoreReasons: "Matches the loaded fit profile and has enough source proof for review.",
+    scoreRisks: "Confirm timing, current process, and whether the owner wants outreach.",
+    workflowPainClues: "Likely handoffs across calls, email, estimates, and follow-up tasks.",
+    reasonToContact: "Review source notes before outreach.",
+    suggestedFirstCallAngle: "Open with the workflow handoff angle and keep the first message short.",
     suggestedAgent: "Workflow support agent",
-    sourceUrls: "Public source record; private notes redacted",
+    sourceUrls: "Company site; contact page; public profile",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
     providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
     emailVerificationStatus: "DEMO_VERIFIED",
@@ -363,13 +363,13 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Public demo row with private fit notes redacted.",
-    scoreRisks: "Private review notes redacted in public demo.",
-    workflowPainClues: "Private workflow notes redacted.",
-    reasonToContact: "Review private notes before outreach.",
-    suggestedFirstCallAngle: "Use the approved private prompt for outreach review.",
+    scoreReasons: "Matches the loaded fit profile and has enough source proof for review.",
+    scoreRisks: "Confirm timing, current process, and whether the owner wants outreach.",
+    workflowPainClues: "Likely handoffs across calls, email, estimates, and follow-up tasks.",
+    reasonToContact: "Review source notes before outreach.",
+    suggestedFirstCallAngle: "Open with the workflow handoff angle and keep the first message short.",
     suggestedAgent: "Workflow support agent",
-    sourceUrls: "Public source record; private notes redacted",
+    sourceUrls: "Company site; contact page; public profile",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
     providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
     emailVerificationStatus: "DEMO_VERIFIED",
@@ -401,13 +401,13 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Public demo row with private fit notes redacted.",
-    scoreRisks: "Private review notes redacted in public demo.",
-    workflowPainClues: "Private workflow notes redacted.",
-    reasonToContact: "Review private notes before outreach.",
-    suggestedFirstCallAngle: "Use the approved private prompt for outreach review.",
+    scoreReasons: "Matches the loaded fit profile and has enough source proof for review.",
+    scoreRisks: "Confirm timing, current process, and whether the owner wants outreach.",
+    workflowPainClues: "Likely handoffs across calls, email, estimates, and follow-up tasks.",
+    reasonToContact: "Review source notes before outreach.",
+    suggestedFirstCallAngle: "Open with the workflow handoff angle and keep the first message short.",
     suggestedAgent: "Workflow support agent",
-    sourceUrls: "Public source record; private notes redacted",
+    sourceUrls: "Company site; contact page; public profile",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
     providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
     emailVerificationStatus: "DEMO_VERIFIED",
@@ -470,22 +470,22 @@ const ClawdifiedShowroomBrief = ({ onRunNow, runBusy }) => (
     <div className="card-head" style={{ alignItems: "flex-start" }}>
       <div className="icon"><Icon name="target" /></div>
       <div style={{ flex: 1 }}>
-        <h3 className="card-title">Clawdified lead agent showroom</h3>
-        <div className="card-sub">This is a public-safe Clawdified lead-agent showroom with the private qualification rules redacted. Click Run agent to populate the example sheet — visitors do not enter their own website or get a free lead list here.</div>
+        <h3 className="card-title">Lead Growth preview</h3>
+        <div className="card-sub">Run the agent to watch a lead sheet fill with fit notes, contact routes, source proof, and outreach angles.</div>
       </div>
       <span className="status-pill ok"><span className="d" />Demo live</span>
     </div>
     <div className="card-body automation-control-body">
       <div className="kpi-row automation-kpis">
         <div className="kpi">
-          <div className="kpi-label">Agent knows</div>
+          <div className="kpi-label">Agent profile</div>
           <div className="kpi-value" style={{ fontSize: 18 }}>Clawdified</div>
-          <div className="kpi-foot">private setup</div>
+          <div className="kpi-foot">loaded for preview</div>
         </div>
         <div className="kpi">
           <div className="kpi-label">Profile</div>
-          <div className="kpi-value" style={{ fontSize: 18 }}>Private rules</div>
-          <div className="kpi-foot">redacted for public demo</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>Fit rules</div>
+          <div className="kpi-foot">set during onboarding</div>
         </div>
         <div className="kpi">
           <div className="kpi-label">Output</div>
@@ -608,7 +608,7 @@ const App = () => {
         setSelectedId(mappedLeads[0]?.id || null);
         setPanelOpen(false);
         setPage("sheet");
-        setRunNotice(`Clawdified showroom run complete: ${mappedLeads.length} sample leads populated with public-safe fit labels, contact routes, source notes, and review angles.`);
+        setRunNotice(`Lead Growth preview complete: ${mappedLeads.length} example leads populated with fit labels, contact routes, source notes, and review angles.`);
       } catch (err) {
         setRunNotice("");
         setError(err.message || String(err));
@@ -630,7 +630,7 @@ const App = () => {
           setError(blockedReason);
           return;
         }
-        const approved = window.confirm("Run Agent now? This may use configured private enrichment settings and write to the lead sheet. Public demo details stay redacted.");
+        const approved = window.confirm("Run Agent now? This may use configured enrichment settings and write to the lead sheet.");
         if (!approved) {
           setRunNotice("");
           return;
