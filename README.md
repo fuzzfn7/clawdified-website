@@ -160,11 +160,12 @@ Optional:
 - `CONNECTOR_BUILDER_WEBHOOK_URL` — optional Hermes/webhook endpoint to notify when the admin dashboard stores a new unsupported connector request.
 - `CONNECTOR_BUILDER_WEBHOOK_TOKEN` — optional bearer token sent only server-to-server to the connector-builder webhook; never shown in dashboard responses.
 
-## Current production verification — 2026-05-26
+## Current production verification — 2026-05-29
 
 Verified with Cloudflare/Wrangler smoke checks:
 
 - Cloudflare Pages project: `clawdifiedweb` (`Git Provider: No`; production deploys are manual Wrangler deploys from a clean committed archive).
+- Live SEO & Competitor Intelligence route: `https://clawdified.com/agents/seo-competitor/` — returns the anonymized sample workspace marker `SEO_COMPETITOR_SAMPLE_WORKSPACE_20260528`, not a visitor website-input scanner.
 - Live admin dashboard page: `https://clawdified.com/admin/connections/` — returns `200` and includes the New Invite connector picker (`connectorPicker`, `Add connector`, and `Nothing is preselected`) instead of the old prechecked Gmail/four-checkbox block.
 - Latest Pages preview URL is visible in `wrangler pages deployment list --project-name=clawdifiedweb`; do not hardcode it here because each documentation-only redeploy creates a new immutable preview URL.
 - Live `/api/admin/connections` rejects unauthenticated requests with `401`.
