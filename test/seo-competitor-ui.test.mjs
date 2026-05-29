@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const html = readFileSync(new URL('../agents/seo-competitor/index.html', import.meta.url), 'utf8');
+const showroomHtml = readFileSync(new URL('../agents/index.html', import.meta.url), 'utf8');
 
 test('SEO competitor page is an anonymized sample workspace, not a fake visitor-input scanner', () => {
   assert.match(html, /SEO_COMPETITOR_SAMPLE_WORKSPACE_20260528/);
@@ -35,4 +36,19 @@ test('SEO competitor page has clickable workspace sections and full Ask Agent se
   assert.doesNotMatch(html, /class="ask-fab"/);
   assert.doesNotMatch(html, /<aside class="ask-panel"/);
   assert.doesNotMatch(html, /openAsk\(\)/);
+});
+
+test('agents showroom describes SEO as a preloaded sample, not a website paste flow', () => {
+  assert.match(showroomHtml, /Review the SEO sample workspace/i);
+  assert.match(showroomHtml, /Preloaded sample analysis showing coverage, competitors, fixes, evidence, and the Ask Agent view/i);
+  assert.match(showroomHtml, /SEO & Competitor Intelligence sample embedded here/i);
+  assert.match(showroomHtml, /preloaded, anonymized analysis workspace/i);
+  assert.match(showroomHtml, /not a blank website scanner/i);
+  assert.match(showroomHtml, /Open sample workspace/i);
+
+  assert.doesNotMatch(showroomHtml, /Paste a website inside the workspace below/i);
+  assert.doesNotMatch(showroomHtml, /Add a website\. The scan fills/i);
+  assert.doesNotMatch(showroomHtml, /Preview SEO scan/i);
+  assert.doesNotMatch(showroomHtml, /What website should the SEO agent analyze\?/i);
+  assert.doesNotMatch(showroomHtml, /The preview summarizes what it sees/i);
 });
