@@ -72,7 +72,7 @@
         "latitude": 35.9606,
         "longitude": -83.9207
       },
-      "priceRange": "$$",
+      "priceRange": "Custom quote",
       "serviceType": [
         "AI Agent Development",
         "Custom Workflow Automation",
@@ -1346,7 +1346,7 @@ footer{
   <div class="n-links">
     <a href="#problem">The problem</a>
     <a href="#solution">The shift</a>
-    <a href="#pricing">Pricing</a>
+    <a href="#pricing">Build options</a>
     <a href="/agents/" class="btn btn-ghost agents-nav-cta">Try live agents</a>
     <a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener" class="btn btn-hi">Book a call</a>
   </div>
@@ -1394,7 +1394,7 @@ footer{
       <div class="chd-quad chd-q-tr">
         <div class="chd-quad-lbl">judgment calls</div>
         <div class="chd-reviews">
-          <div class="chd-rev"><span class="chd-stars">pricing</span><span class="chd-rev-meta">apply rule</span></div>
+          <div class="chd-rev"><span class="chd-stars">scope</span><span class="chd-rev-meta">apply rule</span></div>
           <div class="chd-rev"><span class="chd-stars chd-stars-dim">exception</span><span class="chd-rev-meta">flag owner</span></div>
           <div class="chd-rev"><span class="chd-stars">fit score</span><span class="chd-rev-meta">rank it</span></div>
         </div>
@@ -1476,7 +1476,7 @@ footer{
           <ul class="chd-agent-steps">
             <li><span class="chd-step-dot"></span>read notes, photos, and files</li>
             <li><span class="chd-step-dot"></span>check your workflow rules</li>
-            <li><span class="chd-step-dot"></span>pull pricing and past examples</li>
+            <li><span class="chd-step-dot"></span>pull approved examples</li>
             <li><span class="chd-step-dot"></span>draft the client-ready output</li>
           </ul>
         </div>
@@ -1548,7 +1548,7 @@ footer{
         <div class="chd-node-lbl">guardrails</div>
         <div class="chd-node-art chd-art-guard">
           <div class="chd-art-rule"><span class="chd-rule-k">if</span> info missing <span class="chd-rule-tag">ask</span></div>
-          <div class="chd-art-rule"><span class="chd-rule-k">if</span> &gt; $5k <span class="chd-rule-tag">flag</span></div>
+          <div class="chd-art-rule"><span class="chd-rule-k">if</span> large scope <span class="chd-rule-tag">flag</span></div>
           <div class="chd-art-rule"><span class="chd-rule-k">if</span> ready <span class="chd-rule-tag">draft</span></div>
         </div>
         <div class="chd-node-cap">we set what it can do, draft, or escalate</div>
@@ -1798,7 +1798,7 @@ if (typeof navigator !== 'undefined' && navigator.modelContext) {
 
   navigator.modelContext.registerTool({
     name: "get_services",
-    description: "Get detailed information about Clawdified AI agent services and pricing tiers",
+    description: "Get detailed information about Clawdified AI agent services and build options",
     inputSchema: { type: "object", properties: {}, required: [] },
     execute: async function() {
       return {

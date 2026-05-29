@@ -118,7 +118,7 @@ function buildAgentChatAnswer(question, context = {}) {
     : "the background schedule is off, so it should only run when you manually confirm it";
   const providerLine = requiredMissing.length
     ? `The thing I would check first is provider setup: ${requiredMissing.map((p) => p.name).join(", ")} ${requiredMissing.length === 1 ? "is" : "are"} missing.`
-    : "The lead agent stack is showing ready: discovery, source review, Apollo enrichment, and sheet scoring are all available in this demo state.";
+    : "The lead agent stack is showing ready: discovery, source review, contact enrichment, and sheet scoring are all available in this demo state.";
 
   if (!q) {
     return "Ask me like you would ask a normal operator. I can explain Clawdified, the lead rules, the provider flow, or what the current sheet/run status means.";
@@ -129,32 +129,29 @@ function buildAgentChatAnswer(question, context = {}) {
   }
 
   if (agentQuestionHas(q, [/\bwhat do you do\b/, /\bwho are you\b/, /\bwhat are you\b/, /\byour job\b/, /\byour purpose\b/])) {
-    return "I help keep Clawdified’s lead sheet honest. I look for companies that likely have repetitive admin or follow-up work, pick one real decision-maker per company, find direct contact paths with evidence, and keep weak rows labeled instead of pretending they are finished leads. I can explain the workflow from here, but I do not send outreach on my own.";
+    return "I help show what a lead sheet looks like after a private run. I load sample accounts, attach contact routes and source notes, and keep review labels visible instead of pretending every row is finished. I can explain the demo workflow, but I do not send outreach on my own.";
   }
 
   if (agentQuestionHas(q, [/clawdified/, /about (the )?(brand|company|business)/, /what do you know about/])) {
-    return "Clawdified sells practical AI agents for repetitive employee workflows — things like follow-up, intake, admin coordination, and review or lead-management busywork. The normal entry point is around $600/month for one useful agent, then pricing scales when the workflow needs more integrations or has bigger business impact. This demo is the prospecting system that helps find companies likely to feel that pain and afford that kind of fix.";
+    return "Clawdified builds practical AI workflow agents for small businesses. This public demo shows the lead-sheet experience at a high level while keeping private qualification logic and commercial details off the public site.";
   }
 
   if (agentQuestionHas(q, [/good lead/, /qualified lead/, /identify.*lead/, /qualif/, /criteria/, /fit score/, /good prospect/, /what makes.*lead/, /how.*lead/])) {
-    return "A good Clawdified lead is not just a random business with an email. I’m looking for a company around the $1M-$10M range, usually 5-100 employees, with signs of repetitive operational work — service calls, admin follow-up, scheduling, customer intake, estimates, review requests, or back-office handoffs. Then I need one high-standing person, like an owner, founder, CEO, president, VP, director, operations lead, general manager, or office/admin manager. To count it as finished, the row needs direct email, direct or mobile phone, source evidence, attempted social/profile searches, and a clear reason Clawdified can help.";
+    return "The private scoring recipe is not shown in the public demo. At a high level, the agent looks for accounts where a workflow agent could be relevant, checks source evidence, attaches contact routes, and labels rows for human review instead of exposing the full qualification playbook.";
   }
 
   if (agentQuestionHas(q, [/how.*(system|it|agent).*work/, /workflow/, /process/, /pipeline/, /how.*find/, /how.*search/])) {
-    return `The system starts from Clawdified’s ICP, finds companies with likely operational/admin pain, checks source evidence, identifies one strong decision-maker, enriches contact routes, then writes only scored rows to the sheet. Apollo enrichment is enabled in this demo state, but outreach still stays review-only. Right now I see ${totals.total} sheet row(s): ${totals.finished} finished and ${totals.incomplete} still incomplete.`;
+    return `The system starts from a private Clawdified profile, checks source evidence, attaches contact routes, and writes review-ready rows to the sheet. The public demo keeps qualification details redacted, and outreach stays review-only. Right now I see ${totals.total} sheet row(s): ${totals.finished} finished and ${totals.incomplete} still incomplete.`;
   }
 
-  if (agentQuestionHas(q, [/provider/, /serper/, /browserbase/, /apollo/, /hunter/, /api key/, /configured/, /missing key/])) {
+  if (agentQuestionHas(q, [/provider/, /data source/, /connection/, /api key/, /configured/, /missing key/])) {
     return `Provider readiness: ${providerLine}
 
 Current status: ${agentProviderSummary(providers)}`;
   }
 
   if (agentQuestionHas(q, [/schedule/, /cadence/, /next run/, /automatic/, /autonomous/, /heartbeat/])) {
-    const target = criteria.targetWeeklyVolume || context.runCriteria?.targetWeeklyVolume || "not set";
-    const geography = criteria.geographySegment || context.runCriteria?.geographySegment || "Broad U.S.";
-    const query = compactText(criteria.searchQuery || context.runCriteria?.searchQuery, 160);
-    return `Schedule-wise, ${scheduleLine}. The visible run target is ${target} finished row(s), geography is ${geography}, and the query is: ${query}. Manual runs still go through the Run agent button so paid providers do not fire silently from chat.`;
+    return `Schedule-wise, ${scheduleLine}. The public demo keeps run targets, markets, and search details redacted. Manual runs still go through the Run agent button so nothing fires silently from chat.`;
   }
 
   if (agentQuestionHas(q, [/latest/, /last run/, /recent run/, /history/, /result/, /status/, /blocked/, /stuck/, /shortfall/, /why.*zero/, /why.*missing/, /quality/])) {
@@ -236,7 +233,7 @@ const AgentChatPanel = ({ agentStatus, providers = [], runs = [], leads = [], ru
         <div>
           <div className="agent-chat-kicker"><span className="pulse" /> Agent chat</div>
           <h3>{compact ? "Ask the lead agent" : "Talk to the Clawdified agent"}</h3>
-          <p>{compact ? "Normal Q&A about the agent and current state." : "Ask in plain English. I’ll answer from the Clawdified offer, ICP rules, current sheet, and run health — without sending outreach from chat."}</p>
+          <p>{compact ? "Normal Q&A about the agent and current state." : "Ask in plain English. I’ll answer from the public demo state, current sheet, and run health — without exposing private qualification rules or sending outreach from chat."}</p>
         </div>
         <div className="agent-chat-status-stack">
           <span className={"status-pill " + (agentStatus?.currentRunId ? "degraded" : agentStatus?.scheduler?.enabled ? "ok" : "blocked")}><span className="d" />{agentStatusLabel(agentStatus)}</span>
@@ -265,7 +262,7 @@ const AgentChatPanel = ({ agentStatus, providers = [], runs = [], leads = [], ru
             }
           }}
           rows={compact ? 2 : 3}
-          placeholder="Ask naturally — e.g. what makes a good Clawdified lead?"
+          placeholder="Ask naturally — e.g. how does this demo work?"
           disabled={isThinking}
         />
         <div className="agent-chat-composer-actions">
@@ -305,7 +302,7 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
   const [schedulerUiEnabled, setSchedulerUiEnabled] = React.useState(Boolean(scheduler.enabled));
   React.useEffect(() => { setSchedulerUiEnabled(Boolean(scheduler.enabled)); }, [scheduler.enabled]);
   const schedulerNextRun = nextMorningNine();
-  const schedulerLeadTarget = 20;
+  const schedulerLeadTarget = "Sample";
   const schedulerStatusText = schedulerUiEnabled ? "Autonomous Scheduler enabled" : "Autonomous Scheduler disabled";
 
   return (
@@ -313,7 +310,7 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
       <div className="page-header">
         <div>
           <h1 className="page-title">Agent</h1>
-          <div className="page-sub">Schedule, Clawdified ICP knowledge, provider readiness, and a compact agent chat panel.</div>
+          <div className="page-sub">Schedule, public demo state, provider readiness, and a compact agent chat panel.</div>
         </div>
       </div>
 
@@ -341,9 +338,9 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
                   <div className="kpi-foot">next morning</div>
                 </div>
                 <div className="kpi">
-                  <div className="kpi-label">Lead target</div>
+                  <div className="kpi-label">Demo output</div>
                   <div className="kpi-value">{schedulerLeadTarget}</div>
-                  <div className="kpi-foot">finished leads</div>
+                  <div className="kpi-foot">public sample rows</div>
                 </div>
               </div>
               <div className="toggle-row" style={{ paddingTop: 0 }}>
@@ -366,38 +363,38 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
             <div className="card-head">
               <div className="icon"><Icon name="target" /></div>
               <div>
-                <h3 className="card-title">Clawdified lead agent knowledge</h3>
-                <div className="card-sub">This demo is already configured for Clawdified. It shows what the finished agent workspace looks like — not a public intake form.</div>
+                <h3 className="card-title">Clawdified lead agent demo state</h3>
+                <div className="card-sub">This demo is preconfigured with private rules redacted. It shows what the finished workspace feels like — not a public intake form or playbook leak.</div>
               </div>
             </div>
             <div className="card-body automation-control-body">
               <div className="kpi-row automation-kpis">
                 <div className="kpi">
                   <div className="kpi-label">Knows the offer</div>
-                  <div className="kpi-value" style={{ fontSize: 18 }}>AI agents for SMB workflows</div>
-                  <div className="kpi-foot">follow-up, intake, reviews, admin</div>
+                  <div className="kpi-value" style={{ fontSize: 18 }}>Workflow agents</div>
+                  <div className="kpi-foot">public-safe summary only</div>
                 </div>
                 <div className="kpi">
-                  <div className="kpi-label">Scores for</div>
-                  <div className="kpi-value" style={{ fontSize: 18 }}>$600/mo ROI</div>
-                  <div className="kpi-foot">saved labor or recovered leads</div>
+                  <div className="kpi-label">Uses</div>
+                  <div className="kpi-value" style={{ fontSize: 18 }}>Private rules</div>
+                  <div className="kpi-foot">redacted from public demo</div>
                 </div>
                 <div className="kpi">
-                  <div className="kpi-label">Targets</div>
-                  <div className="kpi-value" style={{ fontSize: 18 }}>Owner/operators</div>
-                  <div className="kpi-foot">decision-makers near the pain</div>
+                  <div className="kpi-label">Shows</div>
+                  <div className="kpi-value" style={{ fontSize: 18 }}>Sample rows</div>
+                  <div className="kpi-foot">safe example data</div>
                 </div>
               </div>
 
               <div className="agent-do-list compact">
-                <div><Icon name="check" />Looks for local service SMBs with repetitive follow-up, scheduling, intake, review, estimate, or admin handoff work.</div>
-                <div><Icon name="check" />Prioritizes owners, presidents, operators, office managers, practice managers, and general managers.</div>
-                <div><Icon name="check" />Returns fit score, source evidence, contact routes, risk notes, and a first-call angle for Wesley to review.</div>
+                <div><Icon name="check" />Shows how a private lead run can become a review-ready sheet without publishing the scoring recipe.</div>
+                <div><Icon name="check" />Keeps the public demo focused on the workflow output, not exact target titles or thresholds.</div>
+                <div><Icon name="check" />Returns sample fit labels, source notes, contact routes, and a safe next-step angle for review.</div>
                 <div><Icon name="x" />Does not ask visitors for their website or expose an internal provider route list in the public demo.</div>
               </div>
 
               <div className="scheduled-criteria-mini">
-                <b>Loaded ICP:</b> {criteria.geographySegment || "Knoxville + East Tennessee"} · target {criteria.targetWeeklyVolume || 20} · {compactText(criteria.searchQuery || "Owner-led service businesses with repetitive follow-up/admin work", 150)}
+                <b>Private demo profile loaded:</b> qualification details are redacted on the public site.
               </div>
             </div>
           </div>

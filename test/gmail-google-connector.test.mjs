@@ -378,7 +378,7 @@ test('admin email-password login sets a session cookie accepted by connection AP
 
 test('admin dashboard and connector page expose the intended non-technical flow', () => {
   const dashboard = readFileSync(new URL('../admin/connections/index.html', import.meta.url), 'utf8');
-  assert.match(dashboard, /Client API connections/i);
+  assert.match(dashboard, /Client connections/i);
   assert.match(dashboard, /Sign in/i);
   assert.match(dashboard, /Facebook \+ Instagram/i);
   assert.match(dashboard, /Copy agent package/i);

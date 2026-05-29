@@ -31,7 +31,7 @@ async function apiJson(path, options = {}) {
 function runSummaryMessage(result) {
   if (result?.demoReplay) {
     const total = Number(result?.run?.total || result?.summary?.demoLeadsQueued || 20);
-    return `Demo replay started — ${total} Clawdified example lead rows will appear in the sheet.`;
+    return `Demo replay started — ${total} Clawdified sample lead rows will appear in the sheet.`;
   }
   const summary = result?.summary || result?.run?.summary || result?.run || {};
   const runId = result?.run?.runId || result?.run?.id || result?.runId || "Run";
@@ -70,9 +70,8 @@ function statusFromConfidence(confidence, value) {
 
 function seniorityFromLead(lead) {
   const text = `${lead.roleCategory || ""} ${lead.title || ""}`.toLowerCase();
-  if (/owner|founder|ceo|chief|president|executive/.test(text)) return "C-Level";
-  if (/vp|vice president/.test(text)) return "VP";
-  if (/head/.test(text)) return "Head";
+  if (/leadership|executive|principal/.test(text)) return "Leadership";
+  if (/lead/.test(text)) return "Lead";
   if (/director/.test(text)) return "Director";
   return "Other";
 }
@@ -113,7 +112,7 @@ function mapLead(lead) {
     domain,
     website: lead.website || (domain ? `https://${domain}` : ""),
     industry: lead.industryCategory || lead.geographySegment || "Uncategorized",
-    size: lead.estimatedRevenueBand || "$1M-$10M",
+    size: lead.fitBand || "Private fit band",
     hq: [lead.city, lead.state].filter(Boolean).join(", ") || lead.geographySegment || "Broad U.S.",
     contactName: lead.personName || "Needs research",
     title: lead.title || "Missing target person",
@@ -141,7 +140,7 @@ function mapLead(lead) {
     softwareAiHeaviness: lead.softwareAiHeaviness || "UNVERIFIED",
     softwareAiFitImpact: lead.softwareAiFitImpact || "UNVERIFIED",
     emailVerificationStatus: lead.emailVerificationStatus || "UNVERIFIED",
-    revenueConfidence: lead.revenueConfidence || "UNVERIFIED",
+    fitConfidence: lead.fitConfidence || "UNVERIFIED",
     sourceQuality: lead.sourceQuality || "UNVERIFIED",
     bestPath: lead.publicContactPath || lead.contactPageUrl || lead.suggestedFirstCallAngle || lead.reasonToContact || "Review source evidence before outreach",
     enrichedAt: formatDate(lead.lastEnrichedDate || lead.updatedAt || lead.createdAt),
@@ -170,24 +169,24 @@ const PUBLIC_DEMO_MODE = true;
 const CLAWDIFIED_AGENT_PROFILE = {
   name: "Clawdified lead agent",
   company: "Clawdified",
-  offer: "practical AI agents that remove repetitive employee workflows for Knoxville-area SMBs",
-  icp: "owner-led service businesses around $1M-$10M with visible follow-up, intake, scheduling, reviews, estimating, or admin handoff pain",
-  geography: "Knoxville + East Tennessee",
-  targetTitles: "Owner, Founder, President, CEO, General Manager, Operations Manager, Office Manager, Practice Manager",
-  output: "a scored lead sheet with decision-maker, contact routes, source evidence, fit reasons, risks, and a suggested first-call angle",
+  offer: "practical AI workflow agents for small-business operations",
+  profile: "private qualification profile used for this showroom",
+  market: "Private market",
+  contactProfile: "Private contact profile",
+  output: "a sample lead sheet with contact routes, source notes, review labels, and a safe next-step angle",
 };
 
 const DEFAULT_RUN_CRITERIA = {
-  searchQuery: CLAWDIFIED_AGENT_PROFILE.icp,
-  geographySegment: CLAWDIFIED_AGENT_PROFILE.geography,
-  targetWeeklyVolume: 20,
+  searchQuery: "Private demo profile",
+  geographySegment: "Private market",
+  targetWeeklyVolume: 5,
 };
 
 const CLAWDIFIED_SHOWROOM_PROVIDERS = {
-  publicDiscovery: { provider: "Public discovery", purpose: "Find companies that match the Clawdified ICP", configured: true, required: true, status: "ready" },
+  publicDiscovery: { provider: "Public discovery", purpose: "Load prequalified demo accounts for the showroom", configured: true, required: true, status: "ready" },
   websiteReview: { provider: "Website + source review", purpose: "Read public pages and keep source evidence attached", configured: true, required: true, status: "ready" },
-  apollo: { provider: "Apollo direct-contact enrichment", purpose: "Direct email/phone enrichment for qualified demo rows", configured: true, required: true, status: "ready" },
-  sheetScoring: { provider: "Lead sheet scoring", purpose: "Apply fit gates, missing-field labels, and outreach angle notes", configured: true, required: true, status: "ready" },
+  contactEnrichment: { provider: "Contact enrichment", purpose: "Attach public-safe contact-route examples for demo rows", configured: true, required: true, status: "ready" },
+  sheetScoring: { provider: "Lead sheet scoring", purpose: "Apply public-safe review labels and next-step notes", configured: true, required: true, status: "ready" },
 };
 
 function nextShowroomRunIso(reference = new Date()) {
@@ -213,7 +212,7 @@ function publicDemoStatus(_criteria = {}, latestRun = null) {
     providerStatus: CLAWDIFIED_SHOWROOM_PROVIDERS,
     publicSafety: {
       external_writes_enabled: false,
-      paid_reveal_enabled: true,
+      paid_reveal_enabled: false,
       auto_send_enabled: false,
     },
     lastRun: latestRun ? { runAt: latestRun.rawAt || latestRun.runAt || new Date().toISOString(), runId: latestRun.runId || "clawdified-showroom" } : null,
@@ -228,14 +227,14 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     domain: "volunteer-mechanical.demo",
     website: "https://clawdified.com/demo/volunteer-mechanical",
     personName: "Chris Morgan",
-    title: "Owner",
-    roleCategory: "Owner",
+    title: "Operations Lead",
+    roleCategory: "Operations",
     departmentFunction: "Leadership",
     industryCategory: "HVAC / mechanical service",
-    estimatedRevenueBand: "$1M-$10M",
-    geographySegment: "Knoxville, TN",
-    city: "Knoxville",
-    state: "TN",
+    fitBand: "Private fit band",
+    geographySegment: "Private market",
+    city: "",
+    state: "",
     email: "chris@volunteer-mechanical.demo",
     emailConfidence: "HIGH",
     phone: "(865) 555-0141",
@@ -248,17 +247,17 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Owner-led service company; recurring calls and estimates; enough operational complexity for a practical AI agent; likely ROI at $600/mo",
-    scoreRisks: "Confirm current call volume before pitching",
-    workflowPainClues: "Missed-call follow-up; estimate reminders; post-job review requests",
-    reasonToContact: "Ask where service-call follow-up or estimate chasing falls through the cracks.",
-    suggestedFirstCallAngle: "Open on missed-call and estimate follow-up the office should not have to chase manually.",
-    suggestedAgent: "Missed-call + estimate follow-up agent",
-    sourceUrls: "Company website; Google Business profile; LinkedIn profile",
+    scoreReasons: "Public demo row with private fit notes redacted.",
+    scoreRisks: "Private review notes redacted in public demo.",
+    workflowPainClues: "Private workflow notes redacted.",
+    reasonToContact: "Review private notes before outreach.",
+    suggestedFirstCallAngle: "Use the approved private prompt for outreach review.",
+    suggestedAgent: "Workflow support agent",
+    sourceUrls: "Public source record; private notes redacted",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
-    providerSourceUsed: "Public discovery; website review; Apollo direct-contact enrichment; sheet scoring",
+    providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
     emailVerificationStatus: "DEMO_VERIFIED",
-    revenueConfidence: "DIRECTIONAL",
+    fitConfidence: "Directional",
   },
   {
     id: "clawdified-demo-002",
@@ -266,14 +265,14 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     domain: "smoky-mountain-roof.demo",
     website: "https://clawdified.com/demo/smoky-mountain-roof",
     personName: "Dana Hill",
-    title: "Operations Manager",
-    roleCategory: "Operations Manager",
+    title: "Operations Lead",
+    roleCategory: "Operations",
     departmentFunction: "Operations",
     industryCategory: "Roofing / exterior services",
-    estimatedRevenueBand: "$1M-$10M",
-    geographySegment: "Maryville, TN",
-    city: "Maryville",
-    state: "TN",
+    fitBand: "Private fit band",
+    geographySegment: "Private market",
+    city: "",
+    state: "",
     email: "dana@smoky-mountain-roof.demo",
     emailConfidence: "HIGH",
     phone: "(865) 555-0187",
@@ -287,17 +286,17 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Seasonal lead flow; quote follow-up matters; reviews and job updates create repeat admin work",
-    scoreRisks: "Confirm they are not franchise/corporate-only",
-    workflowPainClues: "Storm-season quote requests; inspection scheduling; review follow-up",
-    reasonToContact: "Lead with the cost of slow inspection/quote follow-up after busy weather weeks.",
-    suggestedFirstCallAngle: "Ask how many roof inspection requests go cold before someone follows up twice.",
-    suggestedAgent: "Inspection request + quote follow-up agent",
-    sourceUrls: "Company website; review profile; Facebook page",
+    scoreReasons: "Public demo row with private fit notes redacted.",
+    scoreRisks: "Private review notes redacted in public demo.",
+    workflowPainClues: "Private workflow notes redacted.",
+    reasonToContact: "Review private notes before outreach.",
+    suggestedFirstCallAngle: "Use the approved private prompt for outreach review.",
+    suggestedAgent: "Workflow support agent",
+    sourceUrls: "Public source record; private notes redacted",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
-    providerSourceUsed: "Public discovery; website review; Apollo direct-contact enrichment; sheet scoring",
+    providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
     emailVerificationStatus: "DEMO_VERIFIED",
-    revenueConfidence: "DIRECTIONAL",
+    fitConfidence: "Directional",
   },
   {
     id: "clawdified-demo-003",
@@ -305,14 +304,14 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     domain: "knoxville-cleanpro.demo",
     website: "https://clawdified.com/demo/knoxville-cleanpro",
     personName: "Alex Rivera",
-    title: "Office Manager",
-    roleCategory: "Office Manager",
+    title: "Operations Lead",
+    roleCategory: "Operations",
     departmentFunction: "Administration",
     industryCategory: "Commercial cleaning",
-    estimatedRevenueBand: "$1M-$10M",
-    geographySegment: "Knoxville, TN",
-    city: "Knoxville",
-    state: "TN",
+    fitBand: "Private fit band",
+    geographySegment: "Private market",
+    city: "",
+    state: "",
     email: "alex@knoxville-cleanpro.demo",
     emailConfidence: "HIGH",
     phone: "(865) 555-0166",
@@ -325,17 +324,17 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Recurring-service buyer; scheduling and quality check-ins repeat; office/admin role is likely close to the pain",
-    scoreRisks: "Validate number of recurring accounts before outreach",
-    workflowPainClues: "Recurring schedule changes; quality check-ins; quote renewal reminders",
-    reasonToContact: "Position a small agent around recurring-client check-ins and schedule-change cleanup.",
-    suggestedFirstCallAngle: "Ask whether client check-ins and schedule changes are still handled manually.",
-    suggestedAgent: "Recurring client check-in agent",
-    sourceUrls: "Company website; local listing; contact page",
+    scoreReasons: "Public demo row with private fit notes redacted.",
+    scoreRisks: "Private review notes redacted in public demo.",
+    workflowPainClues: "Private workflow notes redacted.",
+    reasonToContact: "Review private notes before outreach.",
+    suggestedFirstCallAngle: "Use the approved private prompt for outreach review.",
+    suggestedAgent: "Workflow support agent",
+    sourceUrls: "Public source record; private notes redacted",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
-    providerSourceUsed: "Public discovery; website review; Apollo direct-contact enrichment; sheet scoring",
+    providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
     emailVerificationStatus: "DEMO_VERIFIED",
-    revenueConfidence: "DIRECTIONAL",
+    fitConfidence: "Directional",
   },
   {
     id: "clawdified-demo-004",
@@ -343,14 +342,14 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     domain: "cedar-ridge-property.demo",
     website: "https://clawdified.com/demo/cedar-ridge-property",
     personName: "Morgan Lee",
-    title: "President",
-    roleCategory: "President",
+    title: "Operations Lead",
+    roleCategory: "Operations",
     departmentFunction: "Leadership",
     industryCategory: "Property management",
-    estimatedRevenueBand: "$1M-$10M",
-    geographySegment: "East Tennessee",
-    city: "Knoxville",
-    state: "TN",
+    fitBand: "Private fit band",
+    geographySegment: "Private market",
+    city: "",
+    state: "",
     email: "morgan@cedar-ridge-property.demo",
     emailConfidence: "HIGH",
     phone: "(865) 555-0199",
@@ -364,17 +363,17 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Owner-led operations; tenant/vendor coordination is repetitive; likely high value from faster follow-up",
-    scoreRisks: "Confirm portfolio size and owner decision path",
-    workflowPainClues: "Maintenance intake; owner updates; vendor follow-up; tenant reminders",
-    reasonToContact: "Frame the agent as a maintenance-intake and vendor-follow-up helper.",
-    suggestedFirstCallAngle: "Ask how maintenance requests move from tenant message to vendor completion today.",
-    suggestedAgent: "Maintenance intake + vendor follow-up agent",
-    sourceUrls: "Company website; contact page; public profile",
+    scoreReasons: "Public demo row with private fit notes redacted.",
+    scoreRisks: "Private review notes redacted in public demo.",
+    workflowPainClues: "Private workflow notes redacted.",
+    reasonToContact: "Review private notes before outreach.",
+    suggestedFirstCallAngle: "Use the approved private prompt for outreach review.",
+    suggestedAgent: "Workflow support agent",
+    sourceUrls: "Public source record; private notes redacted",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
-    providerSourceUsed: "Public discovery; website review; Apollo direct-contact enrichment; sheet scoring",
+    providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
     emailVerificationStatus: "DEMO_VERIFIED",
-    revenueConfidence: "DIRECTIONAL",
+    fitConfidence: "Directional",
   },
   {
     id: "clawdified-demo-005",
@@ -382,14 +381,14 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     domain: "blue-ridge-dental.demo",
     website: "https://clawdified.com/demo/blue-ridge-dental",
     personName: "Taylor Brooks",
-    title: "Practice Manager",
-    roleCategory: "Practice Manager",
+    title: "Operations Lead",
+    roleCategory: "Operations",
     departmentFunction: "Operations",
     industryCategory: "Dental practice",
-    estimatedRevenueBand: "$1M-$10M",
-    geographySegment: "Knoxville, TN",
-    city: "Knoxville",
-    state: "TN",
+    fitBand: "Private fit band",
+    geographySegment: "Private market",
+    city: "",
+    state: "",
     email: "taylor@blue-ridge-dental.demo",
     emailConfidence: "HIGH",
     phone: "(865) 555-0154",
@@ -402,17 +401,17 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Appointment-heavy practice; front-office reminders and review requests repeat; practice manager is a strong operator target",
-    scoreRisks: "Check whether they already use a full patient communication suite",
-    workflowPainClues: "Appointment reminders; missed-call routing; review requests; recall follow-up",
-    reasonToContact: "Lead with front-office workload around missed calls, reminders, and reviews.",
-    suggestedFirstCallAngle: "Ask whether the front desk still handles recall/reminder follow-up manually.",
-    suggestedAgent: "Appointment reminder + review follow-up agent",
-    sourceUrls: "Company website; reviews; contact page",
+    scoreReasons: "Public demo row with private fit notes redacted.",
+    scoreRisks: "Private review notes redacted in public demo.",
+    workflowPainClues: "Private workflow notes redacted.",
+    reasonToContact: "Review private notes before outreach.",
+    suggestedFirstCallAngle: "Use the approved private prompt for outreach review.",
+    suggestedAgent: "Workflow support agent",
+    sourceUrls: "Public source record; private notes redacted",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
-    providerSourceUsed: "Public discovery; website review; Apollo direct-contact enrichment; sheet scoring",
+    providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
     emailVerificationStatus: "DEMO_VERIFIED",
-    revenueConfidence: "DIRECTIONAL",
+    fitConfidence: "Directional",
   },
 ];
 
@@ -426,9 +425,9 @@ function buildClawdifiedShowroomLeads() {
     publicDemoForVisitor: true,
     visitorCompanyName: "Clawdified",
     visitorWebsite: "clawdified.com",
-    visitorOffer: CLAWDIFIED_AGENT_PROFILE.offer,
-    visitorIcp: CLAWDIFIED_AGENT_PROFILE.icp,
-    visitorGeography: CLAWDIFIED_AGENT_PROFILE.geography,
+    visitorOffer: "Private Clawdified offer summary",
+    visitorProfile: "Private demo profile",
+    visitorMarket: "Private market",
   }));
 }
 
@@ -439,15 +438,15 @@ function buildClawdifiedShowroomRun(leads = CLAWDIFIED_SHOWROOM_RAW_LEADS) {
     completedAt: now,
     trigger: "Manual Clawdified agent run",
     runId: `clawdified-demo-${Date.now().toString(36)}`,
-    searchGeographySegment: CLAWDIFIED_AGENT_PROFILE.geography,
-    searchQuery: CLAWDIFIED_AGENT_PROFILE.icp,
-    rawCompaniesFound: 34,
-    companiesExcluded: 18,
-    peopleFound: 9,
+    searchGeographySegment: "Private market",
+    searchQuery: "Private demo profile",
+    rawCompaniesFound: 12,
+    companiesExcluded: 6,
+    peopleFound: 5,
     finishedEnrichedLeadsAdded: leads.length,
     incompleteAccountsSaved: 2,
     duplicatesMerged: 3,
-    sourcesUsed: ["Public discovery", "Website/source review", "Apollo direct-contact enrichment", "Lead sheet scoring"],
+    sourcesUsed: ["Demo discovery", "Source review", "Contact enrichment", "Lead sheet scoring"],
     providerFailuresBlocks: [],
     emailCoverage: `${leads.length}/${leads.length} direct demo routes`,
     phoneCoverage: `${leads.length}/${leads.length} direct/mobile demo routes`,
@@ -455,14 +454,14 @@ function buildClawdifiedShowroomRun(leads = CLAWDIFIED_SHOWROOM_RAW_LEADS) {
     facebookCoverage: "2/5 business/social routes",
     instagramOrOtherSocialCoverage: "0/5 optional routes",
     contactPageCoverage: "5/5 company routes",
-    revenueConfidenceCoverage: "directional demo bands",
+    fitConfidenceCoverage: "private demo labels",
     linkedInSocialCoverage: `${leads.length}/${leads.length} profile routes`,
     duplicateIdCount: 0,
     badSourceCount: 0,
     badSourceDomains: [],
-    sourceCoverageSummary: "Showroom run: the Clawdified lead agent scores ICP fit, finds decision-makers, checks contact routes, and returns a usable sheet for Wesley to review.",
+    sourceCoverageSummary: "Showroom run: the Clawdified lead agent loads sample rows, checks contact routes, and returns a review-ready sheet without exposing private scoring rules.",
     shortfall: "None in showroom run",
-    mainSkipReasons: ["Competitors/software vendors removed", "No owner/operator signal removed", "No clear workflow pain removed"],
+    mainSkipReasons: ["Non-matching sample accounts hidden", "Incomplete sample evidence hidden"],
   };
 }
 
@@ -472,7 +471,7 @@ const ClawdifiedShowroomBrief = ({ onRunNow, runBusy }) => (
       <div className="icon"><Icon name="target" /></div>
       <div style={{ flex: 1 }}>
         <h3 className="card-title">Clawdified lead agent showroom</h3>
-        <div className="card-sub">This is the Clawdified lead agent already configured for Wesley’s offer, ICP, and review workflow. Click Run agent to populate the example sheet — visitors do not enter their own website or get a free lead list here.</div>
+        <div className="card-sub">This is a public-safe Clawdified lead-agent showroom with the private qualification rules redacted. Click Run agent to populate the example sheet — visitors do not enter their own website or get a free lead list here.</div>
       </div>
       <span className="status-pill ok"><span className="d" />Demo live</span>
     </div>
@@ -481,17 +480,17 @@ const ClawdifiedShowroomBrief = ({ onRunNow, runBusy }) => (
         <div className="kpi">
           <div className="kpi-label">Agent knows</div>
           <div className="kpi-value" style={{ fontSize: 18 }}>Clawdified</div>
-          <div className="kpi-foot">offer + price logic</div>
+          <div className="kpi-foot">private setup</div>
         </div>
         <div className="kpi">
-          <div className="kpi-label">ICP</div>
-          <div className="kpi-value" style={{ fontSize: 18 }}>$1M-$10M SMBs</div>
-          <div className="kpi-foot">workflow-heavy operators</div>
+          <div className="kpi-label">Profile</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>Private rules</div>
+          <div className="kpi-foot">redacted for public demo</div>
         </div>
         <div className="kpi">
           <div className="kpi-label">Output</div>
           <div className="kpi-value" style={{ fontSize: 18 }}>Lead sheet</div>
-          <div className="kpi-foot">fit, routes, angle</div>
+          <div className="kpi-foot">routes, notes, angle</div>
         </div>
         <button className="btn btn-primary" style={{ alignSelf: "center", height: 34 }} onClick={() => onRunNow?.({ mode: "showroom" })} disabled={runBusy}><Icon name="refresh" />{runBusy ? "Running…" : "Run agent"}</button>
       </div>
@@ -535,7 +534,7 @@ function mapRun(run) {
     facebookCoverage: run.facebookCoverage || "0%",
     instagramOrOtherSocialCoverage: run.instagramOrOtherSocialCoverage || "0%",
     contactPageCoverage: run.contactPageCoverage || "0%",
-    revenueConfidenceCoverage: run.revenueConfidenceCoverage || "0%",
+    fitConfidenceCoverage: run.fitConfidenceCoverage || "private",
     linkedInSocialCoverage: run.linkedInSocialCoverage || "0%",
     duplicateIdCount: run.duplicateIdCount ?? 0,
     badSourceCount: run.badSourceCount ?? 0,
@@ -609,7 +608,7 @@ const App = () => {
         setSelectedId(mappedLeads[0]?.id || null);
         setPanelOpen(false);
         setPage("sheet");
-        setRunNotice(`Clawdified showroom run complete: ${mappedLeads.length} example leads populated with ICP fit, contact routes, source evidence, and first-call angles.`);
+        setRunNotice(`Clawdified showroom run complete: ${mappedLeads.length} sample leads populated with public-safe fit labels, contact routes, source notes, and review angles.`);
       } catch (err) {
         setRunNotice("");
         setError(err.message || String(err));
@@ -631,7 +630,7 @@ const App = () => {
           setError(blockedReason);
           return;
         }
-        const approved = window.confirm("Run Agent now? This may use configured enrichment credits and write to the lead sheet. Apollo enrichment is enabled for qualified rows.");
+        const approved = window.confirm("Run Agent now? This may use configured private enrichment settings and write to the lead sheet. Public demo details stay redacted.");
         if (!approved) {
           setRunNotice("");
           return;
@@ -643,7 +642,7 @@ const App = () => {
         body: JSON.stringify({
           searchQuery: runCriteria.searchQuery,
           geographySegment: runCriteria.geographySegment,
-          targetWeeklyVolume: Number(runCriteria.targetWeeklyVolume || 50),
+          targetWeeklyVolume: Number(runCriteria.targetWeeklyVolume || 5),
         }),
       });
       setRunNotice(runSummaryMessage(result));

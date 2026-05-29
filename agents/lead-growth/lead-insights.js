@@ -128,14 +128,14 @@
   function defaultPlaybook(lead) {
     const raw = lead?.raw || {};
     const bundle = lowerBundle(lead);
-    if (/owner|founder|ceo|president/.test(bundle)) {
+    if (/leadership|principal|director/.test(bundle)) {
       return {
-        id: "owner-led",
-        headline: "Owner-led admin and follow-up overload",
-        summary: "Best guess: the owner or leadership team is still personally chasing customers, quotes, scheduling, status updates, or paperwork that should be delegated.",
-        entryPoint: "Start with a lightweight AI assistant that handles repetitive follow-up and keeps the owner out of the inbox for routine tasks.",
-        suggestedAgent: "Owner inbox + follow-up agent",
-        why: "Because owners should not be stuck chasing routine replies, scheduling, and paperwork.",
+        id: "leadership-admin",
+        headline: "Leadership follow-up and admin overload",
+        summary: "Best guess: the team has routine follow-up, scheduling, status updates, or paperwork that can be made more consistent.",
+        entryPoint: "Start with a lightweight AI assistant that handles repetitive follow-up for staff review.",
+        suggestedAgent: "Follow-up support agent",
+        why: "Because routine replies, scheduling, and paperwork can be made more consistent.",
       };
     }
     if (/operation|office|admin|coordinator|manager|dispatch/.test(bundle)) {
@@ -148,9 +148,9 @@
         why: "Because routing requests, updating records, reminders, and task checks are repeatable.",
       };
     }
-    if (/sales|revenue|business development|marketing/.test(bundle)) {
+    if (/sales|business development|marketing/.test(bundle)) {
       return {
-        id: "revenue-follow-up",
+        id: "growth-follow-up",
         headline: "Lead follow-up and missed-response recovery",
         summary: "Best guess: the sales/customer-facing side loses deals or time when inbound leads, quotes, reviews, and follow-ups are handled manually.",
         entryPoint: "Start with an AI lead-response and follow-up agent that drafts replies, reminders, and next-step nudges for staff approval.",
@@ -201,7 +201,7 @@
     if (raw.servicesOffered) signals.push(`Services: ${compact(raw.servicesOffered, 82)}`);
     if (lead?.industry || raw.industryCategory) signals.push(`Industry: ${compact(lead?.industry || raw.industryCategory, 64)}`);
     if (lead?.title || raw.title) signals.push(`Buyer: ${compact(lead?.title || raw.title, 64)}`);
-    if (lead?.size || raw.estimatedRevenueBand) signals.push(`Size: ${compact(lead?.size || raw.estimatedRevenueBand, 48)}`);
+    if (lead?.size || raw.fitBand) signals.push(`Fit band: ${compact(lead?.size || raw.fitBand, 48)}`);
     if (!savedPain && reason) signals.push(`Reason: ${compact(reason, 82)}`);
     return signals.slice(0, 5);
   }
@@ -246,7 +246,7 @@
     if (fitScore >= 60) reasons.push("Score suggests this is worth reviewing for a Clawdified automation angle.");
     if (painInsight?.suggestedAgent) reasons.push(`Suggested agent: ${painInsight.suggestedAgent}.`);
     if (lead?.title || raw.title) reasons.push(`${lead?.title || raw.title} is close enough to the business workflow to feel the pain if it is real.`);
-    if (lead?.size || raw.estimatedRevenueBand) reasons.push(`Target size looks like ${lead?.size || raw.estimatedRevenueBand}, which fits the SMB automation buyer range.`);
+    if (lead?.size || raw.fitBand) reasons.push("This public demo row includes a private fit-band label for review.");
     return reasons.slice(0, 4);
   }
 

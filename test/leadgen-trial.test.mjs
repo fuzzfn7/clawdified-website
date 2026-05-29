@@ -73,23 +73,25 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   const main = readFileSync(new URL('../agents/lead-growth/main.jsx', import.meta.url), 'utf8');
   const agentPages = readFileSync(new URL('../agents/lead-growth/agent-pages.jsx', import.meta.url), 'utf8');
   const panel = readFileSync(new URL('../agents/lead-growth/lead-panel.jsx', import.meta.url), 'utf8');
+  const appShell = readFileSync(new URL('../agents/lead-growth/app-shell.jsx', import.meta.url), 'utf8');
+  const insights = readFileSync(new URL('../agents/lead-growth/lead-insights.js', import.meta.url), 'utf8');
   const leadGrowthIndex = readFileSync(new URL('../agents/lead-growth/index.html', import.meta.url), 'utf8');
   const agentsIndex = readFileSync(new URL('../agents/index.html', import.meta.url), 'utf8');
   const retiredEndpoint = readFileSync(new URL('../functions/api/leadgen-trial.js', import.meta.url), 'utf8');
-  const uiBundle = [main, agentPages, leadGrowthIndex].join('\n');
+  const uiBundle = [main, agentPages, appShell, insights, panel, leadGrowthIndex, agentsIndex].join('\n');
 
   assert.match(main, /CLAWDIFIED_LEAD_AGENT_SHOWROOM_20260528/);
   assert.match(main, /Clawdified lead agent showroom/);
   assert.match(main, /CLAWDIFIED_SHOWROOM_PROVIDERS/);
-  assert.match(main, /Apollo direct-contact enrichment/);
+  assert.match(main, /Contact enrichment/);
   assert.match(main, /buildClawdifiedShowroomLeads/);
-  assert.match(agentPages, /Clawdified lead agent knowledge/);
+  assert.match(agentPages, /Clawdified lead agent demo state/);
   assert.match(agentPages, /Provider readiness/);
-  assert.match(agentsIndex, /Clawdified example agent/);
+  assert.match(agentsIndex, /Clawdified sample agent/);
   assert.match(agentsIndex, /visitors do not enter their own website here/);
   assert.match(retiredEndpoint, /Retired public lead-search endpoint/);
 
-  // The public UI should not expose the old intake/search-tool framing.
+  // The public UI should not expose the old intake/search-tool framing or private targeting/pricing recipe.
   assert.doesNotMatch(uiBundle, /Public lead search intake/i);
   assert.doesNotMatch(uiBundle, /Capped public search intake/i);
   assert.doesNotMatch(uiBundle, /Business website/);
@@ -100,6 +102,11 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   assert.doesNotMatch(uiBundle, /capped real public search/i);
   assert.doesNotMatch(uiBundle, /provider order/i);
   assert.doesNotMatch(uiBundle, /Fallback\/missing/i);
+  assert.doesNotMatch(uiBundle, /Apollo|Serper|Browserbase/i);
+  assert.doesNotMatch(uiBundle, /\$600|600\/mo|600\/month|\$1M|10M|5-100/i);
+  assert.doesNotMatch(uiBundle, /Owner-led|Owner\/operators|Practice Manager|Office Manager|Operations Manager/i);
+  assert.doesNotMatch(uiBundle, /pricing tiers|price logic|enrichment credits|qualified demo rows/i);
+  assert.doesNotMatch(uiBundle, /ICP fit|ICP rules|Loaded ICP/i);
 
   assert.match(panel, /Suggested customer angle/);
   assert.doesNotMatch(panel, /<Icon name="bolt" \/>Suggested AI agent<span>/);

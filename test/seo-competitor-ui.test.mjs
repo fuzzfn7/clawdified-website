@@ -44,7 +44,7 @@ test('agents showroom describes SEO as a preloaded sample, not a website paste f
   assert.match(showroomHtml, /SEO & Competitor Intelligence sample embedded here/i);
   assert.match(showroomHtml, /preloaded, anonymized analysis workspace/i);
   assert.match(showroomHtml, /not a blank website scanner/i);
-  assert.match(showroomHtml, /Open sample workspace/i);
+  assert.match(showroomHtml, /Open full screen/i);
 
   assert.doesNotMatch(showroomHtml, /Paste a website inside the workspace below/i);
   assert.doesNotMatch(showroomHtml, /Add a website\. The scan fills/i);

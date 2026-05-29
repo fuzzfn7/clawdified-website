@@ -117,8 +117,8 @@ function outreachRouteMessagesForLead(lead, platform) {
       lead: `Maybe — message me the details and I can tell you who should look at it.`,
     },
     email: {
-      agent: `Subject: Quick idea for ${company}\n\nHi ${firstName}, I noticed ${company} has signs of repetitive operations work around ${pain}. Clawdified builds practical AI agents that handle follow-up, intake, and admin tasks for about $600/mo. Would it be useful if I sent a 2-minute example?`,
-      lead: `Thanks — send the example and pricing. If it fits our workflow, we can set up a call.`,
+      agent: `Subject: Quick idea for ${company}\n\nHi ${firstName}, I noticed ${company} has signs of repetitive operations work around ${pain}. Clawdified builds practical workflow agents for routine follow-up and admin tasks. Would it be useful if I sent a short example?`,
+      lead: `Thanks — send the example. If it fits our workflow, we can set up a call.`,
     },
     instagram: {
       agent: `Hey ${firstName} — quick note from Clawdified. We help businesses like ${company} automate routine follow-up/admin work without a big software rollout. Want the short version?`,
@@ -479,7 +479,7 @@ const FilterBar = ({ leads, filters, setFilters, sortKey, setSortKey }) => {
   const industries = useMemo(() => countBy((l) => l.industry).map((item) => ({ ...item, swatch: indColor(item.value, "bar") })), [leads]);
   const roles = useMemo(() => countBy((l) => l.seniority), [leads]);
   const departments = useMemo(() => countBy((l) => l.department), [leads]);
-  const revenueBands = useMemo(() => countBy((l) => l.size || "Unknown"), [leads]);
+  const fitBands = useMemo(() => countBy((l) => l.size || "Private fit band"), [leads]);
 
   const set = (k, v) => setFilters(f => ({ ...f, [k]: v }));
 
@@ -497,7 +497,7 @@ const FilterBar = ({ leads, filters, setFilters, sortKey, setSortKey }) => {
       <FilterPill label="Industry" icon="db" options={industries} values={filters.industries || []} onChange={(v) => set("industries", v)} />
       <FilterPill label="Role" icon="user" options={roles} values={filters.roles || []} onChange={(v) => set("roles", v)} />
       <FilterPill label="Department" icon="building" options={departments} values={filters.departments || []} onChange={(v) => set("departments", v)} />
-      <FilterPill label="Revenue band" icon="building" options={revenueBands} values={filters.sizes || []} onChange={(v) => set("sizes", v)} />
+      <FilterPill label="Fit band" icon="building" options={fitBands} values={filters.sizes || []} onChange={(v) => set("sizes", v)} />
       <FilterPill label="Fit score" icon="target" allowSlider sliderValue={filters.minFit || 0} onSliderChange={(v) => set("minFit", v)} />
 
       {activeCount > 0 && (
@@ -627,7 +627,7 @@ const ContactSheet = ({ leads, onSelect, selectedId, searchQuery, lastRunAt }) =
           <h1 className="page-title">Lead Sheet
             <span style={{ fontFamily: "var(--mono)", fontSize: 11.5, color: "var(--fg-3)", fontWeight: 400, background: "var(--surface-3)", padding: "3px 9px", borderRadius: 100, border: "1px solid var(--border)", whiteSpace: "nowrap" }}>{leads.length} rows · {lastRunText}</span>
           </h1>
-          <div className="page-sub">The agent fills this sheet automatically. Filter/sort by geography, role, department, revenue, and fit score.</div>
+          <div className="page-sub">The agent fills this sheet automatically. Filter/sort by geography, role, department, public fit band, and fit score.</div>
         </div>
       </div>
 

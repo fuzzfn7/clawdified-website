@@ -81,7 +81,7 @@ const LeadPanel = ({ lead, open, onClose }) => {
   const title = lead.title || "Missing target person";
   const company = lead.company || "Unknown company";
   const industry = lead.industry || "Uncategorized";
-  const revenueBand = lead.size || "$1M-$10M";
+  const fitBand = lead.size || "Private fit band";
   const hq = lead.hq || "Broad U.S.";
   const enrichedAt = lead.enrichedAt || "—";
   const painInsight = panelPainInsight(lead);
@@ -115,7 +115,7 @@ const LeadPanel = ({ lead, open, onClose }) => {
               <span>{industry}</span>
             </div>
             <div className="panel-hero-meta" style={{ marginTop: 6, fontSize: 12 }}>
-              <span><Icon name="building" className="ico" />Revenue band {revenueBand}</span>
+              <span><Icon name="building" className="ico" />Fit band {fitBand}</span>
               <span className="sep">·</span>
               <span>HQ {hq}</span>
             </div>
@@ -163,7 +163,7 @@ const LeadPanel = ({ lead, open, onClose }) => {
               <div className="kv-grid compact-kv-grid">
                 <KV label="Company" icon="building" value={company} status="verified" />
                 <KV label="Industry" icon="db" value={industry} status="verified" />
-                <KV label="Revenue band" value={revenueBand} status="verified" mono />
+                <KV label="Fit band" value={fitBand} status="verified" mono />
                 <KV label="Headquarters" value={hq} status="verified" />
               </div>
             </div>
