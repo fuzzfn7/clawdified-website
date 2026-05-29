@@ -38,11 +38,12 @@ test('SEO competitor page has clickable workspace sections and full Ask Agent se
   assert.doesNotMatch(html, /openAsk\(\)/);
 });
 
-test('agents showroom describes SEO as a finished action workspace, not a website paste flow', () => {
-  assert.match(showroomHtml, /Review an SEO action workspace/i);
-  assert.match(showroomHtml, /See competitors, coverage gaps, recommended fixes, evidence, and the Ask Agent panel/i);
-  assert.match(showroomHtml, /SEO & Competitor Intelligence preview/i);
-  assert.match(showroomHtml, /Review a finished workspace with coverage gaps, competitors, fixes, evidence, and Ask Agent/i);
+test('agents showroom describes SEO as a preloaded sample, not a website paste flow', () => {
+  assert.match(showroomHtml, /Review the SEO sample workspace/i);
+  assert.match(showroomHtml, /Preloaded sample analysis showing coverage, competitors, fixes, evidence, and the Ask Agent view/i);
+  assert.match(showroomHtml, /SEO & Competitor Intelligence sample embedded here/i);
+  assert.match(showroomHtml, /preloaded, anonymized analysis workspace/i);
+  assert.match(showroomHtml, /not a blank website scanner/i);
   assert.match(showroomHtml, /Open full screen/i);
 
   assert.doesNotMatch(showroomHtml, /Paste a website inside the workspace below/i);
@@ -50,6 +51,4 @@ test('agents showroom describes SEO as a finished action workspace, not a websit
   assert.doesNotMatch(showroomHtml, /Preview SEO scan/i);
   assert.doesNotMatch(showroomHtml, /What website should the SEO agent analyze\?/i);
   assert.doesNotMatch(showroomHtml, /The preview summarizes what it sees/i);
-  assert.doesNotMatch(showroomHtml, /preloaded, anonymized analysis workspace/i);
-  assert.doesNotMatch(showroomHtml, /not a blank website scanner/i);
 });
