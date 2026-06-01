@@ -160,9 +160,11 @@ Optional:
 - `CONNECTOR_BUILDER_WEBHOOK_URL` — optional Hermes/webhook endpoint to notify when the admin dashboard stores a new unsupported connector request.
 - `CONNECTOR_BUILDER_WEBHOOK_TOKEN` — optional bearer token sent only server-to-server to the connector-builder webhook; never shown in dashboard responses.
 
-## Current production verification — 2026-05-29
+## Current production verification — 2026-06-01
 
 Verified with Cloudflare/Wrangler smoke checks:
+
+- Live Lead Growth showroom scroll hotfix: commit `38248d7` (`Fix lead outreach preview scrolling`) is pushed to `origin/main` and deployed to Cloudflare Pages. Browser smoke through `https://clawdified.com/agents/?v=38248d7#showroom-stage` opened the embedded Lead Growth iframe, ran the agent, opened Lead Outreach → Review, scrolled the detail page, and verified the message-preview safety note is visible after scroll.
 
 - Cloudflare Pages project: `clawdifiedweb` (`Git Provider: No`; production deploys are manual Wrangler deploys from a clean committed archive).
 - Live SEO & Competitor Intelligence route: `https://clawdified.com/agents/seo-competitor/` — returns the anonymized sample workspace marker `SEO_COMPETITOR_SAMPLE_WORKSPACE_20260528`, not a visitor website-input scanner.
