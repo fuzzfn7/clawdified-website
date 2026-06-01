@@ -117,3 +117,18 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   assert.match(panel, /Suggested customer angle/);
   assert.doesNotMatch(panel, /<Icon name="bolt" \/>Suggested AI agent<span>/);
 });
+
+test('Lead Outreach detail view scrolls instead of clipping the message preview', () => {
+  const appShell = readFileSync(new URL('../agents/lead-growth/app-shell.jsx', import.meta.url), 'utf8');
+  const styles = readFileSync(new URL('../agents/lead-growth/styles.css', import.meta.url), 'utf8');
+
+  assert.match(appShell, /className="page outreach-page outreach-detail-mode"/);
+  assert.match(appShell, /outreach-message-panel/);
+  assert.match(appShell, /outreach-message-frame/);
+  assert.match(appShell, /outreach-safe-note/);
+
+  assert.match(styles, /\.outreach-detail-mode\s*\{\s*overflow:\s*auto;\s*\}/);
+  assert.match(styles, /\.outreach-detail-stage\s*\{[\s\S]*?flex:\s*none;[\s\S]*?overflow:\s*visible;/);
+  assert.match(styles, /\.outreach-detail-grid\s*\{[\s\S]*?flex:\s*none;[\s\S]*?min-height:\s*auto;/);
+  assert.doesNotMatch(styles, /\.outreach-detail-mode\s*\{\s*overflow:\s*hidden;\s*\}/);
+});

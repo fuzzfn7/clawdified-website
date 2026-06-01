@@ -605,15 +605,16 @@ table.outreach-table th:nth-child(6), table.outreach-table td:nth-child(6) { wid
   white-space: nowrap;
 }
 
-.outreach-detail-mode { overflow: hidden; }
+.outreach-detail-mode { overflow: auto; }
 .outreach-detail-stage {
   margin: 18px 24px 24px;
-  flex: 1;
-  min-height: 0;
+  flex: none;
+  min-height: auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  overflow: auto;
+  overflow: visible;
+  padding-bottom: 1px;
 }
 .outreach-detail-topbar {
   display: flex;
@@ -725,11 +726,12 @@ table.outreach-table th:nth-child(6), table.outreach-table td:nth-child(6) { wid
   letter-spacing: 0.06em;
 }
 .outreach-detail-grid {
-  flex: 1;
-  min-height: 0;
+  flex: none;
+  min-height: auto;
   display: grid;
   grid-template-columns: minmax(320px, 0.78fr) minmax(0, 1.22fr);
   gap: 16px;
+  align-items: stretch;
 }
 .outreach-channel-panel,
 .outreach-message-panel {
