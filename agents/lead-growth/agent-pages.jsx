@@ -144,6 +144,183 @@ function thinkingAnswer({ read, weighing = [], next, guardrail }) {
   return parts.join("\n\n");
 }
 
+function extractBusinessHint(q) {
+  const knownEarly = [
+    ["dental", "dental office"], ["dent", "dental office"], ["roof", "roofing business"], ["hvac", "HVAC business"], ["plumb", "plumbing business"],
+    ["med spa", "med spa"], ["spa", "service business"], ["real estate", "real estate business"], ["law", "law firm"],
+    ["clinic", "clinic"], ["contractor", "contractor"], ["landscap", "landscaping business"], ["restaurant", "restaurant"],
+    ["gym", "gym"], ["insurance", "insurance agency"], ["account", "accounting firm"], ["auto", "auto service business"],
+  ];
+  const earlyHit = knownEarly.find(([needle]) => q.includes(needle));
+  if (earlyHit) return earlyHit[1];
+  const patterns = [
+    /\b(?:i|we)\s+(?:run|own|manage|operate|have)\s+(?:an?\s+)?([a-z0-9][a-z0-9\s/-]{2,42}?)(?:\s+(?:business|company|practice|office|shop|firm|agency))?(?:\b|$)/,
+    /\b(?:my|our)\s+([a-z0-9][a-z0-9\s/-]{2,36}?)(?:\s+(?:business|company|practice|office|shop|firm|agency))\b/,
+    /\b(?:for|in)\s+(?:an?\s+)?([a-z0-9][a-z0-9\s/-]{2,36}?)(?:\s+(?:business|company|practice|office|shop|firm|agency))\b/,
+  ];
+  for (const pattern of patterns) {
+    const match = q.match(pattern);
+    if (match?.[1]) {
+      return compactText(match[1]
+        .replace(/\b(?:and|but|with|that|where|who|what|how|can|would|could).*$/g, "")
+        .trim(), 42);
+    }
+  }
+  const known = [
+    ["dent", "dental office"], ["roof", "roofing business"], ["hvac", "HVAC business"], ["plumb", "plumbing business"],
+    ["med spa", "med spa"], ["spa", "service business"], ["real estate", "real estate business"], ["law", "law firm"],
+    ["clinic", "clinic"], ["contractor", "contractor"], ["landscap", "landscaping business"], ["restaurant", "restaurant"],
+    ["gym", "gym"], ["insurance", "insurance agency"], ["account", "accounting firm"], ["auto", "auto service business"],
+  ];
+  const hit = known.find(([needle]) => q.includes(needle));
+  return hit ? hit[1] : "";
+}
+
+function likelyWorkflowExamplesForBusiness(businessHint, q = "") {
+  const text = `${businessHint} ${q}`.toLowerCase();
+  if (/dent|clinic|medical|health|med spa|spa/.test(text)) return ["new-patient intake", "missed-call follow-up", "appointment reminders", "review requests"];
+  if (/roof|hvac|plumb|contract|landscap|auto|service/.test(text)) return ["quote follow-up", "missed-call triage", "job status updates", "review requests"];
+  if (/real estate|insurance|law|account|financial/.test(text)) return ["lead intake", "document collection", "follow-up reminders", "client status updates"];
+  if (/restaurant|gym|fitness|retail/.test(text)) return ["inquiry follow-up", "booking or membership reminders", "review requests", "repeat-customer follow-up"];
+  return ["intake", "follow-up", "status updates", "review or handoff work"];
+}
+
+function inferProspectIntent(q) {
+  if (!q) return { primary: "empty", vague: true, confidence: 0 };
+  const words = q.split(/\s+/).filter(Boolean);
+  const short = words.length <= 4;
+  const vague = short || /\b(this|that|it|thing|stuff|whatever|so what|and\?|ok|okay|huh|confus|lost|don.?t get|explain|plain english|what am i looking at|what is going on)\b/.test(q);
+  const businessHint = extractBusinessHint(q);
+  const scores = {
+    confused: /\b(confus|lost|don.?t get|huh|what is this|what am i looking at|plain english|explain|eli5|simple)\b/.test(q) ? 4 : 0,
+    value: /\b(why|care|matter|worth|point|so what|save|help|benefit|roi|time|money|better)\b/.test(q) ? 3 : 0,
+    fit: /\b(my business|for me|would this work|can this work|do for me|use this|apply|fit|need this|good for)\b/.test(q) || businessHint ? 4 : 0,
+    workflow: /\b(automate|workflow|process|task|manual|follow.?up|intake|reviews?|scheduling|admin|handoff|crm|email|calls?|missed)\b/.test(q) ? 4 : 0,
+    leads: /\b(leads?|prospects?|customers?|find|contact|outreach|sheet|list|score|qualif)\b/.test(q) ? 4 : 0,
+    real: /\b(real|live|fake|demo|sample|actual|does it actually|is this)\b/.test(q) ? 3 : 0,
+    price: /\b(cost|price|pricing|quote|pay|charge|expensive|budget|monthly|month|fee)\b/.test(q) ? 4 : 0,
+    integrate: /\b(integrat|connect|crm|gmail|sheets?|calendar|hubspot|slack|zapier|software|tools?|app)\b/.test(q) ? 4 : 0,
+    timeline: /\b(how long|timeline|start|setup|build|when|fast|quick)\b/.test(q) ? 3 : 0,
+  };
+  if (vague && !Object.values(scores).some(Boolean)) scores.confused = 2;
+  const [primary, score] = Object.entries(scores).sort((a, b) => b[1] - a[1])[0] || ["open", 0];
+  return { primary: score > 0 ? primary : "open", vague, businessHint, confidence: score };
+}
+
+function adaptiveProspectAnswer({ question, q, topLead, topPain, totals, latest }) {
+  const intent = inferProspectIntent(q);
+  const shouldAnswer = intent.vague || intent.confidence > 0 || /\?/.test(String(question || ""));
+  if (!shouldAnswer) return null;
+
+  const businessLabel = intent.businessHint ? `a ${intent.businessHint}` : "your business";
+  const workflowExamples = likelyWorkflowExamplesForBusiness(intent.businessHint, q);
+  const leadExample = topLead
+    ? `In this sample sheet, I’d inspect ${topLead.company} first because the row has a stronger fit signal and a reviewable next-step angle.`
+    : "Right now the sheet is empty, so I’d run the preview before judging any specific row.";
+  const painLine = topPain?.headline && topPain.headline !== "Not configured"
+    ? `The kind of clue I’m looking for is: ${topPain.headline}.`
+    : `The kind of clue I’m looking for is repeatable work like ${workflowExamples.slice(0, 3).join(", ")}.`;
+  const clarify = intent.vague
+    ? "I’m reading your question a bit loosely, so I’ll answer the most likely meaning and give you a better next question."
+    : "I’m reading this as a prospect question, not a command.";
+
+  if (intent.primary === "confused" || intent.primary === "open") {
+    return thinkingAnswer({
+      read: `${clarify} Short version: this previews how Clawdified turns a messy business process or lead profile into a reviewable output, instead of making a person sort through every lead, follow-up, and handoff manually.`,
+      weighing: [
+        "If you mean “what am I looking at?” — it’s the finished workspace an agent would maintain.",
+        `If you mean “how would this help me?” — the useful target is repetitive work in ${businessLabel}, like ${workflowExamples.slice(0, 3).join(", ")}.`,
+        leadExample,
+      ],
+      next: `Tell me your business type and one workflow that keeps slipping, or ask: “what would you automate for ${businessLabel}?”`,
+    });
+  }
+
+  if (intent.primary === "fit" || intent.primary === "workflow") {
+    return thinkingAnswer({
+      read: `For ${businessLabel}, I’d start by looking for the workflow that repeats often, costs time, and has a clear approval point. That is usually where an agent makes money fastest.`,
+      weighing: [
+        `Likely starting workflows: ${workflowExamples.join(", ")}.`,
+        "A good agent should produce a finished queue, sheet, draft, reminder, or decision packet — not just chat back at the team.",
+        painLine,
+      ],
+      next: `The question I’d ask you next is: which part of ${businessLabel} gets repeated every week but still needs judgment before it goes out?`,
+      guardrail: "I can explain the fit publicly, but the private build rules and scoring recipe happen in the actual setup call.",
+    });
+  }
+
+  if (intent.primary === "value") {
+    return thinkingAnswer({
+      read: "The point is not “AI for AI’s sake.” The point is whether one repetitive workflow is costing enough time, missed revenue, slow follow-up, or messy handoffs to justify turning it into an agent.",
+      weighing: [
+        `For ${businessLabel}, I’d look at where people retype, chase, remind, summarize, update a sheet/CRM, or forget follow-up.`,
+        "The fastest wins usually have a clear before/after: less manual admin, faster response, cleaner review queue, or more consistent follow-up.",
+        latestRunSummaryForChat(latest),
+      ],
+      next: "If you tell me the task you hate doing twice a week, I can point to whether it looks agent-worthy or just a normal process fix.",
+    });
+  }
+
+  if (intent.primary === "leads") {
+    return thinkingAnswer({
+      read: "If you’re asking about lead generation, the agent’s job is to turn a private fit profile into rows a human can review: likely account, reason it may fit, contact route, source note, and next angle.",
+      weighing: [
+        `${totals.total} visible row(s), ${totals.finished} review-ready, ${totals.incomplete} still incomplete in the current demo state.`,
+        leadExample,
+        "A good row should make the next human decision easier; it should not pretend every scraped name is a real opportunity.",
+      ],
+      next: topLead ? `Open ${topLead.company} and ask why it fits, or run the preview if you want to watch the sheet rebuild.` : "Run the preview, then ask me why the first finished row is or is not worth pursuing.",
+      guardrail: "The public demo does not reveal the private qualification recipe or send outreach on its own.",
+    });
+  }
+
+  if (intent.primary === "real") {
+    return thinkingAnswer({
+      read: "This public page is a showroom, not an open free-for-all lead engine. It shows the kind of workspace and reasoning a configured Clawdified agent would produce once the private business profile is loaded.",
+      weighing: [
+        "The interface and review flow are real product shape.",
+        "The public rows are safe examples so the site does not publish private targeting logic or let anonymous visitors pull lead lists.",
+        "A real build gets configured around your workflow, tools, approval rules, and output format.",
+      ],
+      next: "If you want to see it against your business, the next step is a workflow map call — not typing secret business criteria into a public page.",
+    });
+  }
+
+  if (intent.primary === "price") {
+    return thinkingAnswer({
+      read: "Pricing depends on the workflow, integrations, approval points, and how much ongoing maintenance the agent needs. I would not quote it from one vague chat message.",
+      weighing: [
+        "A simple follow-up/review workflow is different from a multi-system operations agent.",
+        "The right way to price it is against the cost of the manual workflow and the value of getting the output consistently done.",
+        "The public demo intentionally avoids exact pricing logic.",
+      ],
+      next: "Map one workflow first; then Clawdified can give you a clear build option instead of a generic package price.",
+    });
+  }
+
+  if (intent.primary === "integrate") {
+    return thinkingAnswer({
+      read: `For ${businessLabel}, I’d first identify where the work actually happens — inbox, CRM, spreadsheet, calendar, forms, messages, or docs — then connect only the pieces needed for the workflow.`,
+      weighing: [
+        "The agent should sit between the tools and produce the next approved output.",
+        "Integrations matter less than the handoff: what comes in, what decision is made, and what finished thing should come out.",
+        "Sensitive connectors are configured privately, not exposed through this public demo.",
+      ],
+      next: "Name the tool your team lives in and the repetitive task around it; I’ll explain what the agent would likely watch, draft, update, or queue.",
+    });
+  }
+
+  if (intent.primary === "timeline") {
+    return thinkingAnswer({
+      read: "The build timeline depends on how clear the workflow is and how many systems need to be connected. A narrow workflow can be mapped quickly; messy multi-step approvals take longer because they need safer review paths.",
+      weighing: ["Do we know the trigger?", "Do we know the decision rules?", "Do we know the final output and who approves it?"],
+      next: "Start by naming the trigger and the finished output. Example: “when a new form comes in, draft the follow-up and update the sheet.”",
+    });
+  }
+
+  return null;
+}
+
 function buildAgentChatAnswer(question, context = {}) {
   const q = normalizeAgentQuestion(question);
   const scheduler = context.agentStatus?.scheduler || {};
@@ -178,6 +355,9 @@ function buildAgentChatAnswer(question, context = {}) {
       next: "Ask me what I’m seeing, why a row matters, or what I’d check before outreach.",
     });
   }
+
+  const adaptive = adaptiveProspectAnswer({ question, q, topLead, topPain, totals, latest });
+  if (adaptive) return adaptive;
 
   if (agentQuestionHas(q, [/\bwhat do you do\b/, /\bwho are you\b/, /\bwhat are you\b/, /\byour job\b/, /\byour purpose\b/])) {
     return thinkingAnswer({
@@ -264,9 +444,9 @@ function buildAgentChatAnswer(question, context = {}) {
   }
 
   return thinkingAnswer({
-    read: "I can answer that better if we anchor it to the lead sheet or the Clawdified workflow.",
-    weighing: [topLeadLine, "I can explain fit, source/contact confidence, current run state, or what to check next."],
-    next: "Try asking: “what are you seeing?”, “why is this a fit?”, “how does this work?”, or “what would you do before outreach?”",
+    read: "I may be guessing at your intent, but I’m treating this like a real prospect question. The useful lens is: what repetitive work, lead review, follow-up, or handoff would be better if it showed up as a finished queue instead of living in someone’s head?",
+    weighing: [topLeadLine, "If you are asking about your own business, I need the business type and the workflow that keeps repeating.", "If you are asking about the demo sheet, I can explain what the agent is checking and what a human should review next."],
+    next: "Reply with the messy task in plain English — even if it’s vague — and I’ll translate it into the likely agent workflow.",
   });
 }
 
@@ -274,12 +454,46 @@ function agentAnswerText(answer) {
   return typeof answer === "string" ? answer : String(answer?.text || "");
 }
 
-async function requestAgentChatAnswer(question, context) {
+function publicAgentChatContext(context = {}) {
+  const providers = agentProviderRows(context.agentStatus, context.providers);
+  const latest = context.runs?.[0] || null;
+  const totals = countRealLeads(context.leads);
+  const topLead = topLeadForAgent(context.leads);
+  const topPain = painReadForAgent(topLead);
+  return {
+    mode: "public_lead_growth_showroom",
+    totals,
+    schedulerEnabled: Boolean(context.agentStatus?.scheduler?.enabled),
+    providersReady: providers.filter((provider) => provider.required && provider.configured).length,
+    providersRequired: providers.filter((provider) => provider.required).length,
+    latestRun: latest ? {
+      action: latest.action || latest.trigger || "Last run",
+      finished: Number(latest.finishedEnrichedLeadsAdded || 0),
+      incomplete: Number(latest.incompleteAccountsSaved || 0),
+      companies: Number(latest.rawCompaniesFound || 0),
+      people: Number(latest.peopleFound || 0),
+    } : null,
+    topLead: topLead ? {
+      company: compactText(topLead.company, 80),
+      industry: compactText(topLead.industry, 64),
+      geography: compactText(topLead.geography, 64),
+      fitScore: Number(topLead.fitScore || topLead.clawdifiedCompatibilityScore || 0),
+      pain: compactText(topPain?.headline || topLead.notes || topLead.raw?.workflowPainClues, 120),
+      nextAngle: compactText(topPain?.next || topLead.bestPath || topLead.raw?.suggestedFirstCallAngle, 140),
+    } : null,
+  };
+}
+
+async function requestAgentChatAnswer(question, context, history = []) {
   try {
     const res = await fetch("/api/agent/chat", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ question }),
+      body: JSON.stringify({
+        question,
+        context: publicAgentChatContext(context),
+        history: history.slice(-6).map((message) => ({ role: message.role, text: compactText(message.text, 420) })),
+      }),
     });
     const body = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(body?.error || `HTTP ${res.status}`);
@@ -318,7 +532,7 @@ const AgentChatPanel = ({ agentStatus, providers = [], runs = [], leads = [], ru
     setDraft("");
     setIsThinking(true);
     const context = { agentStatus, providers, runs, leads, runCriteria };
-    const answer = await requestAgentChatAnswer(text, context);
+    const answer = await requestAgentChatAnswer(text, context, messages);
     setMessages((prev) => prev.map((message) => message.id === thinkingId
       ? { ...message, text: answer, pending: false }
       : message

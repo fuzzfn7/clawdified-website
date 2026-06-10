@@ -2,12 +2,25 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
+import { buildFallbackAgentChatAnswer, onRequestPost as onAgentChatPost } from '../functions/api/agent/chat.js';
 import { onRequestGet, onRequestPost } from '../functions/api/leadgen-trial.js';
 
 async function postLeadgenTrial(body, { env = {}, headers = {} } = {}) {
   const response = await onRequestPost({
     env,
     request: new Request('https://clawdified.com/api/leadgen-trial', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...headers },
+      body: JSON.stringify(body),
+    }),
+  });
+  return { response, body: await response.json() };
+}
+
+async function postAgentChat(body, { env = {}, headers = {} } = {}) {
+  const response = await onAgentChatPost({
+    env,
+    request: new Request('https://clawdified.com/api/agent/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...headers },
       body: JSON.stringify(body),
@@ -69,6 +82,36 @@ test('leadgen trial GET advertises retired showroom replacement', async () => {
   assert.deepEqual(body.leads, []);
 });
 
+test('agent chat endpoint interprets vague prospect questions instead of returning canned prompt help', async () => {
+  const { response, body } = await postAgentChat({
+    question: 'huh what am I looking at and why should I care',
+    context: {
+      mode: 'public_lead_growth_showroom',
+      totals: { total: 0, finished: 0, incomplete: 0 },
+      latestRun: null,
+      topLead: null,
+    },
+  });
+
+  assert.equal(response.status, 200);
+  assert.equal(body.ok, true);
+  assert.match(body.answer, /broad|unclear|Short version|Clawdified|workflow/i);
+  assert.match(body.answer, /Next move/i);
+  assert.doesNotMatch(body.answer, /Try asking|Provider readiness|Apollo|Serper|Browserbase|\$600|price logic/i);
+});
+
+test('agent chat fallback adapts to a prospect business hint', () => {
+  const answer = buildFallbackAgentChatAnswer('I run a dental office, what would this actually do for me?', {
+    mode: 'public_lead_growth_showroom',
+    totals: { total: 3, finished: 2, incomplete: 1 },
+    topLead: { company: 'Sample Dental Group', fitScore: 88, pain: 'Missed-call follow-up and appointment reminders', nextAngle: 'start with intake follow-up' },
+  });
+
+  assert.match(answer, /dental office|new-patient intake|appointment reminders|missed-call/i);
+  assert.match(answer, /What I’m weighing|Next move/i);
+  assert.doesNotMatch(answer, /Try asking|Provider readiness|Apollo|Serper|Browserbase|\$600|pricing tiers|ICP rules/i);
+});
+
 test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search intake', () => {
   const main = readFileSync(new URL('../agents/lead-growth/main.jsx', import.meta.url), 'utf8');
   const agentPages = readFileSync(new URL('../agents/lead-growth/agent-pages.jsx', import.meta.url), 'utf8');
@@ -78,6 +121,7 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   const leadGrowthIndex = readFileSync(new URL('../agents/lead-growth/index.html', import.meta.url), 'utf8');
   const agentsIndex = readFileSync(new URL('../agents/index.html', import.meta.url), 'utf8');
   const retiredEndpoint = readFileSync(new URL('../functions/api/leadgen-trial.js', import.meta.url), 'utf8');
+  const agentChatEndpoint = readFileSync(new URL('../functions/api/agent/chat.js', import.meta.url), 'utf8');
   const uiBundle = [main, agentPages, appShell, insights, panel, leadGrowthIndex, agentsIndex].join('\n');
 
   assert.match(main, /CLAWDIFIED_LEAD_AGENT_SHOWROOM_20260528/);
@@ -91,6 +135,7 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   assert.match(agentsIndex, /Private agents should feel like <em>your workflow\.<\/em>/);
   assert.match(agentsIndex, /Messy work in\. Finished work out\./);
   assert.match(retiredEndpoint, /Retired public lead-search endpoint/);
+  assert.match(agentChatEndpoint, /Prospects may ask vague, confusing, misspelled, or incomplete questions/);
 
   // The public UI should not expose the old intake/search-tool framing or private targeting/pricing recipe.
   assert.doesNotMatch(uiBundle, /Public lead search intake/i);
