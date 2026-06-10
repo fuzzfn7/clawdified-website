@@ -1788,6 +1788,7 @@ table.sheet tbody tr.selected td:first-child { box-shadow: inset 2px 0 0 var(--a
   display: flex;
   gap: 7px;
   flex-wrap: wrap;
+  background: color-mix(in oklab, var(--surface-2) 78%, var(--accent-soft));
 }
 .agent-chat-prompts button {
   border: 1px solid var(--border);
@@ -1796,6 +1797,7 @@ table.sheet tbody tr.selected td:first-child { box-shadow: inset 2px 0 0 var(--a
   border-radius: 999px;
   padding: 5px 9px;
   font-size: 11.5px;
+  cursor: pointer;
 }
 .agent-chat-prompts button:hover {
   border-color: var(--accent-border);
@@ -1827,10 +1829,19 @@ table.sheet tbody tr.selected td:first-child { box-shadow: inset 2px 0 0 var(--a
 }
 .agent-chat-message.agent {
   align-self: flex-start;
+  border-left: 3px solid var(--accent);
+  background: linear-gradient(180deg, color-mix(in oklab, var(--surface) 86%, var(--accent-soft)), var(--surface));
+}
+.agent-chat-message.agent:not(.pending) .agent-chat-message-text {
+  color: var(--fg);
 }
 .agent-chat-message.pending .agent-chat-message-text {
   color: var(--fg-3);
   font-style: italic;
+}
+.agent-chat-message.pending {
+  border-style: dashed;
+  background: var(--surface-2);
 }
 .agent-chat-message-meta {
   display: flex;

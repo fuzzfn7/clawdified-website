@@ -31,7 +31,7 @@ async function apiJson(path, options = {}) {
 function runSummaryMessage(result) {
   if (result?.demoReplay) {
     const total = Number(result?.run?.total || result?.summary?.demoLeadsQueued || 20);
-    return `Demo replay started — ${total} Clawdified sample lead rows will appear in the sheet.`;
+    return `I’m rebuilding the demo sheet now — ${total} Clawdified-style sample row(s) will appear with fit notes, contact routes, and review angles.`;
   }
   const summary = result?.summary || result?.run?.summary || result?.run || {};
   const runId = result?.run?.runId || result?.run?.id || result?.runId || "Run";
@@ -41,8 +41,8 @@ function runSummaryMessage(result) {
   const companies = Number(summary.rawCompaniesFound || 0);
   const people = Number(summary.peopleFound || 0);
   const blockers = Array.isArray(summary.providerFailuresBlocks) ? summary.providerFailuresBlocks.length : 0;
-  const blockerText = blockers ? ` ${blockers} provider blocker(s) recorded in Agent Health.` : "";
-  return `${runId} completed: ${finished} finished lead(s), ${incomplete} incomplete account(s), ${duplicates} duplicate(s) merged from ${companies} company result(s) / ${people} people found.${blockerText}`;
+  const blockerText = blockers ? ` I’d check Agent Health next because ${blockers} setup blocker(s) were recorded.` : "";
+  return `I finished ${runId}: ${finished} review-ready row(s), ${incomplete} still incomplete, and ${duplicates} duplicate(s) merged after checking ${companies} company candidate(s) / ${people} person candidate(s).${blockerText}`;
 }
 
 function splitList(value) {
@@ -470,27 +470,27 @@ const ClawdifiedShowroomBrief = ({ onRunNow, runBusy }) => (
     <div className="card-head" style={{ alignItems: "flex-start" }}>
       <div className="icon"><Icon name="target" /></div>
       <div style={{ flex: 1 }}>
-        <h3 className="card-title">Lead Growth preview</h3>
-        <div className="card-sub">Run the agent to watch a lead sheet fill with fit notes, contact routes, source proof, and outreach angles.</div>
+        <h3 className="card-title">Lead Growth agent</h3>
+        <div className="card-sub">Run it like a quick review: the agent weighs likely workflow pain, checks contact routes, and turns the best rows into something a human can judge.</div>
       </div>
-      <span className="status-pill ok"><span className="d" />Demo live</span>
+      <span className="status-pill ok"><span className="d" />Ready to review</span>
     </div>
     <div className="card-body automation-control-body">
       <div className="kpi-row automation-kpis">
         <div className="kpi">
-          <div className="kpi-label">Agent profile</div>
-          <div className="kpi-value" style={{ fontSize: 18 }}>Clawdified</div>
-          <div className="kpi-foot">loaded for preview</div>
+          <div className="kpi-label">Starts with</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>Fit profile</div>
+          <div className="kpi-foot">loaded privately</div>
         </div>
         <div className="kpi">
-          <div className="kpi-label">Profile</div>
-          <div className="kpi-value" style={{ fontSize: 18 }}>Fit rules</div>
-          <div className="kpi-foot">set during onboarding</div>
+          <div className="kpi-label">Weighs</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>Pain + proof</div>
+          <div className="kpi-foot">before ranking</div>
         </div>
         <div className="kpi">
-          <div className="kpi-label">Output</div>
-          <div className="kpi-value" style={{ fontSize: 18 }}>Lead sheet</div>
-          <div className="kpi-foot">routes, notes, angle</div>
+          <div className="kpi-label">Returns</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>Review sheet</div>
+          <div className="kpi-foot">route, note, angle</div>
         </div>
         <button className="btn btn-primary" style={{ alignSelf: "center", height: 34 }} onClick={() => onRunNow?.({ mode: "showroom" })} disabled={runBusy}><Icon name="refresh" />{runBusy ? "Running…" : "Run agent"}</button>
       </div>
@@ -499,11 +499,11 @@ const ClawdifiedShowroomBrief = ({ onRunNow, runBusy }) => (
 );
 
 function liveRunGuard(providers = []) {
-  if (!providers.length) return "Run Agent blocked: provider status has not loaded yet.";
+  if (!providers.length) return "I can’t judge a run yet because the setup readout has not loaded.";
   const blocked = providers.filter((provider) => provider.status === "blocked");
   if (blocked.length) {
     const names = blocked.map((provider) => provider.name).join(", ");
-    return `Run Agent blocked: ${names} not configured.`;
+    return `I’d pause before running because ${names} ${blocked.length === 1 ? "is" : "are"} not configured.`;
   }
   return "";
 }
@@ -596,7 +596,7 @@ const App = () => {
     setError("");
 
     if (PUBLIC_DEMO_MODE) {
-      setRunNotice("Running the Clawdified lead agent showroom…");
+      setRunNotice("I’m reading the loaded demo profile, weighing likely workflow pain, then filling the review sheet…");
       try {
         await new Promise((resolve) => window.setTimeout(resolve, 450));
         const mappedLeads = buildClawdifiedShowroomLeads();
@@ -608,7 +608,7 @@ const App = () => {
         setSelectedId(mappedLeads[0]?.id || null);
         setPanelOpen(false);
         setPage("sheet");
-        setRunNotice(`Lead Growth preview complete: ${mappedLeads.length} example leads populated with fit labels, contact routes, source notes, and review angles.`);
+        setRunNotice(`I found ${mappedLeads.length} example row(s) worth reviewing and added the pieces that matter: likely pain, contact route, source note, and next-step angle.`);
       } catch (err) {
         setRunNotice("");
         setError(err.message || String(err));
@@ -661,7 +661,7 @@ const App = () => {
       setRuns([]);
       setSelectedId(null);
       setPanelOpen(false);
-      setRunNotice("Demo sheet cleared. Click Run agent to replay the Clawdified lead-agent example rows.");
+      setRunNotice("I cleared the example sheet. Run the agent again when you want me to rebuild the review rows from the loaded profile.");
       setError("");
       return;
     }
@@ -702,7 +702,7 @@ const App = () => {
   function exportCsv() {
     if (PUBLIC_DEMO_MODE) {
       if (!leads.length) {
-        setRunNotice("Run the Clawdified demo agent before exporting rows.");
+        setRunNotice("Run the preview first so there are reviewed rows to export.");
         return;
       }
       const header = ["fit_score", "company", "domain", "contact", "title", "industry", "geography", "phone", "social", "suggested_agent", "outreach_angle"];
@@ -726,7 +726,7 @@ const App = () => {
       a.download = "clawdified-lead-growth-demo.csv";
       a.click();
       URL.revokeObjectURL(a.href);
-      setRunNotice("Clawdified demo CSV exported from the showroom lead rows.");
+      setRunNotice("Exported the reviewed demo rows as a CSV.");
       return;
     }
     window.location.href = "/api/export/csv";

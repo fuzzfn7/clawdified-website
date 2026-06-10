@@ -81,12 +81,12 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   const uiBundle = [main, agentPages, appShell, insights, panel, leadGrowthIndex, agentsIndex].join('\n');
 
   assert.match(main, /CLAWDIFIED_LEAD_AGENT_SHOWROOM_20260528/);
-  assert.match(main, /Lead Growth preview/);
+  assert.match(main, /Lead Growth agent/);
   assert.match(main, /CLAWDIFIED_SHOWROOM_PROVIDERS/);
   assert.match(main, /Contact enrichment/);
   assert.match(main, /buildClawdifiedShowroomLeads/);
   assert.match(agentPages, /Lead Growth preview state/);
-  assert.match(agentPages, /Provider readiness/);
+  assert.match(agentPages, /Ask the agent what it’s seeing/);
   assert.match(agentsIndex, /Run the preview to see fit notes, contact routes, source proof, and outreach angles land in the sheet/);
   assert.match(agentsIndex, /Built around your process/);
   assert.match(retiredEndpoint, /Retired public lead-search endpoint/);

@@ -90,85 +90,184 @@ function agentQuestionHas(q, patterns) {
 }
 
 function agentProviderSummary(providers) {
-  if (!providers.length) return "I do not have provider status loaded yet.";
-  const rows = providers.map((provider) => `${provider.name}: ${provider.configured ? "configured" : "missing"}${provider.required ? "" : " optional"}`);
-  return rows.join("; ");
+  if (!providers.length) return "I don’t have the connection readout loaded yet.";
+  const ready = providers.filter((provider) => provider.configured).length;
+  const required = providers.filter((provider) => provider.required !== false);
+  const requiredReady = required.filter((provider) => provider.configured).length;
+  const missing = required.filter((provider) => !provider.configured).map((provider) => provider.name);
+  if (missing.length) return `${requiredReady}/${required.length || providers.length} required checks are ready. I’d fix ${missing.join(", ")} before trusting a live run.`;
+  return `${ready}/${providers.length} checks look ready. In this public demo, the details stay high-level so the private lead recipe is not published.`;
 }
 
 function latestRunSummaryForChat(latest) {
-  if (!latest) return "I do not see a saved run yet.";
+  if (!latest) return "I don’t see a run yet, so I’m judging from the loaded demo profile rather than a finished sheet.";
   const finished = Number(latest.finishedEnrichedLeadsAdded || 0);
   const incomplete = Number(latest.incompleteAccountsSaved || 0);
   const companies = Number(latest.rawCompaniesFound || 0);
   const people = Number(latest.peopleFound || 0);
-  const shortfall = latest.shortfall || latest.fulfillmentStatus || "no shortfall label recorded";
-  return `${latest.action || latest.trigger || "Last run"}: ${finished} finished, ${incomplete} incomplete, ${companies} companies checked, ${people} people found. Shortfall/status: ${shortfall}.`;
+  const action = latest.action || latest.trigger || "Last run";
+  const read = finished
+    ? `${action} produced ${finished} review-ready row(s).`
+    : `${action} did not leave a finished row yet.`;
+  return `${read} I’m also seeing ${incomplete} incomplete account(s), ${companies} company candidate(s), and ${people} person/contact candidate(s).`;
+}
+
+function topLeadForAgent(leads = []) {
+  return (leads || [])
+    .filter((lead) => lead && lead.id !== "empty")
+    .slice()
+    .sort((a, b) => Number(b.fitScore || b.clawdifiedCompatibilityScore || 0) - Number(a.fitScore || a.clawdifiedCompatibilityScore || 0))[0] || null;
+}
+
+function painReadForAgent(lead) {
+  if (!lead) return null;
+  const insight = window.LeadInsights?.operationalPainForLead
+    ? window.LeadInsights.operationalPainForLead(lead)
+    : null;
+  return {
+    headline: compactText(insight?.headline || lead.notes || lead.raw?.workflowPainClues, 92),
+    why: compactText(insight?.why || lead.raw?.reasonToContact || lead.notes, 140),
+    next: compactText(insight?.entryPoint || lead.bestPath || lead.raw?.suggestedFirstCallAngle, 155),
+  };
+}
+
+function bulletList(items) {
+  return items.filter(Boolean).map((item) => `• ${item}`).join("\n");
+}
+
+function thinkingAnswer({ read, weighing = [], next, guardrail }) {
+  const parts = [];
+  if (read) parts.push(`My read:\n${read}`);
+  if (weighing.length) parts.push(`What I’m weighing:\n${bulletList(weighing)}`);
+  if (next) parts.push(`Next move:\n${next}`);
+  if (guardrail) parts.push(`Guardrail:\n${guardrail}`);
+  return parts.join("\n\n");
 }
 
 function buildAgentChatAnswer(question, context = {}) {
   const q = normalizeAgentQuestion(question);
   const scheduler = context.agentStatus?.scheduler || {};
-  const criteria = scheduler.criteria || context.runCriteria || {};
   const providers = agentProviderRows(context.agentStatus, context.providers);
   const requiredMissing = providers.filter((provider) => provider.required && !provider.configured);
   const latest = context.runs?.[0] || null;
   const totals = countRealLeads(context.leads);
+  const topLead = topLeadForAgent(context.leads);
+  const topPain = painReadForAgent(topLead);
+  const topLeadLine = topLead
+    ? `${topLead.company} is the row I’d look at first: ${topLead.fitScore || topLead.clawdifiedCompatibilityScore || 0} fit, ${topLead.contactName || "contact still being reviewed"}, ${topLead.title || "title not confirmed"}.`
+    : "I don’t have rows in the sheet yet, so I’d start by running the preview and then judging the filled sheet.";
   const scheduleLine = scheduler.enabled
-    ? `${fmtAgentInterval(scheduler.intervalMinutes)}, next run ${fmtAgentDateTime(scheduler.nextRunAt)}`
-    : "the background schedule is off, so it should only run when you manually confirm it";
+    ? `${fmtAgentInterval(scheduler.intervalMinutes)}, with the next visible run around ${fmtAgentDateTime(scheduler.nextRunAt)}`
+    : "the schedule is off, so this should only move when someone intentionally runs it";
   const providerLine = requiredMissing.length
-    ? `The thing I would check first is provider setup: ${requiredMissing.map((p) => p.name).join(", ")} ${requiredMissing.length === 1 ? "is" : "are"} missing.`
-    : "The lead agent stack is showing ready: discovery, source review, contact enrichment, and sheet scoring are all available in this demo state.";
+    ? `I’d pause before trusting a live run because ${requiredMissing.map((p) => p.name).join(", ")} ${requiredMissing.length === 1 ? "looks" : "look"} missing.`
+    : "The demo’s required checks look ready, so the useful question is lead quality rather than setup.";
 
   if (!q) {
-    return "Ask me like you would ask a normal operator. I can explain Clawdified, the lead rules, the provider flow, or what the current sheet/run status means.";
+    return thinkingAnswer({
+      read: "Ask me like you’d ask a person reviewing the lead sheet. I’ll answer from the visible rows, run state, and Clawdified workflow context.",
+      weighing: ["Which rows look worth human review", "Why a workflow agent might matter", "What is still unverified or intentionally private"],
+      next: "Try: “what are you seeing?”, “why is the top lead a fit?”, or “what would you do next?”",
+    });
   }
 
   if (/^(hi|hey|hello|yo|sup|good morning|good afternoon|good evening)\b/.test(q)) {
-    return "Hey — I’m here. Ask me anything about Clawdified, the lead agent, the current sheet, or how the system works.";
+    return thinkingAnswer({
+      read: "Hey — I’m here. I’m watching the lead sheet, not just repeating a command list.",
+      weighing: [topLeadLine, `${totals.total} visible row(s), ${totals.finished} finished, ${totals.incomplete} still needing review`],
+      next: "Ask me what I’m seeing, why a row matters, or what I’d check before outreach.",
+    });
   }
 
   if (agentQuestionHas(q, [/\bwhat do you do\b/, /\bwho are you\b/, /\bwhat are you\b/, /\byour job\b/, /\byour purpose\b/])) {
-    return "I help show what a lead sheet looks like after a private run. I load sample accounts, attach contact routes and source notes, and keep review labels visible instead of pretending every row is finished. I can explain the demo workflow, but I do not send outreach on my own.";
+    return thinkingAnswer({
+      read: "I’m the lead-review layer for this demo. I look at a loaded fit profile, turn likely accounts into a reviewable sheet, and explain why a row might deserve attention.",
+      weighing: ["Is there an obvious workflow pain?", "Is there enough source/contact context to review?", "Is the row ready for a human decision or still incomplete?"],
+      next: "Use me to understand the sheet before anyone takes action.",
+      guardrail: "I don’t send outreach or reveal the private scoring recipe from the public demo.",
+    });
   }
 
   if (agentQuestionHas(q, [/clawdified/, /about (the )?(brand|company|business)/, /what do you know about/])) {
-    return "Clawdified builds practical AI workflow agents for small businesses. This public demo shows the lead-sheet experience at a high level while keeping private qualification logic and commercial details off the public site.";
+    return thinkingAnswer({
+      read: "Clawdified builds practical AI agents for repetitive business work — the stuff that usually lives in inboxes, follow-up notes, spreadsheets, calendars, and handoffs.",
+      weighing: ["The buyer needs a workflow painful enough to justify an agent", "The agent should create a concrete output or approval queue, not just chat", "The public page should show the result without exposing the sales playbook"],
+      next: "For this demo, I’m showing what a lead sheet can look like after that kind of private setup has already happened.",
+    });
   }
 
   if (agentQuestionHas(q, [/good lead/, /qualified lead/, /identify.*lead/, /qualif/, /criteria/, /fit score/, /good prospect/, /what makes.*lead/, /how.*lead/])) {
-    return "The private scoring recipe is not shown in the public demo. At a high level, the agent looks for accounts where a workflow agent could be relevant, checks source evidence, attaches contact routes, and labels rows for human review instead of exposing the full qualification playbook.";
+    return thinkingAnswer({
+      read: topLeadLine,
+      weighing: [
+        topPain?.headline ? `Likely workflow pain: ${topPain.headline}` : "I’m looking for repeatable follow-up, admin, scheduling, intake, or status-update pain.",
+        `${totals.directEmails} row(s) have email and ${totals.directPhones} have direct/mobile phone in this demo state.`,
+        "I want enough evidence for a human to review without pretending the row is automatically closed-won.",
+      ],
+      next: topPain?.next || "Open the best row, check the source/contact notes, then decide whether the angle is worth a real conversation.",
+      guardrail: "The exact qualification thresholds stay private on the public site.",
+    });
   }
 
   if (agentQuestionHas(q, [/how.*(system|it|agent).*work/, /workflow/, /process/, /pipeline/, /how.*find/, /how.*search/])) {
-    return `The system starts from a loaded fit profile, checks source evidence, attaches contact routes, and writes review-ready rows to the sheet. Outreach stays review-only. Right now I see ${totals.total} sheet row(s): ${totals.finished} finished and ${totals.incomplete} still incomplete.`;
+    return thinkingAnswer({
+      read: `I’m seeing this as a workflow, not a magic search box: load the profile, look for likely accounts, attach proof/contact routes, then write a sheet a human can judge. Current sheet: ${totals.total} row(s), ${totals.finished} finished, ${totals.incomplete} incomplete.`,
+      weighing: ["Fit: does the business look like it has repeatable work Clawdified could automate?", "Evidence: is there enough public/source context to support the row?", "Actionability: is there a contact route and a clear next-step angle?"],
+      next: topLead ? `I’d start by opening ${topLead.company} and checking whether the suggested workflow pain feels real.` : "Run the preview, then review the top row instead of judging an empty sheet.",
+      guardrail: "Outreach stays human-reviewed from this public demo.",
+    });
   }
 
   if (agentQuestionHas(q, [/provider/, /data source/, /connection/, /api key/, /configured/, /missing key/])) {
-    return `Provider readiness: ${providerLine}
-
-Current status: ${agentProviderSummary(providers)}`;
+    return thinkingAnswer({
+      read: providerLine,
+      weighing: [agentProviderSummary(providers), "The public demo keeps source/provider details generic so the private stack and targeting recipe are not exposed."],
+      next: requiredMissing.length ? "Fix the missing setup before relying on a real run." : "Move from setup checks to row-quality review.",
+    });
   }
 
   if (agentQuestionHas(q, [/schedule/, /cadence/, /next run/, /automatic/, /autonomous/, /heartbeat/])) {
-    return `Schedule-wise, ${scheduleLine}. The public demo keeps run targets, markets, and search details redacted. Manual runs still go through the Run agent button so nothing fires silently from chat.`;
+    return thinkingAnswer({
+      read: `Schedule-wise, ${scheduleLine}.`,
+      weighing: ["Manual runs should stay visibly intentional", "Background runs should write inspectable rows, not silently send messages", "Public demo targets stay generalized"],
+      next: "Use Run agent when you want the sheet to visibly rebuild for the demo.",
+    });
   }
 
-  if (agentQuestionHas(q, [/latest/, /last run/, /recent run/, /history/, /result/, /status/, /blocked/, /stuck/, /shortfall/, /why.*zero/, /why.*missing/, /quality/])) {
-    return `${latestRunSummaryForChat(latest)}
-
-Current sheet: ${totals.total} total row(s), ${totals.finished} finished, ${totals.incomplete} incomplete, ${totals.directEmails} with direct email, ${totals.directPhones} with direct/mobile phone. The usual reason rows stay incomplete is simple: the agent found a person/company, but not the required direct email + direct/mobile phone package with evidence yet.`;
+  if (agentQuestionHas(q, [/latest/, /last run/, /recent run/, /history/, /result/, /status/, /blocked/, /stuck/, /shortfall/, /why.*zero/, /why.*missing/, /quality/, /what.*seeing/])) {
+    return thinkingAnswer({
+      read: latestRunSummaryForChat(latest),
+      weighing: [
+        `${totals.total} total visible row(s), ${totals.finished} finished, ${totals.incomplete} incomplete.`,
+        `${totals.directEmails} row(s) have email and ${totals.directPhones} have direct/mobile phone.`,
+        topLeadLine,
+      ],
+      next: topLead ? `I’d inspect ${topLead.company}, then decide whether its likely pain — ${topPain?.headline || "the saved workflow clue"} — is strong enough for a real Clawdified conversation.` : "Run the preview so there is something concrete to judge.",
+    });
   }
 
   if (agentQuestionHas(q, [/\b(run|start|launch)\b.*\b(agent|search|lead|job)\b/, /\bkick off\b/, /^run\b/, /^start\b/, /^launch\b/])) {
-    return "I can talk through the run, but I will not start work from chat. Use the Run agent button so the app can show the visible run state and populate the sheet intentionally.";
+    return thinkingAnswer({
+      read: "I can talk through what I would check, but I won’t quietly start work from inside chat.",
+      weighing: ["A visible button keeps the demo honest", "The sheet should change in front of the viewer", "No outreach or hidden external action should happen from a chat sentence"],
+      next: "Click Run agent and I’ll treat the filled sheet as the thing to review.",
+    });
   }
 
   if (agentQuestionHas(q, [/outreach/, /send/, /email/, /dm/, /sms/, /call/, /message/, /linkedin message/, /facebook message/])) {
-    return "This agent is research-only. It can show contact routes and explain what it found, but it does not send Gmail, LinkedIn, Facebook, Instagram, SMS, calls, or any other outreach from here.";
+    return thinkingAnswer({
+      read: "I’d use the sheet to suggest a first conversation angle, not to send anything automatically.",
+      weighing: [topLead ? `${topLead.company}: ${topPain?.next || topLead.bestPath || "review the saved angle first"}` : "No row is selected yet", "A human should approve the account, contact route, and message before outreach", "Social/email sends are outside this public preview"],
+      next: "Open a row, review the reason and contact route, then decide if the angle is worth using.",
+      guardrail: "No Gmail, LinkedIn, Facebook, Instagram, SMS, calls, or DMs are sent from here.",
+    });
   }
 
-  return "I can work with that, but I need to anchor the answer to this demo: Clawdified, the lead-generation workflow, provider status, run status, or the rules for what counts as a real lead. Ask it naturally — for example, “what do you know about Clawdified?”, “how does the system work?”, or “how do you decide if a lead is good?”";
+  return thinkingAnswer({
+    read: "I can answer that better if we anchor it to the lead sheet or the Clawdified workflow.",
+    weighing: [topLeadLine, "I can explain fit, source/contact confidence, current run state, or what to check next."],
+    next: "Try asking: “what are you seeing?”, “why is this a fit?”, “how does this work?”, or “what would you do before outreach?”",
+  });
 }
 
 function agentAnswerText(answer) {
@@ -199,7 +298,7 @@ const AgentChatPanel = ({ agentStatus, providers = [], runs = [], leads = [], ru
       id: "welcome",
       role: "agent",
       label: "Clawdified agent",
-      text: "Hey — I’m here. Ask me normally about Clawdified, how this lead agent works, what makes a good lead, or what’s happening in the current run.",
+      text: "My read:\nI’m here to review the lead sheet with you. Ask what I’m seeing, why a row might fit, or what I’d check before outreach.\n\nNext move:\nRun the preview, then ask me which row I’d inspect first.",
     },
   ]));
   const providerRows = agentProviderRows(agentStatus, providers);
@@ -214,7 +313,7 @@ const AgentChatPanel = ({ agentStatus, providers = [], runs = [], leads = [], ru
     setMessages((prev) => [
       ...prev,
       { id: `user-${Date.now()}`, role: "user", label: "You", text },
-      { id: thinkingId, role: "agent", label: "Clawdified agent", text: "Thinking…", pending: true },
+      { id: thinkingId, role: "agent", label: "Clawdified agent", text: "Checking the sheet, run state, and fit clues…", pending: true },
     ]);
     setDraft("");
     setIsThinking(true);
@@ -231,15 +330,21 @@ const AgentChatPanel = ({ agentStatus, providers = [], runs = [], leads = [], ru
     <section className={"agent-chat-card" + (compact ? " compact" : "")}>
       <div className="agent-chat-head">
         <div>
-          <div className="agent-chat-kicker"><span className="pulse" /> Agent chat</div>
-          <h3>{compact ? "Ask the lead agent" : "Talk to the Clawdified agent"}</h3>
-          <p>{compact ? "Normal Q&A about the agent and current state." : "Ask in plain English. I’ll answer from the public demo state, current sheet, and run health — without exposing private qualification rules or sending outreach from chat."}</p>
+          <div className="agent-chat-kicker"><span className="pulse" /> Lead agent readout</div>
+          <h3>{compact ? "Ask what it sees" : "Ask the agent what it’s seeing"}</h3>
+          <p>{compact ? "Plain-English read on rows, fit, and next checks." : "Ask in plain English. I’ll reason from the visible sheet, run health, and Clawdified context — without exposing private qualification rules or sending outreach from chat."}</p>
         </div>
         <div className="agent-chat-status-stack">
           <span className={"status-pill " + (agentStatus?.currentRunId ? "degraded" : agentStatus?.scheduler?.enabled ? "ok" : "blocked")}><span className="d" />{agentStatusLabel(agentStatus)}</span>
           <span className="agent-chat-mini-stat">providers {requiredReady}/{requiredTotal || providerRows.length || 0}</span>
           <span className="agent-chat-mini-stat">rows {totals.total}</span>
         </div>
+      </div>
+
+      <div className="agent-chat-prompts" aria-label="Suggested questions">
+        {["What are you seeing?", "Why is the top row a fit?", "What would you check next?"].map((prompt) => (
+          <button key={prompt} type="button" onClick={() => submitMessage(prompt)} disabled={isThinking}>{prompt}</button>
+        ))}
       </div>
 
       <div className="agent-chat-thread" aria-live="polite">
@@ -262,16 +367,16 @@ const AgentChatPanel = ({ agentStatus, providers = [], runs = [], leads = [], ru
             }
           }}
           rows={compact ? 2 : 3}
-          placeholder="Ask naturally — e.g. how does this demo work?"
+          placeholder="Ask naturally — e.g. what are you seeing in the lead sheet?"
           disabled={isThinking}
         />
         <div className="agent-chat-composer-actions">
           {onRunNow && (
-            <button type="button" className="btn" onClick={() => onRunNow({ mode: "live" })} disabled={runBusy || isThinking} title="Starts the normal confirmed Run Agent flow.">
+            <button type="button" className="btn" onClick={() => onRunNow({ mode: "live" })} disabled={runBusy || isThinking} title="Runs the visible preview so the sheet changes in front of the viewer.">
               <Icon name="refresh" />{runBusy ? "Running…" : "Run agent"}
             </button>
           )}
-          <button type="submit" className="btn btn-primary" disabled={isThinking || !draft.trim()}><Icon name="sparkle" />{isThinking ? "Thinking…" : "Send"}</button>
+          <button type="submit" className="btn btn-primary" disabled={isThinking || !draft.trim()}><Icon name="sparkle" />{isThinking ? "Reviewing…" : "Ask"}</button>
         </div>
       </form>
     </section>
@@ -310,7 +415,7 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
       <div className="page-header">
         <div>
           <h1 className="page-title">Agent</h1>
-          <div className="page-sub">Schedule, public demo state, provider readiness, and a compact agent chat panel.</div>
+          <div className="page-sub">Schedule the preview, review the demo state, and ask the lead agent what it is seeing.</div>
         </div>
       </div>
 
