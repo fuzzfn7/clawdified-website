@@ -201,7 +201,7 @@
     if (raw.servicesOffered) signals.push(`Services: ${compact(raw.servicesOffered, 82)}`);
     if (lead?.industry || raw.industryCategory) signals.push(`Industry: ${compact(lead?.industry || raw.industryCategory, 64)}`);
     if (lead?.title || raw.title) signals.push(`Buyer: ${compact(lead?.title || raw.title, 64)}`);
-    if (lead?.size || raw.fitBand) signals.push(`Fit band: ${compact(lead?.size || raw.fitBand, 48)}`);
+    if (lead?.size || raw.fitBand) signals.push(`Customer type: ${compact(lead?.size || raw.fitBand, 48)}`);
     if (!savedPain && reason) signals.push(`Reason: ${compact(reason, 82)}`);
     return signals.slice(0, 5);
   }
@@ -230,10 +230,10 @@
 
   function humanizeReason(reason) {
     return compact(text(reason)
-      .replace(/Clawdified compatibility/gi, "Clawdified fit")
+      .replace(/Clawdified compatibility/gi, "Clawdified match")
       .replace(/workflowPainClues/gi, "workflow pain clues")
       .replace(/softwareAiHeaviness/gi, "software/AI heaviness")
-      .replace(/tamFitScore|fitScore/gi, "fit score"), 160);
+      .replace(/tamFitScore|fitScore/gi, "match score"), 160);
   }
 
   function plainFitReasons(lead, painInsight) {
@@ -243,10 +243,10 @@
 
     const reasons = [];
     const fitScore = Number(lead?.clawdifiedCompatibilityScore || lead?.fitScore || raw.clawdifiedCompatibilityScore || raw.tamFitScore || 0);
-    if (fitScore >= 60) reasons.push("Score suggests this is worth reviewing for a Clawdified automation angle.");
+    if (fitScore >= 60) reasons.push("The match score says this row is worth a human look.");
     if (painInsight?.suggestedAgent) reasons.push(`Suggested agent: ${painInsight.suggestedAgent}.`);
     if (lead?.title || raw.title) reasons.push(`${lead?.title || raw.title} is close enough to the business workflow to feel the pain if it is real.`);
-    if (lead?.size || raw.fitBand) reasons.push("This public demo row includes a private fit-band label for review.");
+    if (lead?.size || raw.fitBand) reasons.push("The customer type is close enough to the target rules to review.");
     return reasons.slice(0, 4);
   }
 
@@ -259,7 +259,7 @@
     if (missing.some((field) => /email/i.test(field))) fallback.push("Direct email is still missing or unverified.");
     if (missing.some((field) => /phone/i.test(field))) fallback.push("Direct/mobile phone is still missing or unverified.");
     if (!fallback.length && missing.length) fallback.push(`Still missing: ${compact(missing.slice(0, 3).join(", "), 120)}.`);
-    if (!fallback.length) fallback.push("No major fit risk was recorded yet; still verify the pain before outreach.");
+    if (!fallback.length) fallback.push("No major watch-out was recorded yet; still verify the pain before outreach.");
     return fallback;
   }
 

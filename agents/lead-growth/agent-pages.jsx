@@ -96,11 +96,11 @@ function agentProviderSummary(providers) {
   const requiredReady = required.filter((provider) => provider.configured).length;
   const missing = required.filter((provider) => !provider.configured).map((provider) => provider.name);
   if (missing.length) return `${requiredReady}/${required.length || providers.length} required checks are ready. I’d fix ${missing.join(", ")} before trusting a live run.`;
-  return `${ready}/${providers.length} checks look ready. In this public demo, the details stay high-level so the private lead recipe is not published.`;
+  return `${ready}/${providers.length} checks look ready. The demo keeps setup details simple so the page focuses on what the agent returns.`;
 }
 
 function latestRunSummaryForChat(latest) {
-  if (!latest) return "I don’t see a run yet, so I’m judging from the loaded demo profile rather than a finished sheet.";
+  if (!latest) return "I don’t see a run yet, so I’m judging from the saved customer rules rather than a finished sheet.";
   const finished = Number(latest.finishedEnrichedLeadsAdded || 0);
   const incomplete = Number(latest.incompleteAccountsSaved || 0);
   const companies = Number(latest.rawCompaniesFound || 0);
@@ -245,7 +245,7 @@ function adaptiveProspectAnswer({ question, q, topLead, topPain, totals, latest 
         painLine,
       ],
       next: `The question I’d ask you next is: which part of ${businessLabel} gets repeated every week but still needs judgment before it goes out?`,
-      guardrail: "I can explain the fit publicly, but the private build rules and scoring recipe happen in the actual setup call.",
+      guardrail: "I can explain the fit publicly, but the exact customer rules and approvals get handled in the actual setup call.",
     });
   }
 
@@ -263,23 +263,23 @@ function adaptiveProspectAnswer({ question, q, topLead, topPain, totals, latest 
 
   if (intent.primary === "leads") {
     return thinkingAnswer({
-      read: "If you’re asking about lead generation, the agent’s job is to turn a private fit profile into rows a human can review: likely account, reason it may fit, contact route, source note, and next angle.",
+      read: "If you’re asking about lead generation, the agent’s job is to turn your customer rules into rows a human can review: likely account, reason it may fit, contact route, source note, and next angle.",
       weighing: [
         `${totals.total} visible row(s), ${totals.finished} review-ready, ${totals.incomplete} still incomplete in the current demo state.`,
         leadExample,
         "A good row should make the next human decision easier; it should not pretend every scraped name is a real opportunity.",
       ],
-      next: topLead ? `Open ${topLead.company} and ask why it fits, or run the preview if you want to watch the sheet rebuild.` : "Run the preview, then ask me why the first finished row is or is not worth pursuing.",
-      guardrail: "The public demo does not reveal the private qualification recipe or send outreach on its own.",
+      next: topLead ? `Open ${topLead.company} and ask why it matched, or run the preview if you want to watch the sheet rebuild.` : "Run the preview, then ask me why the first finished row is or is not worth pursuing.",
+      guardrail: "The public demo does not send outreach on its own or publish the exact setup recipe.",
     });
   }
 
   if (intent.primary === "real") {
     return thinkingAnswer({
-      read: "This public page is a showroom, not an open free-for-all lead engine. It shows the kind of workspace and reasoning a configured Clawdified agent would produce once the private business profile is loaded.",
+      read: "This public page is a showroom, not an open free-for-all lead engine. It shows the kind of workspace and reasoning a configured Clawdified agent would produce once the business context and customer rules are loaded.",
       weighing: [
         "The interface and review flow are real product shape.",
-        "The public rows are safe examples so the site does not publish private targeting logic or let anonymous visitors pull lead lists.",
+        "The rows are examples so the site can show the workflow without letting anonymous visitors pull lead lists.",
         "A real build gets configured around your workflow, tools, approval rules, and output format.",
       ],
       next: "If you want to see it against your business, the next step is a workflow map call — not typing secret business criteria into a public page.",
@@ -292,7 +292,7 @@ function adaptiveProspectAnswer({ question, q, topLead, topPain, totals, latest 
       weighing: [
         "A simple follow-up/review workflow is different from a multi-system operations agent.",
         "The right way to price it is against the cost of the manual workflow and the value of getting the output consistently done.",
-        "The public demo intentionally avoids exact pricing logic.",
+        "This page avoids package pricing because the workflow needs to be mapped first.",
       ],
       next: "Map one workflow first; then Clawdified can give you a clear build option instead of a generic package price.",
     });
@@ -304,7 +304,7 @@ function adaptiveProspectAnswer({ question, q, topLead, topPain, totals, latest 
       weighing: [
         "The agent should sit between the tools and produce the next approved output.",
         "Integrations matter less than the handoff: what comes in, what decision is made, and what finished thing should come out.",
-        "Sensitive connectors are configured privately, not exposed through this public demo.",
+        "Secure connectors get set up in a real project, not from this page.",
       ],
       next: "Name the tool your team lives in and the repetitive task around it; I’ll explain what the agent would likely watch, draft, update, or queue.",
     });
@@ -343,8 +343,8 @@ function buildAgentChatAnswer(question, context = {}) {
   if (!q) {
     return thinkingAnswer({
       read: "Ask me like you’d ask a person reviewing the lead sheet. I’ll answer from the visible rows, run state, and Clawdified workflow context.",
-      weighing: ["Which rows look worth human review", "Why a workflow agent might matter", "What is still unverified or intentionally private"],
-      next: "Try: “what are you seeing?”, “why is the top lead a fit?”, or “what would you do next?”",
+      weighing: ["Which rows look worth human review", "Why a workflow agent might matter", "What still needs a human check"],
+      next: "Try: “what are you seeing?”, “why did the top lead match?”, or “what would you do next?”",
     });
   }
 
@@ -361,10 +361,10 @@ function buildAgentChatAnswer(question, context = {}) {
 
   if (agentQuestionHas(q, [/\bwhat do you do\b/, /\bwho are you\b/, /\bwhat are you\b/, /\byour job\b/, /\byour purpose\b/])) {
     return thinkingAnswer({
-      read: "I’m the lead-review layer for this demo. I look at a loaded fit profile, turn likely accounts into a reviewable sheet, and explain why a row might deserve attention.",
+      read: "I’m the lead-review layer for this demo. I look at the customer rules, turn likely accounts into a reviewable sheet, and explain why a row might deserve attention.",
       weighing: ["Is there an obvious workflow pain?", "Is there enough source/contact context to review?", "Is the row ready for a human decision or still incomplete?"],
       next: "Use me to understand the sheet before anyone takes action.",
-      guardrail: "I don’t send outreach or reveal the private scoring recipe from the public demo.",
+      guardrail: "I don’t send outreach or reveal the exact setup recipe from the public demo.",
     });
   }
 
@@ -372,11 +372,11 @@ function buildAgentChatAnswer(question, context = {}) {
     return thinkingAnswer({
       read: "Clawdified builds practical AI agents for repetitive business work — the stuff that usually lives in inboxes, follow-up notes, spreadsheets, calendars, and handoffs.",
       weighing: ["The buyer needs a workflow painful enough to justify an agent", "The agent should create a concrete output or approval queue, not just chat", "The public page should show the result without exposing the sales playbook"],
-      next: "For this demo, I’m showing what a lead sheet can look like after that kind of private setup has already happened.",
+      next: "For this demo, I’m showing what a lead sheet can look like after that kind of business context and customer rules have already been loaded.",
     });
   }
 
-  if (agentQuestionHas(q, [/good lead/, /qualified lead/, /identify.*lead/, /qualif/, /criteria/, /fit score/, /good prospect/, /what makes.*lead/, /how.*lead/])) {
+  if (agentQuestionHas(q, [/good lead/, /qualified lead/, /identify.*lead/, /qualif/, /criteria/, /match score/, /good prospect/, /what makes.*lead/, /how.*lead/])) {
     return thinkingAnswer({
       read: topLeadLine,
       weighing: [
@@ -385,7 +385,7 @@ function buildAgentChatAnswer(question, context = {}) {
         "I want enough evidence for a human to review without pretending the row is automatically closed-won.",
       ],
       next: topPain?.next || "Open the best row, check the source/contact notes, then decide whether the angle is worth a real conversation.",
-      guardrail: "The exact qualification thresholds stay private on the public site.",
+      guardrail: "Exact customer thresholds are set during the real setup, not guessed from the public page.",
     });
   }
 
@@ -401,7 +401,7 @@ function buildAgentChatAnswer(question, context = {}) {
   if (agentQuestionHas(q, [/provider/, /data source/, /connection/, /api key/, /configured/, /missing key/])) {
     return thinkingAnswer({
       read: providerLine,
-      weighing: [agentProviderSummary(providers), "The public demo keeps source/provider details generic so the private stack and targeting recipe are not exposed."],
+      weighing: [agentProviderSummary(providers), "The source checks stay high-level here so viewers can focus on the lead sheet output."],
       next: requiredMissing.length ? "Fix the missing setup before relying on a real run." : "Move from setup checks to row-quality review.",
     });
   }
@@ -546,7 +546,7 @@ const AgentChatPanel = ({ agentStatus, providers = [], runs = [], leads = [], ru
         <div>
           <div className="agent-chat-kicker"><span className="pulse" /> Lead agent readout</div>
           <h3>{compact ? "Ask what it sees" : "Ask the agent what it’s seeing"}</h3>
-          <p>{compact ? "Plain-English read on rows, fit, and next checks." : "Ask in plain English. I’ll reason from the visible sheet, run health, and Clawdified context — without exposing private qualification rules or sending outreach from chat."}</p>
+          <p>{compact ? "Plain-English read on rows, match quality, and next checks." : "Ask in plain English. I’ll reason from the visible sheet, run proof, and Clawdified context without sending outreach from chat."}</p>
         </div>
         <div className="agent-chat-status-stack">
           <span className={"status-pill " + (agentStatus?.currentRunId ? "degraded" : agentStatus?.scheduler?.enabled ? "ok" : "blocked")}><span className="d" />{agentStatusLabel(agentStatus)}</span>
@@ -683,7 +683,7 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
               <div className="icon"><Icon name="target" /></div>
               <div>
                 <h3 className="card-title">Lead Growth preview state</h3>
-                <div className="card-sub">This shows what the finished workspace feels like: fit notes, source notes, contact routes, and next-step angles in one sheet.</div>
+                <div className="card-sub">This shows what the finished workspace feels like: why each company matched, source notes, contact routes, and next-step angles in one sheet.</div>
               </div>
             </div>
             <div className="card-body automation-control-body">
@@ -695,7 +695,7 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
                 </div>
                 <div className="kpi">
                   <div className="kpi-label">Uses</div>
-                  <div className="kpi-value" style={{ fontSize: 18 }}>Fit rules</div>
+                  <div className="kpi-value" style={{ fontSize: 18 }}>Customer rules</div>
                   <div className="kpi-foot">set during onboarding</div>
                 </div>
                 <div className="kpi">
@@ -706,14 +706,14 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
               </div>
 
               <div className="agent-do-list compact">
-                <div><Icon name="check" />Shows how a private lead run can become a review-ready sheet without publishing the scoring recipe.</div>
-                <div><Icon name="check" />Keeps the public demo focused on the workflow output, not exact target titles or thresholds.</div>
-                <div><Icon name="check" />Returns sample fit labels, source notes, contact routes, and a safe next-step angle for review.</div>
+                <div><Icon name="check" />Shows how customer rules become a review-ready sheet.</div>
+                <div><Icon name="check" />Keeps the demo focused on the output: who matched, why, source notes, and next step.</div>
+                <div><Icon name="check" />Returns match notes, source notes, contact routes, and a next-step angle for review.</div>
                 <div><Icon name="x" />Does not send outreach from this preview.</div>
               </div>
 
               <div className="scheduled-criteria-mini">
-                <b>Fit profile loaded:</b> service businesses with follow-up-heavy workflows.
+                <b>Customer rules loaded:</b> service businesses with follow-up-heavy workflows.
               </div>
             </div>
           </div>
@@ -743,8 +743,8 @@ const AgentHealth = ({ providers, runs, agentStatus }) => {
     <div className="page">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Run Health</h1>
-          <div className="page-sub">Useful proof: is it scheduled, are providers wired, what happened on the last run?</div>
+          <h1 className="page-title">Run Proof</h1>
+          <div className="page-sub">Useful proof: what changed, what checks ran, and what the last run returned.</div>
         </div>
         <div className="page-actions">
           <button className="btn" onClick={() => window.location.reload()}><Icon name="refresh" />Refresh</button>
@@ -830,8 +830,8 @@ const AgentHealth = ({ providers, runs, agentStatus }) => {
           <div className="card-head">
             <div className="icon"><Icon name="db" /></div>
             <div>
-              <h3 className="card-title">Provider readiness</h3>
-              <div className="card-sub">No fake latency/quota fields — just what each provider contributes and whether it is wired.</div>
+              <h3 className="card-title">Source checks</h3>
+              <div className="card-sub">Which checks are available for the demo and what each one contributes.</div>
             </div>
           </div>
           <div className="card-body" style={{ display: "grid", gap: 10 }}>
@@ -855,7 +855,7 @@ const AgentHealth = ({ providers, runs, agentStatus }) => {
             <div className="icon"><Icon name="history" /></div>
             <div>
               <h3 className="card-title">Recent runs</h3>
-              <div className="card-sub">Manual showroom runs and scheduled agent runs in one place.</div>
+              <div className="card-sub">Manual previews and scheduled agent runs in one place.</div>
             </div>
           </div>
           <div>

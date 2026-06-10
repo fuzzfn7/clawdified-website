@@ -68,7 +68,7 @@ function outreachSummaryForLead(lead) {
   const ready = platforms.filter((platform) => platform.status === "ready");
   if (interacted.length) return `${interacted.length} interacted · ${ready.length} ready`;
   if (ready.length) return `${ready.length} platforms ready`;
-  return "Needs contact routes";
+  return "Needs a route";
 }
 
 function firstNameFromLead(lead) {
@@ -236,7 +236,7 @@ const OutreachPage = ({ leads, selectedId, onSelect, searchQuery }) => {
             </div>
             <div className="outreach-hero-score">
               <b>{activeLead.fitScore || 0}</b>
-              <span>fit score</span>
+              <span>match score</span>
             </div>
           </section>
 
@@ -325,7 +325,7 @@ const OutreachPage = ({ leads, selectedId, onSelect, searchQuery }) => {
           </div>
           <div className="outreach-table-scroll">
             <table className="outreach-table">
-              <thead><tr><th>Contact</th><th>Company</th><th>Channels found</th><th>Message angle</th><th>Fit</th><th></th></tr></thead>
+              <thead><tr><th>Contact</th><th>Company</th><th>Channels found</th><th>Message angle</th><th>Match</th><th></th></tr></thead>
               <tbody>
                 {rows.length ? rows.map((lead) => {
                   const platforms = outreachPlatformsForLead(lead);
@@ -360,7 +360,7 @@ const Rail = ({ page, setPage, leads = [] }) => {
     { id: "sheet", icon: "sheet", label: "Lead Sheet", badge: leadCount },
     { id: "outreach", icon: "mail", label: "Lead Outreach", badge: leadCount },
     { id: "settings", icon: "settings", label: "Agent" },
-    { id: "health", icon: "activity", label: "Run Health", health: "ok" },
+    { id: "health", icon: "activity", label: "Run Proof", health: "ok" },
   ];
   return (
     <aside className="rail">
@@ -398,7 +398,7 @@ const Topbar = ({ page, onRunNow, runBusy, onClearDemo, clearBusy, showDemoClear
     agent: ["Agent", "Chat"],
     outreach: ["Agent", "Lead Outreach"],
     settings: ["Agent", "Agent"],
-    health: ["Agent", "Run Health"],
+    health: ["Agent", "Run Proof"],
   };
   const [a, b] = titles[page] || titles.sheet;
   return (
@@ -441,7 +441,7 @@ const StatStrip = ({ leads }) => {
         <div className="stat-icon"><Icon name="db" /></div>
       </div>
       <div className="stat-cell">
-        <div className="stat-label">Hot fits</div>
+        <div className="stat-label">Best matches</div>
         <div className="stat-value">{hotFits}<span className="stat-delta flat">≥80</span></div>
         <div className="stat-icon" style={{ background: "oklch(0.95 0.05 145)", color: "oklch(0.36 0.13 145)" }}><Icon name="target" /></div>
       </div>
@@ -456,7 +456,7 @@ const StatStrip = ({ leads }) => {
         <div className="stat-icon"><Icon name="phone" /></div>
       </div>
       <div className="stat-cell">
-        <div className="stat-label">Average fit</div>
+        <div className="stat-label">Avg match</div>
         <div className="stat-value">{avgFit}<span style={{fontSize:13,color:"var(--fg-3)"}}>%</span></div>
         <div className="stat-icon"><Icon name="sparkle" /></div>
       </div>
@@ -479,7 +479,7 @@ const FilterBar = ({ leads, filters, setFilters, sortKey, setSortKey }) => {
   const industries = useMemo(() => countBy((l) => l.industry).map((item) => ({ ...item, swatch: indColor(item.value, "bar") })), [leads]);
   const roles = useMemo(() => countBy((l) => l.seniority), [leads]);
   const departments = useMemo(() => countBy((l) => l.department), [leads]);
-  const fitBands = useMemo(() => countBy((l) => l.size || "Private fit band"), [leads]);
+  const fitBands = useMemo(() => countBy((l) => l.size || "Customer type"), [leads]);
 
   const set = (k, v) => setFilters(f => ({ ...f, [k]: v }));
 
@@ -497,8 +497,8 @@ const FilterBar = ({ leads, filters, setFilters, sortKey, setSortKey }) => {
       <FilterPill label="Industry" icon="db" options={industries} values={filters.industries || []} onChange={(v) => set("industries", v)} />
       <FilterPill label="Role" icon="user" options={roles} values={filters.roles || []} onChange={(v) => set("roles", v)} />
       <FilterPill label="Department" icon="building" options={departments} values={filters.departments || []} onChange={(v) => set("departments", v)} />
-      <FilterPill label="Fit band" icon="building" options={fitBands} values={filters.sizes || []} onChange={(v) => set("sizes", v)} />
-      <FilterPill label="Fit score" icon="target" allowSlider sliderValue={filters.minFit || 0} onSliderChange={(v) => set("minFit", v)} />
+      <FilterPill label="Customer type" icon="building" options={fitBands} values={filters.sizes || []} onChange={(v) => set("sizes", v)} />
+      <FilterPill label="Match score" icon="target" allowSlider sliderValue={filters.minFit || 0} onSliderChange={(v) => set("minFit", v)} />
 
       {activeCount > 0 && (
         <button className="filter-pill" style={{ color: "var(--fg-3)", borderStyle: "dashed" }} onClick={() => setFilters({})}>
@@ -510,7 +510,7 @@ const FilterBar = ({ leads, filters, setFilters, sortKey, setSortKey }) => {
       <div className="filter-summary" style={{ display: "flex", alignItems: "center", gap: 8 }}>
         Sort
         <select value={sortKey} onChange={(event) => setSortKey(event.target.value)} style={{ background: "var(--surface-2)", color: "var(--fg)", border: "1px solid var(--border)", borderRadius: 6, padding: "5px 8px", fontSize: 12 }}>
-          <option value="fit-desc">Fit score ↓</option>
+          <option value="fit-desc">Best match ↓</option>
           <option value="company-asc">Company A-Z</option>
           <option value="contact-asc">Contact A-Z</option>
           <option value="enriched-desc">Newest enriched</option>
@@ -563,7 +563,7 @@ function getOperationalPain(lead) {
   if (window.LeadInsights?.operationalPainForLead) return window.LeadInsights.operationalPainForLead(lead);
   return {
     headline: "Repetitive follow-up and admin handoffs",
-    summary: "Best guess: manual follow-up, scheduling, data entry, or paperwork could be the AI entry point.",
+    summary: "Best guess: manual follow-up, scheduling, data entry, or paperwork could be the first workflow to automate.",
     entryPoint: "Start with the simplest repeatable follow-up/admin workflow.",
     suggestedAgent: "Follow-up + admin cleanup agent",
     why: "Because routine follow-up, scheduling, data entry, and paperwork often repeat.",
@@ -627,7 +627,7 @@ const ContactSheet = ({ leads, onSelect, selectedId, searchQuery, lastRunAt }) =
           <h1 className="page-title">Lead Sheet
             <span style={{ fontFamily: "var(--mono)", fontSize: 11.5, color: "var(--fg-3)", fontWeight: 400, background: "var(--surface-3)", padding: "3px 9px", borderRadius: 100, border: "1px solid var(--border)", whiteSpace: "nowrap" }}>{leads.length} rows · {lastRunText}</span>
           </h1>
-          <div className="page-sub">The agent fills this sheet automatically. Filter/sort by geography, role, department, public fit band, and fit score.</div>
+          <div className="page-sub">The agent fills this sheet automatically. Filter by area, role, department, customer type, and match score.</div>
         </div>
       </div>
 
@@ -656,10 +656,10 @@ const ContactSheet = ({ leads, onSelect, selectedId, searchQuery, lastRunAt }) =
               <tr>
                 <th style={{ padding: 0 }}></th>
                 <th><span className="checkbox" /></th>
-                <th>Fit</th>
+                <th>Match</th>
                 <th>Company</th>
                 <th>Contact</th>
-                <th>Suggested AI agent</th>
+                <th>Likely workflow</th>
                 <th>Industry</th>
                 <th>Geography</th>
                 <th>Phone</th>
@@ -724,7 +724,7 @@ const ContactSheet = ({ leads, onSelect, selectedId, searchQuery, lastRunAt }) =
           <span className="sep" />
           <span>{checked.size} selected</span>
           <span className="sep" />
-          <span>{sortKey === "fit-desc" ? "Sorted by Fit score ↓" : "Custom sort active"}</span>
+          <span>{sortKey === "fit-desc" ? "Sorted by best match ↓" : "Custom sort active"}</span>
           <div style={{ flex: 1 }} />
           <span>Auto-refreshes every 30s</span>
         </div>

@@ -81,8 +81,8 @@ const LeadPanel = ({ lead, open, onClose }) => {
   const title = lead.title || "Missing target person";
   const company = lead.company || "Unknown company";
   const industry = lead.industry || "Uncategorized";
-  const fitBand = lead.size || "Private fit band";
-  const hq = lead.hq || "Broad U.S.";
+  const fitBand = lead.size || "Customer type";
+  const hq = lead.hq || "Target area";
   const enrichedAt = lead.enrichedAt || "—";
   const painInsight = panelPainInsight(lead);
   const fitReasons = panelFitReasons(lead, painInsight);
@@ -98,7 +98,7 @@ const LeadPanel = ({ lead, open, onClose }) => {
       <aside className={"panel" + (open ? " open" : "")} role="dialog" aria-label="Lead details">
         <div className="panel-head">
           <span className="panel-head-id">{lead.id}</span>
-          <span style={{ fontSize: 12, color: "var(--fg-3)" }}>Contact intelligence</span>
+          <span style={{ fontSize: 12, color: "var(--fg-3)" }}>Lead details</span>
           <div className="panel-head-spacer" />
           <button className="panel-close" onClick={onClose} title="Close"><Icon name="x" /></button>
         </div>
@@ -115,13 +115,13 @@ const LeadPanel = ({ lead, open, onClose }) => {
               <span>{industry}</span>
             </div>
             <div className="panel-hero-meta" style={{ marginTop: 6, fontSize: 12 }}>
-              <span><Icon name="building" className="ico" />Fit band {fitBand}</span>
+              <span><Icon name="building" className="ico" />Customer type {fitBand}</span>
               <span className="sep">·</span>
               <span>HQ {hq}</span>
             </div>
           </div>
           <div className="panel-hero-side">
-            <div className="panel-hero-conf">{fitScore} <small>fit</small></div>
+            <div className="panel-hero-conf">{fitScore} <small>match</small></div>
             <div style={{ width: 100 }}><ConfidenceBar value={lead.confidence || 0} /></div>
             <div style={{ fontSize: 11, color: "var(--fg-3)", fontFamily: "var(--mono)", marginTop: 2 }}>{lead.compatibilityConfidence || "UNVERIFIED"} · enriched {enrichedAt}</div>
           </div>
@@ -163,22 +163,22 @@ const LeadPanel = ({ lead, open, onClose }) => {
               <div className="kv-grid compact-kv-grid">
                 <KV label="Company" icon="building" value={company} status="verified" />
                 <KV label="Industry" icon="db" value={industry} status="verified" />
-                <KV label="Fit band" value={fitBand} status="verified" mono />
+                <KV label="Customer type" value={fitBand} status="verified" mono />
                 <KV label="Headquarters" value={hq} status="verified" />
               </div>
             </div>
             <div>
-              <div className="panel-section-title">Plain-English fit<span className="count">{fitScore}</span></div>
+              <div className="panel-section-title">Why this lead<span className="count">{fitScore}</span></div>
               <div className="fit-summary-card">
                 <div className="fit-score-large"><span>{fitScore}</span><small>{lead.compatibilityConfidence || "UNVERIFIED"}</small></div>
                 <div className="fit-summary-copy">
-                  <b>Why it may fit</b>
-                  <PlainList items={fitReasons} fallback="No fit reasons recorded yet; verify the operational pain before outreach." />
+                  <b>Why it matched</b>
+                  <PlainList items={fitReasons} fallback="No match reasons recorded yet; verify the operational pain before outreach." />
                 </div>
               </div>
               <div className="risk-note">
                 <b>Watch-outs</b>
-                <PlainList items={fitRisks} fallback="No major fit risk was recorded yet; still verify before outreach." tone="risk" />
+                <PlainList items={fitRisks} fallback="No major watch-out was recorded yet; still verify before outreach." tone="risk" />
               </div>
             </div>
           </div>

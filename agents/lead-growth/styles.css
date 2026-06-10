@@ -1,4 +1,4 @@
-/* Clawdified — internal contact enrichment database */
+/* Clawdified — lead growth workspace */
 :root {
   --accent-h: 250;
   --accent: oklch(0.52 0.18 var(--accent-h));
@@ -1992,7 +1992,7 @@ table.sheet tbody tr.selected td:first-child { box-shadow: inset 2px 0 0 var(--a
 .seniority-head { background: oklch(0.94 0.06 195); color: oklch(0.42 0.13 195); }
 .seniority-director { background: oklch(0.94 0.04 250); color: oklch(0.45 0.04 250); }
 
-/* Fit score — visual ring around number */
+/* Match score — visual ring around number */
 .fit-cell {
   display: flex; align-items: center; gap: 8px;
 }

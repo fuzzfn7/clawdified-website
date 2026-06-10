@@ -110,7 +110,7 @@ const FilterPill = ({ label, icon, options, values, onChange, allowSlider, slide
           {allowSlider ? (
             <div style={{ padding: "8px 12px 12px" }}>
               <div style={{ fontSize: 12, color: "var(--fg-2)", marginBottom: 8 }}>
-                Show only leads with fit score ≥ <b style={{ fontFamily: "var(--mono)", color: "var(--fg)" }}>{sliderValue}%</b>
+                Show only leads with match score ≥ <b style={{ fontFamily: "var(--mono)", color: "var(--fg)" }}>{sliderValue}%</b>
               </div>
               <input type="range" min="0" max="100" step="5" value={sliderValue} onChange={(e) => onSliderChange(parseInt(e.target.value))} style={{ width: "100%", accentColor: "var(--accent)" }} />
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: 10.5, color: "var(--fg-3)", fontFamily: "var(--mono)", marginTop: 4 }}>

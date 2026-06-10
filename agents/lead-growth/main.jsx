@@ -31,7 +31,7 @@ async function apiJson(path, options = {}) {
 function runSummaryMessage(result) {
   if (result?.demoReplay) {
     const total = Number(result?.run?.total || result?.summary?.demoLeadsQueued || 20);
-    return `I’m rebuilding the demo sheet now — ${total} Clawdified-style sample row(s) will appear with fit notes, contact routes, and review angles.`;
+    return `I’m rebuilding the demo sheet now — ${total} Clawdified-style sample row(s) will appear with why-it-matched notes, contact routes, and review angles.`;
   }
   const summary = result?.summary || result?.run?.summary || result?.run || {};
   const runId = result?.run?.runId || result?.run?.id || result?.runId || "Run";
@@ -112,8 +112,8 @@ function mapLead(lead) {
     domain,
     website: lead.website || (domain ? `https://${domain}` : ""),
     industry: lead.industryCategory || lead.geographySegment || "Uncategorized",
-    size: lead.fitBand || "Private fit band",
-    hq: [lead.city, lead.state].filter(Boolean).join(", ") || lead.geographySegment || "Broad U.S.",
+    size: lead.fitBand || "Customer type",
+    hq: [lead.city, lead.state].filter(Boolean).join(", ") || lead.geographySegment || "Target area",
     contactName: lead.personName || "Needs research",
     title: lead.title || "Missing target person",
     seniority: seniorityFromLead(lead),
@@ -170,23 +170,23 @@ const CLAWDIFIED_AGENT_PROFILE = {
   name: "Clawdified lead agent",
   company: "Clawdified",
   offer: "practical AI workflow agents for small-business operations",
-  profile: "private qualification profile used for this showroom",
-  market: "Private market",
-  contactProfile: "Private contact profile",
+  profile: "ideal customers, service area, and do/don't-contact rules loaded for this showroom",
+  market: "Target service area",
+  contactProfile: "contact route rules",
   output: "a sample lead sheet with contact routes, source notes, review labels, and a safe next-step angle",
 };
 
 const DEFAULT_RUN_CRITERIA = {
-  searchQuery: "Private demo profile",
-  geographySegment: "Private market",
+  searchQuery: "Ideal customers with follow-up-heavy workflows",
+  geographySegment: "Target service area",
   targetWeeklyVolume: 5,
 };
 
 const CLAWDIFIED_SHOWROOM_PROVIDERS = {
-  publicDiscovery: { provider: "Public discovery", purpose: "Load prequalified demo accounts for the showroom", configured: true, required: true, status: "ready" },
-  websiteReview: { provider: "Website + source review", purpose: "Read public pages and keep source evidence attached", configured: true, required: true, status: "ready" },
-  contactEnrichment: { provider: "Contact enrichment", purpose: "Attach contact-route examples for demo rows", configured: true, required: true, status: "ready" },
-  sheetScoring: { provider: "Lead sheet scoring", purpose: "Apply review labels and next-step notes", configured: true, required: true, status: "ready" },
+  publicDiscovery: { provider: "Business search", purpose: "Find example companies that match the customer rules", configured: true, required: true, status: "ready" },
+  websiteReview: { provider: "Website/source check", purpose: "Check pages and keep proof attached to each row", configured: true, required: true, status: "ready" },
+  contactEnrichment: { provider: "Contact routes", purpose: "Attach example ways a human could review or reach the business", configured: true, required: true, status: "ready" },
+  sheetScoring: { provider: "Review sheet builder", purpose: "Sort rows by match, proof, and next step", configured: true, required: true, status: "ready" },
 };
 
 function nextShowroomRunIso(reference = new Date()) {
@@ -231,8 +231,8 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     roleCategory: "Operations",
     departmentFunction: "Leadership",
     industryCategory: "HVAC / mechanical service",
-    fitBand: "Private fit band",
-    geographySegment: "Private market",
+    fitBand: "Service business · follow-up-heavy",
+    geographySegment: "Target service area",
     city: "",
     state: "",
     email: "chris@volunteer-mechanical.demo",
@@ -247,15 +247,15 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Matches the loaded fit profile and has enough source proof for review.",
-    scoreRisks: "Confirm timing, current process, and whether the owner wants outreach.",
-    workflowPainClues: "Likely handoffs across calls, email, estimates, and follow-up tasks.",
-    reasonToContact: "Review source notes before outreach.",
-    suggestedFirstCallAngle: "Open with the workflow handoff angle and keep the first message short.",
-    suggestedAgent: "Workflow support agent",
+    scoreReasons: "Looks like a service business where calls, estimates, scheduling, and job follow-up can create repeat admin work.",
+    scoreRisks: "Confirm the workflow is a current priority before outreach.",
+    workflowPainClues: "Calls, estimates, scheduling, job updates, and follow-up can move across too many places.",
+    reasonToContact: "Lead with the likely workflow bottleneck, not generic AI.",
+    suggestedFirstCallAngle: "Ask where calls, estimates, scheduling, or follow-up are still handled manually.",
+    suggestedAgent: "Follow-up + scheduling support agent",
     sourceUrls: "Company site; contact page; public profile",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
-    providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
+    providerSourceUsed: "Business search; source review; contact routes; review sheet builder",
     emailVerificationStatus: "DEMO_VERIFIED",
     fitConfidence: "Directional",
   },
@@ -269,8 +269,8 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     roleCategory: "Operations",
     departmentFunction: "Operations",
     industryCategory: "Roofing / exterior services",
-    fitBand: "Private fit band",
-    geographySegment: "Private market",
+    fitBand: "Home services · estimate follow-up",
+    geographySegment: "Target service area",
     city: "",
     state: "",
     email: "dana@smoky-mountain-roof.demo",
@@ -286,15 +286,15 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Matches the loaded fit profile and has enough source proof for review.",
-    scoreRisks: "Confirm timing, current process, and whether the owner wants outreach.",
-    workflowPainClues: "Likely handoffs across calls, email, estimates, and follow-up tasks.",
-    reasonToContact: "Review source notes before outreach.",
-    suggestedFirstCallAngle: "Open with the workflow handoff angle and keep the first message short.",
-    suggestedAgent: "Workflow support agent",
+    scoreReasons: "Looks like a home-service business where estimate follow-up, scheduling, and review requests repeat every week.",
+    scoreRisks: "Confirm the workflow is a current priority before outreach.",
+    workflowPainClues: "New roof inquiries, estimates, scheduling changes, and post-job reviews can slip when they live in calls and texts.",
+    reasonToContact: "Lead with the likely workflow bottleneck, not generic AI.",
+    suggestedFirstCallAngle: "Ask how they currently follow up after estimates and missed calls.",
+    suggestedAgent: "Estimate follow-up + review request agent",
     sourceUrls: "Company site; contact page; public profile",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
-    providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
+    providerSourceUsed: "Business search; source review; contact routes; review sheet builder",
     emailVerificationStatus: "DEMO_VERIFIED",
     fitConfidence: "Directional",
   },
@@ -308,8 +308,8 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     roleCategory: "Operations",
     departmentFunction: "Administration",
     industryCategory: "Commercial cleaning",
-    fitBand: "Private fit band",
-    geographySegment: "Private market",
+    fitBand: "Recurring service · office admin",
+    geographySegment: "Target service area",
     city: "",
     state: "",
     email: "alex@knoxville-cleanpro.demo",
@@ -324,15 +324,15 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Matches the loaded fit profile and has enough source proof for review.",
-    scoreRisks: "Confirm timing, current process, and whether the owner wants outreach.",
-    workflowPainClues: "Likely handoffs across calls, email, estimates, and follow-up tasks.",
-    reasonToContact: "Review source notes before outreach.",
-    suggestedFirstCallAngle: "Open with the workflow handoff angle and keep the first message short.",
-    suggestedAgent: "Workflow support agent",
+    scoreReasons: "Looks like a recurring-service business where client updates, staffing changes, and job notes can pile up.",
+    scoreRisks: "Confirm the workflow is a current priority before outreach.",
+    workflowPainClues: "Recurring job updates, schedule changes, client questions, and quality checks can turn into repeat office work.",
+    reasonToContact: "Lead with the likely workflow bottleneck, not generic AI.",
+    suggestedFirstCallAngle: "Ask how they keep recurring clients updated when schedules or staffing change.",
+    suggestedAgent: "Client update + office admin agent",
     sourceUrls: "Company site; contact page; public profile",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
-    providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
+    providerSourceUsed: "Business search; source review; contact routes; review sheet builder",
     emailVerificationStatus: "DEMO_VERIFIED",
     fitConfidence: "Directional",
   },
@@ -346,8 +346,8 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     roleCategory: "Operations",
     departmentFunction: "Leadership",
     industryCategory: "Property management",
-    fitBand: "Private fit band",
-    geographySegment: "Private market",
+    fitBand: "Property team · tenant updates",
+    geographySegment: "Target service area",
     city: "",
     state: "",
     email: "morgan@cedar-ridge-property.demo",
@@ -363,15 +363,15 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Matches the loaded fit profile and has enough source proof for review.",
-    scoreRisks: "Confirm timing, current process, and whether the owner wants outreach.",
-    workflowPainClues: "Likely handoffs across calls, email, estimates, and follow-up tasks.",
-    reasonToContact: "Review source notes before outreach.",
-    suggestedFirstCallAngle: "Open with the workflow handoff angle and keep the first message short.",
-    suggestedAgent: "Workflow support agent",
+    scoreReasons: "Looks like a property team where tenant requests, owner updates, maintenance notes, and follow-up can fragment quickly.",
+    scoreRisks: "Confirm the workflow is a current priority before outreach.",
+    workflowPainClues: "Tenant requests, owner updates, maintenance scheduling, and document follow-up can scatter across inboxes and calls.",
+    reasonToContact: "Lead with the likely workflow bottleneck, not generic AI.",
+    suggestedFirstCallAngle: "Ask how they keep tenant requests, owner updates, and maintenance follow-up organized.",
+    suggestedAgent: "Tenant request + owner update agent",
     sourceUrls: "Company site; contact page; public profile",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
-    providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
+    providerSourceUsed: "Business search; source review; contact routes; review sheet builder",
     emailVerificationStatus: "DEMO_VERIFIED",
     fitConfidence: "Directional",
   },
@@ -385,8 +385,8 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     roleCategory: "Operations",
     departmentFunction: "Operations",
     industryCategory: "Dental practice",
-    fitBand: "Private fit band",
-    geographySegment: "Private market",
+    fitBand: "Healthcare office · front-desk follow-up",
+    geographySegment: "Target service area",
     city: "",
     state: "",
     email: "taylor@blue-ridge-dental.demo",
@@ -401,15 +401,15 @@ const CLAWDIFIED_SHOWROOM_RAW_LEADS = [
     isFinishedEnrichedLead: true,
     researchStatus: "finished",
     missingFields: "",
-    scoreReasons: "Matches the loaded fit profile and has enough source proof for review.",
-    scoreRisks: "Confirm timing, current process, and whether the owner wants outreach.",
-    workflowPainClues: "Likely handoffs across calls, email, estimates, and follow-up tasks.",
-    reasonToContact: "Review source notes before outreach.",
-    suggestedFirstCallAngle: "Open with the workflow handoff angle and keep the first message short.",
-    suggestedAgent: "Workflow support agent",
+    scoreReasons: "Looks like a front-office-heavy practice where patient intake, reminders, and review requests repeat daily.",
+    scoreRisks: "Confirm the workflow is a current priority before outreach.",
+    workflowPainClues: "New-patient questions, appointment reminders, forms, and review requests can eat front-desk time.",
+    reasonToContact: "Lead with the likely workflow bottleneck, not generic AI.",
+    suggestedFirstCallAngle: "Ask how much front-desk time goes to reminders, forms, and patient follow-up.",
+    suggestedAgent: "Patient intake + reminder agent",
     sourceUrls: "Company site; contact page; public profile",
     sourceQuality: "SHOWROOM_DEMO_PROFILED",
-    providerSourceUsed: "Demo discovery; source review; contact enrichment; sheet scoring",
+    providerSourceUsed: "Business search; source review; contact routes; review sheet builder",
     emailVerificationStatus: "DEMO_VERIFIED",
     fitConfidence: "Directional",
   },
@@ -425,9 +425,9 @@ function buildClawdifiedShowroomLeads() {
     publicDemoForVisitor: true,
     visitorCompanyName: "Clawdified",
     visitorWebsite: "clawdified.com",
-    visitorOffer: "Private Clawdified offer summary",
-    visitorProfile: "Private demo profile",
-    visitorMarket: "Private market",
+    visitorOffer: "workflow agents for repeatable business tasks",
+    visitorProfile: "ideal customers and rules loaded",
+    visitorMarket: "target service area",
   }));
 }
 
@@ -436,17 +436,17 @@ function buildClawdifiedShowroomRun(leads = CLAWDIFIED_SHOWROOM_RAW_LEADS) {
   return {
     runAt: now,
     completedAt: now,
-    trigger: "Manual Clawdified agent run",
+    trigger: "Manual lead agent preview",
     runId: `clawdified-demo-${Date.now().toString(36)}`,
-    searchGeographySegment: "Private market",
-    searchQuery: "Private demo profile",
+    searchGeographySegment: "Target service area",
+    searchQuery: "Ideal customers with follow-up-heavy workflows",
     rawCompaniesFound: 12,
     companiesExcluded: 6,
     peopleFound: 5,
     finishedEnrichedLeadsAdded: leads.length,
     incompleteAccountsSaved: 2,
     duplicatesMerged: 3,
-    sourcesUsed: ["Demo discovery", "Source review", "Contact enrichment", "Lead sheet scoring"],
+    sourcesUsed: ["Business search", "Source review", "Contact routes", "Review sheet builder"],
     providerFailuresBlocks: [],
     emailCoverage: `${leads.length}/${leads.length} direct demo routes`,
     phoneCoverage: `${leads.length}/${leads.length} direct/mobile demo routes`,
@@ -454,14 +454,14 @@ function buildClawdifiedShowroomRun(leads = CLAWDIFIED_SHOWROOM_RAW_LEADS) {
     facebookCoverage: "2/5 business/social routes",
     instagramOrOtherSocialCoverage: "0/5 optional routes",
     contactPageCoverage: "5/5 company routes",
-    fitConfidenceCoverage: "private demo labels",
+    fitConfidenceCoverage: "match labels",
     linkedInSocialCoverage: `${leads.length}/${leads.length} profile routes`,
     duplicateIdCount: 0,
     badSourceCount: 0,
     badSourceDomains: [],
-    sourceCoverageSummary: "Showroom run: the Clawdified lead agent loads sample rows, checks contact routes, and returns a review-ready sheet without exposing private scoring rules.",
+    sourceCoverageSummary: "Showroom run: the Lead Growth agent starts from business context and customer rules, finds matching example companies, checks proof/contact routes, and writes a sheet a human can review.",
     shortfall: "None in showroom run",
-    mainSkipReasons: ["Non-matching sample accounts hidden", "Incomplete sample evidence hidden"],
+    mainSkipReasons: ["Poor matches skipped", "Rows without enough proof held back"],
   };
 }
 
@@ -471,7 +471,7 @@ const ClawdifiedShowroomBrief = ({ onRunNow, runBusy }) => (
       <div className="icon"><Icon name="target" /></div>
       <div style={{ flex: 1 }}>
         <h3 className="card-title">Lead Growth agent</h3>
-        <div className="card-sub">Run it like a quick review: the agent weighs likely workflow pain, checks contact routes, and turns the best rows into something a human can judge.</div>
+        <div className="card-sub">This is the flow: load the business context, ideal customer, service area, and constraints. The agent searches for matching companies, checks proof/contact routes, and returns a sheet a human can review.</div>
       </div>
       <span className="status-pill ok"><span className="d" />Ready to review</span>
     </div>
@@ -479,18 +479,18 @@ const ClawdifiedShowroomBrief = ({ onRunNow, runBusy }) => (
       <div className="kpi-row automation-kpis">
         <div className="kpi">
           <div className="kpi-label">Starts with</div>
-          <div className="kpi-value" style={{ fontSize: 18 }}>Fit profile</div>
-          <div className="kpi-foot">loaded privately</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>Customer rules</div>
+          <div className="kpi-foot">business, area, constraints</div>
         </div>
         <div className="kpi">
-          <div className="kpi-label">Weighs</div>
-          <div className="kpi-value" style={{ fontSize: 18 }}>Pain + proof</div>
-          <div className="kpi-foot">before ranking</div>
+          <div className="kpi-label">Searches for</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>Real matches</div>
+          <div className="kpi-foot">companies that look like buyers</div>
         </div>
         <div className="kpi">
           <div className="kpi-label">Returns</div>
           <div className="kpi-value" style={{ fontSize: 18 }}>Review sheet</div>
-          <div className="kpi-foot">route, note, angle</div>
+          <div className="kpi-foot">why, route, next angle</div>
         </div>
         <button className="btn btn-primary" style={{ alignSelf: "center", height: 34 }} onClick={() => onRunNow?.({ mode: "showroom" })} disabled={runBusy}><Icon name="refresh" />{runBusy ? "Running…" : "Run agent"}</button>
       </div>
@@ -517,7 +517,7 @@ function mapRun(run) {
     time: formatTime(rawAt),
     action: run.trigger === "scheduled-heartbeat" ? "Scheduled heartbeat" : run.trigger || "Run",
     count: summaryCount,
-    target: [run.searchGeographySegment || run.geographySegment, run.searchQuery].filter(Boolean).join(" · ") || "TAM contact enrichment",
+    target: [run.searchGeographySegment || run.geographySegment, run.searchQuery].filter(Boolean).join(" · ") || "Lead matching run",
     duration: run.error ? "failed" : "done",
     status: failed || run.error ? "degraded" : "ok",
     rawCompaniesFound: run.rawCompaniesFound ?? 0,
@@ -534,7 +534,7 @@ function mapRun(run) {
     facebookCoverage: run.facebookCoverage || "0%",
     instagramOrOtherSocialCoverage: run.instagramOrOtherSocialCoverage || "0%",
     contactPageCoverage: run.contactPageCoverage || "0%",
-    fitConfidenceCoverage: run.fitConfidenceCoverage || "private",
+    fitConfidenceCoverage: run.fitConfidenceCoverage || "match labels",
     linkedInSocialCoverage: run.linkedInSocialCoverage || "0%",
     duplicateIdCount: run.duplicateIdCount ?? 0,
     badSourceCount: run.badSourceCount ?? 0,
@@ -596,7 +596,7 @@ const App = () => {
     setError("");
 
     if (PUBLIC_DEMO_MODE) {
-      setRunNotice("I’m reading the loaded demo profile, weighing likely workflow pain, then filling the review sheet…");
+      setRunNotice("I’m reading the business context and customer rules, then looking for matching example companies…");
       try {
         await new Promise((resolve) => window.setTimeout(resolve, 450));
         const mappedLeads = buildClawdifiedShowroomLeads();
@@ -661,7 +661,7 @@ const App = () => {
       setRuns([]);
       setSelectedId(null);
       setPanelOpen(false);
-      setRunNotice("I cleared the example sheet. Run the agent again when you want me to rebuild the review rows from the loaded profile.");
+      setRunNotice("I cleared the example sheet. Run the agent again when you want me to rebuild it from the customer rules.");
       setError("");
       return;
     }
@@ -705,7 +705,7 @@ const App = () => {
         setRunNotice("Run the preview first so there are reviewed rows to export.");
         return;
       }
-      const header = ["fit_score", "company", "domain", "contact", "title", "industry", "geography", "phone", "social", "suggested_agent", "outreach_angle"];
+      const header = ["match_score", "company", "domain", "contact", "title", "industry", "geography", "phone", "social", "suggested_agent", "outreach_angle"];
       const rows = leads.map((lead) => [
         lead.fitScore,
         lead.company,
@@ -714,8 +714,8 @@ const App = () => {
         lead.title,
         lead.industry,
         lead.hq,
-        lead.directPhone || lead.companyPhone || "gated/private run",
-        lead.socialPath || "gated/private run",
+        lead.directPhone || lead.companyPhone || "not shown in demo",
+        lead.socialPath || "not shown in demo",
         getOperationalPain(lead).suggestedAgent || "",
         lead.bestPath || lead.notes || "",
       ]);

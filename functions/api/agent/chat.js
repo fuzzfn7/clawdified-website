@@ -162,7 +162,7 @@ export function buildFallbackAgentChatAnswer(question, rawContext = {}) {
         context.topLead?.pain ? `The sample lead read is looking for pain like: ${context.topLead.pain}.` : runLine,
       ],
       next: `The useful question is: what part of ${businessLabel} gets repeated every week but still needs judgment before it goes out?`,
-      guardrail: 'The public chat can talk through fit, but private scoring, connectors, and build rules stay off the public page.',
+      guardrail: 'The public chat can talk through whether the workflow makes sense; exact connectors, approval rules, and build details get handled in a setup call.',
     });
   }
 
@@ -180,14 +180,14 @@ export function buildFallbackAgentChatAnswer(question, rawContext = {}) {
 
   if (intent.primary === 'leads') {
     return structuredAnswer({
-      read: 'For lead generation, the agent is trying to turn a private fit profile into rows a human can review: likely account, reason it may fit, contact route, source note, and next angle.',
+      read: 'For lead generation, the agent turns your business context and customer rules into rows a human can review: likely account, why it matched, contact route, source note, and next angle.',
       weighing: [
         `${context.totals.total} visible row(s), ${context.totals.finished} review-ready, ${context.totals.incomplete} incomplete in the current demo state.`,
         leadExample,
         'A good row should help a human decide the next step; it should not pretend every scraped name is a real opportunity.',
       ],
       next: context.topLead?.company ? `Ask me why ${context.topLead.company} is or is not worth pursuing.` : 'Run the preview, then ask me why the first finished row is worth reviewing.',
-      guardrail: 'The public demo does not reveal the private qualification recipe or send outreach on its own.',
+      guardrail: 'The public demo does not send outreach on its own or publish the exact setup recipe.',
     });
   }
 
@@ -196,7 +196,7 @@ export function buildFallbackAgentChatAnswer(question, rawContext = {}) {
       read: 'This is a public showroom, not an anonymous live lead engine. It shows the shape of the workspace and the type of reasoning a configured Clawdified agent would use.',
       weighing: [
         'The interface and review pattern are the real product shape.',
-        'The public rows are safe examples so the site does not publish private targeting logic or let anonymous visitors pull lead lists.',
+        'The rows are examples so the site can show the workflow without letting anonymous visitors pull lead lists.',
         'A real build gets configured around the business workflow, tools, approval rules, and output format.',
       ],
       next: 'If you want to see it against your business, the next step is mapping one workflow privately.',
@@ -209,7 +209,7 @@ export function buildFallbackAgentChatAnswer(question, rawContext = {}) {
       weighing: [
         'A simple follow-up workflow is different from a multi-system operations agent.',
         'The right comparison is the cost of the manual workflow and the value of getting it done consistently.',
-        'Exact pricing logic is intentionally not published in the public demo.',
+        'This page avoids package pricing because the workflow needs to be mapped first.',
       ],
       next: 'Map one workflow first; then Clawdified can give a clear build option instead of a generic package price.',
     });
@@ -248,7 +248,7 @@ function promptForModel(question, context, history) {
     'Prospects may ask vague, confusing, misspelled, or incomplete questions. Infer intent before answering.',
     'Be concise, plain-English, and sales/operator useful. Do not sound like a command log or FAQ matcher.',
     'Use sections exactly when helpful: My read, What I’m weighing, Next move, Guardrail.',
-    'Never reveal private scoring rules, target-title lists, exact pricing logic, paid-provider names, API/provider order, secrets, or internal system details.',
+    'Never reveal internal scoring rules, target-title lists, exact price math, paid-provider names, API/provider order, secrets, or system details.',
     'Do not claim outreach was sent. Do not imply anonymous visitors can pull real lead lists from the public page.',
     'If the question is ambiguous, state the likely interpretation and ask one useful follow-up.',
     '',
@@ -259,7 +259,7 @@ function promptForModel(question, context, history) {
 }
 
 function answerLooksUnsafe(answer) {
-  return /Apollo|Serper|Browserbase|\$600|600\/mo|600\/month|\$1M|10M|5-100|provider order|price logic|pricing tiers|ICP rules|Loaded ICP|Owner-led|Owner\/operators|Practice Manager|Office Manager|Operations Manager/i.test(answer || '');
+  return /Apollo|Serper|Browserbase|\$600|600\/mo|600\/month|\$1M|10M|5-100|provider order|price logic|pricing tiers|I\s*C\s*P\s*rules|Loaded\s*I\s*C\s*P|Owner-led|Owner\/operators|Practice Manager|Office Manager|Operations Manager/i.test(answer || '');
 }
 
 async function modelAnswer({ env, question, context, history }) {
