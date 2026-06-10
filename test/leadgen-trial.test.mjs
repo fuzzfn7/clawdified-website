@@ -128,9 +128,12 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   assert.match(main, /Lead Growth agent/);
   assert.match(main, /CLAWDIFIED_SHOWROOM_PROVIDERS/);
   assert.match(main, /Contact routes/);
+  assert.match(main, /Business context \+ ICP/);
+  assert.match(main, /ICP matches/);
   assert.match(main, /buildClawdifiedShowroomLeads/);
   assert.match(agentPages, /Lead Growth preview state/);
   assert.match(agentPages, /Ask the agent what it’s seeing/);
+  assert.match(agentsIndex, /Watch business context \+ ICP turn into a review-ready lead sheet/);
   assert.match(agentsIndex, /Run the preview to see why each company matched, the source proof, contact routes, and outreach angles land in the sheet/);
   assert.match(agentsIndex, /Private agents should feel like <em>your workflow\.<\/em>/);
   assert.match(agentsIndex, /Messy work in\. Finished work out\./);
@@ -159,6 +162,7 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   assert.doesNotMatch(uiBundle, /Owner-led|Owner\/operators|Practice Manager|Office Manager|Operations Manager/i);
   assert.doesNotMatch(uiBundle, /pricing tiers|price logic|enrichment credits|qualified demo rows/i);
   assert.doesNotMatch(uiBundle, /ICP fit|ICP rules|Loaded ICP/i);
+  assert.doesNotMatch(uiBundle, /customer rules|real matches/i);
 
   assert.match(panel, /Suggested customer angle/);
   assert.doesNotMatch(panel, /<Icon name="bolt" \/>Suggested AI agent<span>/);

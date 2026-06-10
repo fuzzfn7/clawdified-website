@@ -180,7 +180,7 @@ export function buildFallbackAgentChatAnswer(question, rawContext = {}) {
 
   if (intent.primary === 'leads') {
     return structuredAnswer({
-      read: 'For lead generation, the agent turns your business context and customer rules into rows a human can review: likely account, why it matched, contact route, source note, and next angle.',
+      read: 'For lead generation, the agent turns your business context + ICP into rows a human can review: likely account, why it matched, contact route, source note, and next angle.',
       weighing: [
         `${context.totals.total} visible row(s), ${context.totals.finished} review-ready, ${context.totals.incomplete} incomplete in the current demo state.`,
         leadExample,

@@ -246,7 +246,7 @@
     if (fitScore >= 60) reasons.push("The match score says this row is worth a human look.");
     if (painInsight?.suggestedAgent) reasons.push(`Suggested agent: ${painInsight.suggestedAgent}.`);
     if (lead?.title || raw.title) reasons.push(`${lead?.title || raw.title} is close enough to the business workflow to feel the pain if it is real.`);
-    if (lead?.size || raw.fitBand) reasons.push("The customer type is close enough to the target rules to review.");
+    if (lead?.size || raw.fitBand) reasons.push("The company is close enough to the ICP to review.");
     return reasons.slice(0, 4);
   }
 

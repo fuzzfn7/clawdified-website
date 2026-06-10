@@ -170,7 +170,7 @@ const CLAWDIFIED_AGENT_PROFILE = {
   name: "Clawdified lead agent",
   company: "Clawdified",
   offer: "practical AI workflow agents for small-business operations",
-  profile: "ideal customers, service area, and do/don't-contact rules loaded for this showroom",
+  profile: "business context, ICP, service area, and constraints loaded for this showroom",
   market: "Target service area",
   contactProfile: "contact route rules",
   output: "a sample lead sheet with contact routes, source notes, review labels, and a safe next-step angle",
@@ -183,7 +183,7 @@ const DEFAULT_RUN_CRITERIA = {
 };
 
 const CLAWDIFIED_SHOWROOM_PROVIDERS = {
-  publicDiscovery: { provider: "Business search", purpose: "Find example companies that match the customer rules", configured: true, required: true, status: "ready" },
+  publicDiscovery: { provider: "Business search", purpose: "Find example companies that match the ICP", configured: true, required: true, status: "ready" },
   websiteReview: { provider: "Website/source check", purpose: "Check pages and keep proof attached to each row", configured: true, required: true, status: "ready" },
   contactEnrichment: { provider: "Contact routes", purpose: "Attach example ways a human could review or reach the business", configured: true, required: true, status: "ready" },
   sheetScoring: { provider: "Review sheet builder", purpose: "Sort rows by match, proof, and next step", configured: true, required: true, status: "ready" },
@@ -426,7 +426,7 @@ function buildClawdifiedShowroomLeads() {
     visitorCompanyName: "Clawdified",
     visitorWebsite: "clawdified.com",
     visitorOffer: "workflow agents for repeatable business tasks",
-    visitorProfile: "ideal customers and rules loaded",
+    visitorProfile: "business context + ICP loaded",
     visitorMarket: "target service area",
   }));
 }
@@ -459,7 +459,7 @@ function buildClawdifiedShowroomRun(leads = CLAWDIFIED_SHOWROOM_RAW_LEADS) {
     duplicateIdCount: 0,
     badSourceCount: 0,
     badSourceDomains: [],
-    sourceCoverageSummary: "Showroom run: the Lead Growth agent starts from business context and customer rules, finds matching example companies, checks proof/contact routes, and writes a sheet a human can review.",
+    sourceCoverageSummary: "Showroom run: the Lead Growth agent starts from business context + ICP, finds matching example companies, checks proof/contact routes, and writes a sheet a human can review.",
     shortfall: "None in showroom run",
     mainSkipReasons: ["Poor matches skipped", "Rows without enough proof held back"],
   };
@@ -479,13 +479,13 @@ const ClawdifiedShowroomBrief = ({ onRunNow, runBusy }) => (
       <div className="kpi-row automation-kpis">
         <div className="kpi">
           <div className="kpi-label">Starts with</div>
-          <div className="kpi-value" style={{ fontSize: 18 }}>Customer rules</div>
-          <div className="kpi-foot">business, area, constraints</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>Business context + ICP</div>
+          <div className="kpi-foot">offer, ICP, area</div>
         </div>
         <div className="kpi">
           <div className="kpi-label">Searches for</div>
-          <div className="kpi-value" style={{ fontSize: 18 }}>Real matches</div>
-          <div className="kpi-foot">companies that look like buyers</div>
+          <div className="kpi-value" style={{ fontSize: 18 }}>ICP matches</div>
+          <div className="kpi-foot">companies that fit the profile</div>
         </div>
         <div className="kpi">
           <div className="kpi-label">Returns</div>
@@ -596,7 +596,7 @@ const App = () => {
     setError("");
 
     if (PUBLIC_DEMO_MODE) {
-      setRunNotice("I’m reading the business context and customer rules, then looking for matching example companies…");
+      setRunNotice("I’m reading the business context + ICP, then looking for matching example companies…");
       try {
         await new Promise((resolve) => window.setTimeout(resolve, 450));
         const mappedLeads = buildClawdifiedShowroomLeads();
@@ -661,7 +661,7 @@ const App = () => {
       setRuns([]);
       setSelectedId(null);
       setPanelOpen(false);
-      setRunNotice("I cleared the example sheet. Run the agent again when you want me to rebuild it from the customer rules.");
+      setRunNotice("I cleared the example sheet. Run the agent again when you want me to rebuild it from the business context + ICP.");
       setError("");
       return;
     }

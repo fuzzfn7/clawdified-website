@@ -100,7 +100,7 @@ function agentProviderSummary(providers) {
 }
 
 function latestRunSummaryForChat(latest) {
-  if (!latest) return "I don’t see a run yet, so I’m judging from the saved customer rules rather than a finished sheet.";
+  if (!latest) return "I don’t see a run yet, so I’m judging from the saved business context + ICP rather than a finished sheet.";
   const finished = Number(latest.finishedEnrichedLeadsAdded || 0);
   const incomplete = Number(latest.incompleteAccountsSaved || 0);
   const companies = Number(latest.rawCompaniesFound || 0);
@@ -245,7 +245,7 @@ function adaptiveProspectAnswer({ question, q, topLead, topPain, totals, latest 
         painLine,
       ],
       next: `The question I’d ask you next is: which part of ${businessLabel} gets repeated every week but still needs judgment before it goes out?`,
-      guardrail: "I can explain the fit publicly, but the exact customer rules and approvals get handled in the actual setup call.",
+      guardrail: "I can explain the fit publicly, but the exact ICP, constraints, and approvals get handled in the actual setup call.",
     });
   }
 
@@ -263,7 +263,7 @@ function adaptiveProspectAnswer({ question, q, topLead, topPain, totals, latest 
 
   if (intent.primary === "leads") {
     return thinkingAnswer({
-      read: "If you’re asking about lead generation, the agent’s job is to turn your customer rules into rows a human can review: likely account, reason it may fit, contact route, source note, and next angle.",
+      read: "If you’re asking about lead generation, the agent’s job is to turn your business context + ICP into rows a human can review: likely account, reason it may fit, contact route, source note, and next angle.",
       weighing: [
         `${totals.total} visible row(s), ${totals.finished} review-ready, ${totals.incomplete} still incomplete in the current demo state.`,
         leadExample,
@@ -276,7 +276,7 @@ function adaptiveProspectAnswer({ question, q, topLead, topPain, totals, latest 
 
   if (intent.primary === "real") {
     return thinkingAnswer({
-      read: "This public page is a showroom, not an open free-for-all lead engine. It shows the kind of workspace and reasoning a configured Clawdified agent would produce once the business context and customer rules are loaded.",
+      read: "This public page is a showroom, not an open free-for-all lead engine. It shows the kind of workspace and reasoning a configured Clawdified agent would produce once the business context + ICP are loaded.",
       weighing: [
         "The interface and review flow are real product shape.",
         "The rows are examples so the site can show the workflow without letting anonymous visitors pull lead lists.",
@@ -361,7 +361,7 @@ function buildAgentChatAnswer(question, context = {}) {
 
   if (agentQuestionHas(q, [/\bwhat do you do\b/, /\bwho are you\b/, /\bwhat are you\b/, /\byour job\b/, /\byour purpose\b/])) {
     return thinkingAnswer({
-      read: "I’m the lead-review layer for this demo. I look at the customer rules, turn likely accounts into a reviewable sheet, and explain why a row might deserve attention.",
+      read: "I’m the lead-review layer for this demo. I look at the business context + ICP, turn likely accounts into a reviewable sheet, and explain why a row might deserve attention.",
       weighing: ["Is there an obvious workflow pain?", "Is there enough source/contact context to review?", "Is the row ready for a human decision or still incomplete?"],
       next: "Use me to understand the sheet before anyone takes action.",
       guardrail: "I don’t send outreach or reveal the exact setup recipe from the public demo.",
@@ -372,7 +372,7 @@ function buildAgentChatAnswer(question, context = {}) {
     return thinkingAnswer({
       read: "Clawdified builds practical AI agents for repetitive business work — the stuff that usually lives in inboxes, follow-up notes, spreadsheets, calendars, and handoffs.",
       weighing: ["The buyer needs a workflow painful enough to justify an agent", "The agent should create a concrete output or approval queue, not just chat", "The public page should show the result without exposing the sales playbook"],
-      next: "For this demo, I’m showing what a lead sheet can look like after that kind of business context and customer rules have already been loaded.",
+      next: "For this demo, I’m showing what a lead sheet can look like after that kind of business context + ICP have already been loaded.",
     });
   }
 
@@ -385,7 +385,7 @@ function buildAgentChatAnswer(question, context = {}) {
         "I want enough evidence for a human to review without pretending the row is automatically closed-won.",
       ],
       next: topPain?.next || "Open the best row, check the source/contact notes, then decide whether the angle is worth a real conversation.",
-      guardrail: "Exact customer thresholds are set during the real setup, not guessed from the public page.",
+      guardrail: "Exact ICP thresholds are set during the real setup, not guessed from the public page.",
     });
   }
 
@@ -695,7 +695,7 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
                 </div>
                 <div className="kpi">
                   <div className="kpi-label">Uses</div>
-                  <div className="kpi-value" style={{ fontSize: 18 }}>Customer rules</div>
+                  <div className="kpi-value" style={{ fontSize: 18 }}>Business context + ICP</div>
                   <div className="kpi-foot">set during onboarding</div>
                 </div>
                 <div className="kpi">
@@ -706,14 +706,14 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
               </div>
 
               <div className="agent-do-list compact">
-                <div><Icon name="check" />Shows how customer rules become a review-ready sheet.</div>
+                <div><Icon name="check" />Shows how business context + ICP become a review-ready sheet.</div>
                 <div><Icon name="check" />Keeps the demo focused on the output: who matched, why, source notes, and next step.</div>
                 <div><Icon name="check" />Returns match notes, source notes, contact routes, and a next-step angle for review.</div>
                 <div><Icon name="x" />Does not send outreach from this preview.</div>
               </div>
 
               <div className="scheduled-criteria-mini">
-                <b>Customer rules loaded:</b> service businesses with follow-up-heavy workflows.
+                <b>Business context + ICP loaded:</b> service businesses with follow-up-heavy workflows.
               </div>
             </div>
           </div>
