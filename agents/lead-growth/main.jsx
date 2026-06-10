@@ -611,7 +611,7 @@ const App = () => {
         setSelectedId(mappedLeads[0]?.id || null);
         setPanelOpen(false);
         setPage("sheet");
-        setRunNotice(`I found ${mappedLeads.length} example row(s) worth reviewing and added the pieces that matter: likely pain, contact route, source note, and next-step angle.`);
+        setRunNotice(`I found ${mappedLeads.length} public-source row(s) worth reviewing and added the pieces that matter: likely pain, contact route, source note, and next-step angle.`);
       } catch (err) {
         setRunNotice("");
         setError(err.message || String(err));

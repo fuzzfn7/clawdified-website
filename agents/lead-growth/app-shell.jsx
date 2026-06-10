@@ -420,7 +420,7 @@ const Topbar = ({ page, onRunNow, runBusy, onClearDemo, clearBusy, showDemoClear
       </div>
       <button className="btn" onClick={onExport}><Icon name="download" />Export CSV</button>
       {showDemoClear && (
-        <button className="btn" onClick={onClearDemo} disabled={clearBusy || Boolean(demoClearDisabledReason)} title={demoClearDisabledReason || "Clears the saved demo rows so Run agent can replay them again."}><Icon name="db" />{clearBusy ? "Clearing…" : agent === "running" ? "Stop & clear demo" : "Clear demo"}</button>
+        <button className="btn" onClick={onClearDemo} disabled={clearBusy || Boolean(demoClearDisabledReason)} title={demoClearDisabledReason || "Clears the current public-source rows so Run agent can rebuild the sheet."}><Icon name="db" />{clearBusy ? "Clearing…" : agent === "running" ? "Stop & clear sheet" : "Clear sheet"}</button>
       )}
       <button className="btn btn-primary" onClick={() => onRunNow({ mode: "live" })} disabled={runBusy || Boolean(liveRunDisabledReason)} title={liveRunDisabledReason || "Runs one manual agent sweep after confirmation."}><Icon name="refresh" />{runBusy ? "Running…" : "Run agent"}</button>
     </div>

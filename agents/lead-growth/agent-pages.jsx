@@ -657,9 +657,9 @@ const AgentSettings = ({ agentStatus, providers = [], runs = [], leads = [], run
                   <div className="kpi-foot">next morning</div>
                 </div>
                 <div className="kpi">
-                  <div className="kpi-label">Demo output</div>
+                  <div className="kpi-label">Run output</div>
                   <div className="kpi-value">{schedulerLeadTarget}</div>
-                  <div className="kpi-foot">public sample rows</div>
+                  <div className="kpi-foot">public-source rows</div>
                 </div>
               </div>
               <div className="toggle-row" style={{ paddingTop: 0 }}>

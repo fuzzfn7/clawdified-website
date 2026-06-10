@@ -174,6 +174,7 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   assert.doesNotMatch(uiBundle, /\b[a-z0-9-]+\.demo\b|clawdified\.com\/demo|555-01|SHOWROOM_DEMO_PROFILED|DEMO_VERIFIED|clawdified-demo/i);
   assert.doesNotMatch(uiBundle, /volunteer-mechanical|smoky-mountain-roof|knoxville-cleanpro|cedar-ridge-property|blue-ridge-dental/i);
   assert.doesNotMatch(uiBundle, /demo-chris|demo-dana|demo-alex|demo-morgan|demo-taylor|saved-demo replay|direct demo routes/i);
+  assert.doesNotMatch(uiBundle, /Clear demo|Stop & clear demo|example row\(s\)|public sample rows|Demo output/i);
 
   assert.match(panel, /Suggested customer angle/);
   assert.doesNotMatch(panel, /<Icon name="bolt" \/>Suggested AI agent<span>/);
