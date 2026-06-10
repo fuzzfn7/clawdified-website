@@ -9,7 +9,20 @@ test('SEO competitor page is an anonymized sample workspace, not a fake visitor-
   assert.match(html, /SEO_COMPETITOR_SAMPLE_WORKSPACE_20260528/);
   assert.match(html, /anonymized pest-control company/i);
   assert.match(html, /built from a real SEO competitor analysis/i);
-  assert.match(html, /5\s*<span class="sm">\/80<\/span>|5\s*of\s*80/i);
+  assert.match(html, /5\s*<span class="sm">\s*of 80<\/span>|5\s*of\s*80 Google search checks/i);
+  assert.match(html, /80 Google searches|80 Google search checks|80 ranking checks/i);
+  for (const forbiddenCellPhrase of [
+    /80 cells/i,
+    /80-cell/i,
+    /target cells/i,
+    /Cells absent/i,
+    /visibility cells/i,
+    /search cells/i,
+    /All cells/i,
+    /Cells visible/i,
+  ]) {
+    assert.doesNotMatch(html, forbiddenCellPhrase);
+  }
   assert.match(html, /robots\.txt/i);
   assert.match(html, /Pest Ops Pest Control/i);
   assert.match(html, /1,226 rows captured/i);

@@ -696,7 +696,7 @@
             <span class="dot-sep"></span>
             <span class="m"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span class="k">Run by</span><span class="v">SEO Agent</span></span>
             <span class="dot-sep"></span>
-            <span class="m"><span class="k">Coverage</span><span class="v">80 cells</span></span>
+            <span class="m"><span class="k">Coverage</span><span class="v">80 Google searches</span></span>
             <span class="dot-sep"></span>
             <span class="m"><span class="k">Evidence</span><span class="v">1,226 rows</span></span>
             <span class="dot-sep"></span>
@@ -715,18 +715,18 @@
         <div class="kpi">
           <span class="k">Visibility</span>
           <div class="v-row">
-            <span class="v">5<span class="sm">/80</span></span>
+            <span class="v">5<span class="sm"> of 80</span></span>
             <span class="delta bad">−2 vs last</span>
           </div>
-          <div class="sub">Cells where you appear in top 10. <span class="em">Local-pack: 0</span></div>
+          <div class="sub">Google searches where the company appears on page one. <span class="em">Map top 3: 0</span></div>
         </div>
         <div class="kpi">
-          <span class="k">Cells absent</span>
+          <span class="k">Missing searches</span>
           <div class="v-row">
-            <span class="v">75<span class="sm">/80</span></span>
+            <span class="v">75<span class="sm"> of 80</span></span>
             <span class="delta bad">+2</span>
           </div>
-          <div class="sub">Cities &amp; terms where the company does not appear at all</div>
+          <div class="sub">Search terms + cities where the company does not appear on page one</div>
         </div>
         <div class="kpi">
           <span class="k">Top competitor overlap</span>
@@ -734,7 +734,7 @@
             <span class="v">62<span class="sm">%</span></span>
             <span class="delta flat">flat</span>
           </div>
-          <div class="sub"><span class="em">Pest Ops</span> wins the target cells</div>
+          <div class="sub"><span class="em">Pest Ops</span> wins most searches the company is missing</div>
         </div>
         <div class="kpi">
           <span class="k">Review gap</span>
@@ -828,7 +828,7 @@ const ACTIONS = [
   {id:"AP-006", pri:2, when:"d30", ttl:"Add NAP‑consistent citations on 12 local directories", why:"The company's name, address, phone are missing or mismatched on 9 of 12 standard pest directories. Cleanup directly affects local‑pack inclusion.", owner:"Operator", conf:"Medium", kpiLabel:"Verified citations", kpi:"3 → 12", evidence:"12-directory audit sample", done:false},
   {id:"AP-007", pri:3, when:"d30", ttl:"Reply to every new review within 24h", why:"Active review responses correlate with higher local-pack appearance rates in pest control. Use a 3-line owner template.", owner:"Owner", conf:"Medium", kpiLabel:"Response rate", kpi:"0% → 100%", evidence:"GBP review log", done:false},
   {id:"AP-008", pri:2, when:"d90", ttl:"Publish 6 local-question articles per quarter", why:"Competitors winning organic in your geo answer specific local questions like \"when do termites swarm in East Tennessee\". Plan: 2 per month, each tied to a service page.", owner:"Content", conf:"Medium", kpiLabel:"Long-tail terms", kpi:"+15", evidence:"Competitor content gap · 24 topics", done:false},
-  {id:"AP-009", pri:2, when:"d90", ttl:"Track local rank monthly on 20 terms × 4 cities", why:"You can't improve what you don't watch. Rerun this exact 80-cell scan monthly so we see movement, not snapshots.", owner:"SEO Agent", conf:"High", kpiLabel:"Cells visible", kpi:"5 → 25", evidence:"This scan, repeatable", done:false},
+  {id:"AP-009", pri:2, when:"d90", ttl:"Track local rank monthly on 20 terms × 4 cities", why:"You can't improve what you don't watch. Rerun these exact 80 Google search checks monthly so we see movement, not snapshots.", owner:"SEO Agent", conf:"High", kpiLabel:"Searches visible", kpi:"5 → 25", evidence:"Repeatable rank check", done:false},
   {id:"AP-010", pri:3, when:"d90", ttl:"Earn 4 local links from East TN community sites", why:"Sponsor or partner with 4 community organizations. Each link is a strong local relevance signal — competitors average 6.", owner:"Owner", conf:"Low", kpiLabel:"Local links", kpi:"1 → 5", evidence:"Backlink gap report", done:false},
   {id:"AP-011", pri:2, when:"h72", ttl:"Fix mismatched phone number on GBP", why:"The phone on the company's Google Business Profile differs from the site footer by one digit. Mismatch can suppress local-pack inclusion within days.", owner:"Owner", conf:"High", kpiLabel:"NAP consistency", kpi:"Pass", evidence:"GBP API + site crawl", done:false},
 ];
@@ -869,11 +869,11 @@ const SUGGESTED_QS = [
 ];
 const CANNED = {
   "why is pest ops ahead of me?":
-    "Pest Ops wins <strong>62% of the target cells</strong>, for three concrete reasons: <br>• They have <strong>5 dedicated service pages</strong>; you have one combined page. <br>• They have <strong>421 reviews</strong>; the sample company has 12. <br>• Their pages are indexed in all 4 of your cities; <strong>yours aren't indexed at all</strong> (<code>robots.txt</code>). <br>Action <strong>AP-001</strong> is the cheapest to fix.",
+    "Pest Ops wins <strong>62% of the target Google searches</strong>, for three concrete reasons: <br>• They have <strong>5 dedicated service pages</strong>; you have one combined page. <br>• They have <strong>421 reviews</strong>; the sample company has 12. <br>• Their pages are indexed in all 4 of your cities; <strong>yours aren't indexed at all</strong> (<code>robots.txt</code>). <br>Action <strong>AP-001</strong> is the cheapest to fix.",
   "what should i fix first this week?":
     "In order: <br><strong>AP-001</strong> · Unblock <code>/services/*</code> in robots.txt (10‑min dev fix). <br><strong>AP-002</strong> · Resubmit sitemap (already in‑progress). <br><strong>AP-003</strong> · Ask 8 customers for reviews. <br>The first two unblock indexing — without them, the rest of the plan can't take effect.",
   "why am i missing in farragut?":
-    "The sample company has <strong>no Farragut-specific page</strong> — no headline, address mention, ZIP, or landmark. The 4 businesses winning Farragut cells all do. Plus the sample company's <code>robots.txt</code> is blocking the service pages that would otherwise rank there. Track action <strong>AP-005</strong>.",
+    "The sample company has <strong>no Farragut-specific page</strong> — no headline, address mention, ZIP, or landmark. The 4 businesses winning Farragut searches all do. Plus the sample company's <code>robots.txt</code> is blocking the service pages that would otherwise rank there. Track action <strong>AP-005</strong>.",
   "what can i do without a developer?":
     "Three owner-only moves, in priority order: <br>• <strong>AP-003</strong> — Ask 8 customers for reviews this week (highest leverage). <br>• <strong>AP-007</strong> — Reply to every review within 24h with a 3‑line template. <br>• <strong>AP-006</strong> — Fix NAP listings on 9 inconsistent directories. I can hand you the list with exact text to paste.",
 };
@@ -945,8 +945,8 @@ function renderOverview(){
     <div class="ov-grid">
       <div class="ov-headline">
         <div class="verdict"><span class="b"></span>Agent verdict</div>
-        <h2>This company is visible in <span class="em">5 of 80</span> places customers look, and never in the local‑pack top 3. Three fixes this week unblock the rest of the plan.</h2>
-        <p>Of the 75 places the company is missing, the same six competitors are showing instead — and the single biggest reason is mechanical, not editorial: your service pages can't be read by Google.</p>
+        <h2>This company appears in <span class="em">5 of 80</span> Google search checks, and never in the map top 3. Three fixes this week unblock the rest of the plan.</h2>
+        <p>Across 20 search terms in 4 nearby cities, the company is missing from 75 first-page results. The same six competitors are showing instead — and the single biggest reason is mechanical, not editorial: your service pages can't be read by Google.</p>
         <div class="actions">
           <button class="btn primary" onclick="switchTab('plan')">
             <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="#1a1208" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
@@ -1025,13 +1025,13 @@ function renderCoverage(){
 
     <div class="card">
       <div class="card-hd">
-        <span class="title">How we capture each cell</span>
+        <span class="title">How each Google search is checked</span>
         <span class="sub">3 time-of-day samples · top‑10 SERP + local‑pack capture · saved to evidence log</span>
       </div>
       <div class="card-bd" style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;font-size:13px;color:var(--text-dim);line-height:1.55">
         <div>
           <div class="label-up" style="margin-bottom:6px;color:var(--ember)">Local‑pack</div>
-          The company appears in the map‑3 above organic results. Strongest signal of local discovery — the agent flags any cell where you reach pack‑3.
+          The company appears in the map‑3 above organic results. Strongest signal of local discovery — the agent flags any search where you reach the top 3 map results.
         </div>
         <div>
           <div class="label-up" style="margin-bottom:6px;color:var(--ember)">Organic</div>
@@ -1052,7 +1052,7 @@ function renderMatrixCard({compact}){
     <div class="card">
       <div class="card-hd">
         <span class="title">Search coverage</span>
-        <span class="sub mono">${total}/${total} cells verified · 20 terms × 4 cities</span>
+        <span class="sub mono">${total} ranking checks verified · 20 search terms × 4 cities</span>
         <div class="right">
           <div class="seg" id="covSeg">
             <button class="on" data-mode="all">All terms</button>
@@ -1068,7 +1068,7 @@ function renderMatrixCard({compact}){
           <span class="l"><span class="sq" style="background:rgba(245,166,35,.18);box-shadow:0 0 0 1px #6d4f1f inset"></span>Organic top 10</span>
           <span class="l"><span class="sq" style="background:var(--bg-2);box-shadow:0 0 0 1px var(--line-2) inset"></span>Absent</span>
         </div>
-        <span style="margin-left:auto;font-size:11px;color:var(--muted)" class="mono">Click any cell to see evidence</span>
+        <span style="margin-left:auto;font-size:11px;color:var(--muted)" class="mono">Click any result to see evidence</span>
       </div>
       <div class="matrix-wrap scroll-y" style="${compact?'max-height:380px;':''}">
         <div class="matrix" id="matrixGrid">
@@ -1090,9 +1090,9 @@ function renderMatrixCard({compact}){
         </div>
       </div>
       <div class="matrix-foot">
-        <div class="f bad"><div class="k">Absent</div><div class="v mono">${absent}<span class="sm">/80</span></div></div>
-        <div class="f amber"><div class="k">Organic only</div><div class="v mono">${organic}<span class="sm">/80</span></div></div>
-        <div class="f warn"><div class="k">Local‑pack top 3</div><div class="v mono">${pack}<span class="sm">/80</span></div></div>
+        <div class="f bad"><div class="k">Missing searches</div><div class="v mono">${absent}<span class="sm"> of 80</span></div></div>
+        <div class="f amber"><div class="k">Page-one rankings</div><div class="v mono">${organic}<span class="sm"> of 80</span></div></div>
+        <div class="f warn"><div class="k">Map top 3</div><div class="v mono">${pack}<span class="sm"> of 80</span></div></div>
         <div class="f dim"><div class="k">Cities covered</div><div class="v mono">1<span class="sm">/4</span></div></div>
         <div class="f dim"><div class="k">Evidence rows</div><div class="v mono">1,226</div></div>
       </div>
@@ -1126,7 +1126,7 @@ function renderCompetitors(){
             <span class="rank mono">#${i+1}</span>
           </div>
           <div class="stats">
-            <div class="s"><span class="v">${c.winRate}%</span><span class="k">Your cells won</span></div>
+            <div class="s"><span class="v">${c.winRate}%</span><span class="k">Searches they win</span></div>
             <div class="s"><span class="v">${c.reviews}</span><span class="k">Reviews</span></div>
             <div class="s"><span class="v">${c.areas}<span style="color:var(--muted);font-size:11px;font-weight:500">/4</span></span><span class="k">Cities</span></div>
           </div>
@@ -1145,7 +1145,7 @@ function renderCompetitors(){
     <div class="card">
       <div class="card-hd"><span class="title">Why these 6, not others</span><span class="sub">methodology</span></div>
       <div class="card-bd" style="font-size:13px;color:var(--text-dim);line-height:1.6">
-        The agent surfaces businesses that appear in <strong style="color:var(--text)">the sample's 80 search cells</strong> at least twice, then ranks by how much they overlap with the cells the company is missing. We cap at 6 to keep the comparison actionable; the full audit surfaces all 11.
+        The agent surfaces businesses that appear in <strong style="color:var(--text)">the sample's 80 Google search checks</strong> at least twice, then ranks by how often they show up where the company is missing. We cap at 6 to keep the comparison actionable; the full audit surfaces all 11.
       </div>
     </div>
   `;
@@ -1228,7 +1228,7 @@ function renderEvidence(){
         <span style="font-size:11.5px;color:var(--muted)">· every claim above is traceable back to one of these rows</span>
         <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
           <div class="seg">
-            <button class="on">All cells</button>
+            <button class="on">All searches</button>
             <button>Absent</button>
             <button>Organic</button>
           </div>
@@ -1274,7 +1274,7 @@ function renderAsk(){
           <div>
             <div class="label-up">Grounded in this analysis</div>
             <h2>Ask the SEO Agent</h2>
-            <p>This is not a generic chatbot. It answers from the sample company's business context, 80-cell search map, competitor overlap, action plan, and evidence rows.</p>
+            <p>This is not a generic chatbot. It answers from the sample company's business context, 80 Google search checks, competitor overlap, action plan, and evidence rows.</p>
             <div class="ask-grounding">
               <span>Business memory loaded</span>
               <span>6 competitors compared</span>
@@ -1286,7 +1286,7 @@ function renderAsk(){
         <div class="ask-stream scroll-y" id="askStream">
           <div class="msg agent">
             <span class="who">SEO Agent</span>
-            <div class="bub">I already know the sample business, the service area, the search terms, and the competitor set. Headline: <strong>5 of 80 cells visible, 0 in the local-pack top 3</strong>. The biggest blocker is technical: <code>robots.txt</code> blocks the service pages. Ask me what to fix first, why Pest Ops is ahead, or what proof supports a recommendation.</div>
+            <div class="bub">I already know the sample business, the service area, the search terms, and the competitor set. Headline: <strong>appearing in 5 of 80 Google searches, 0 in the map top 3</strong>. The biggest blocker is technical: <code>robots.txt</code> blocks the service pages. Ask me what to fix first, why Pest Ops is ahead, or what proof supports a recommendation.</div>
           </div>
         </div>
         <div class="ask-suggest">
@@ -1310,7 +1310,7 @@ function renderAsk(){
           <div class="label-up" style="margin-bottom:8px">What the agent knows</div>
           <div class="agent-memory">
             <div class="memory-row"><b>Business</b><span>Anonymized pest-control company serving Knoxville, Farragut, Maryville, and Oak Ridge.</span></div>
-            <div class="memory-row"><b>Problem</b><span>Only 5/80 visibility cells, 0 local-pack top-three appearances, and 75 cells where competitors appear instead.</span></div>
+            <div class="memory-row"><b>Problem</b><span>Only appearing in 5 of 80 Google searches, 0 map top-three appearances, and 75 searches where competitors appear instead.</span></div>
             <div class="memory-row"><b>Cause</b><span>Blocked service pages, thin dedicated pages, city-page gaps, review-volume gap, and citation/NAP issues.</span></div>
             <div class="memory-row"><b>Output</b><span>Prioritized 72-hour, 30-day, and 60/90-day action plan with evidence references.</span></div>
           </div>
@@ -1318,7 +1318,7 @@ function renderAsk(){
         <div>
           <div class="label-up" style="margin-bottom:8px">Jump to proof</div>
           <div class="ask-proof-list">
-            <button onclick="switchTab('coverage')">Open the 80-cell search coverage map</button>
+            <button onclick="switchTab('coverage')">Open the 80-search coverage map</button>
             <button onclick="switchTab('competitors')">Show the six competitors outranking the company</button>
             <button onclick="switchTab('plan')">View the prioritized action plan</button>
             <button onclick="switchTab('evidence')">Open timestamped evidence rows</button>
