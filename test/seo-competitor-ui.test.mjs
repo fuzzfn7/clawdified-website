@@ -55,7 +55,7 @@ test('agents showroom describes SEO as a finished action workspace, not a websit
   assert.match(showroomHtml, /Review an SEO action workspace/i);
   assert.match(showroomHtml, /See competitors, coverage gaps, recommended fixes, evidence, and the Ask Agent panel/i);
   assert.match(showroomHtml, /SEO & Competitor Intelligence preview/i);
-  assert.match(showroomHtml, /Review a finished workspace with coverage gaps, competitors, fixes, evidence, and Ask Agent/i);
+  assert.match(showroomHtml, /Another example workspace: coverage gaps, competitors, fixes, evidence, and Ask Agent/i);
   assert.match(showroomHtml, /Open full screen/i);
 
   assert.doesNotMatch(showroomHtml, /Paste a website inside the workspace below/i);
@@ -65,4 +65,36 @@ test('agents showroom describes SEO as a finished action workspace, not a websit
   assert.doesNotMatch(showroomHtml, /The preview summarizes what it sees/i);
   assert.doesNotMatch(showroomHtml, /preloaded, anonymized analysis workspace/i);
   assert.doesNotMatch(showroomHtml, /not a blank website scanner/i);
+});
+
+test('agents showroom uses a visual custom workflow build section and compact CTA', () => {
+  for (const requiredMarker of [
+    /Private agents should feel like <em>your workflow\.<\/em>/i,
+    /build-showcase/,
+    /flow-map/,
+    /Messy work in\. Finished work out\./i,
+    /Messy inputs/i,
+    /Business rules/i,
+    /Agent work/i,
+    /Finished output/i,
+    /Human control stays visible/i,
+    /No external send without approval/i,
+    /Map my workflow/i,
+  ]) {
+    assert.match(showroomHtml, requiredMarker);
+  }
+
+  for (const removedCopy of [
+    /fastest proof/i,
+    /lead generation, SEO, or proposal\/report automation/i,
+    /SEO action systems/i,
+    /Proposal\/report automation/i,
+    /Book a call and we’ll map/i,
+    /workflow with the biggest payoff/i,
+    /Same pattern, <em>your real workflow<\/em>/i,
+    /class="build-menu"/i,
+    /class="menu-row"/i,
+  ]) {
+    assert.doesNotMatch(showroomHtml, removedCopy);
+  }
 });
