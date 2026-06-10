@@ -130,6 +130,14 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   assert.match(main, /Contact routes/);
   assert.match(main, /Business context \+ ICP/);
   assert.match(main, /ICP matches/);
+  assert.match(main, /Brian Marshall/);
+  assert.match(main, /Daniel Falkner/);
+  assert.match(main, /Dr\. Stephen Malone/);
+  assert.match(main, /Mike Yarbrough/);
+  assert.match(main, /Marie Sharpe/);
+  assert.match(main, /marshallcleaningservice\.com/);
+  assert.match(main, /knoxvillesmiles\.com/);
+  assert.match(main, /knoxvilleproperty\.management/);
   assert.match(main, /buildClawdifiedShowroomLeads/);
   assert.match(agentPages, /Lead Growth preview state/);
   assert.match(agentPages, /Ask the agent what it’s seeing/);
@@ -163,6 +171,9 @@ test('public Lead Growth UI is a Clawdified showroom, not a visitor lead-search 
   assert.doesNotMatch(uiBundle, /pricing tiers|price logic|enrichment credits|qualified demo rows/i);
   assert.doesNotMatch(uiBundle, /ICP fit|ICP rules|Loaded ICP/i);
   assert.doesNotMatch(uiBundle, /customer rules|real matches/i);
+  assert.doesNotMatch(uiBundle, /\b[a-z0-9-]+\.demo\b|clawdified\.com\/demo|555-01|SHOWROOM_DEMO_PROFILED|DEMO_VERIFIED|clawdified-demo/i);
+  assert.doesNotMatch(uiBundle, /volunteer-mechanical|smoky-mountain-roof|knoxville-cleanpro|cedar-ridge-property|blue-ridge-dental/i);
+  assert.doesNotMatch(uiBundle, /demo-chris|demo-dana|demo-alex|demo-morgan|demo-taylor|saved-demo replay|direct demo routes/i);
 
   assert.match(panel, /Suggested customer angle/);
   assert.doesNotMatch(panel, /<Icon name="bolt" \/>Suggested AI agent<span>/);
