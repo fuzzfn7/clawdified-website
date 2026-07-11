@@ -83,6 +83,10 @@
     .nav nav a:not(.nav-cta):hover{color:#26211c;background:rgba(38,33,28,.045)}
     .nav .nav-cta{margin-left:6px;padding:11px 15px;border-radius:11px;background:#26211c;color:#fff;font:750 9px var(--mono);letter-spacing:.08em;text-transform:uppercase;transition:background .2s ease,transform .2s ease}
     .nav .nav-cta:hover{background:#b7662d;color:#fff;transform:translateY(-1px)}
+    @keyframes projectJumpOut{to{opacity:.7;filter:blur(3px)}}
+    @keyframes projectJumpIn{from{opacity:.72;filter:blur(3px)}}
+    ::view-transition-old(root){animation:projectJumpOut .16s ease-out both}
+    ::view-transition-new(root){animation:projectJumpIn .26s ease-out both}
 
     .hero{position:relative;min-height:108svh;overflow:hidden;background:linear-gradient(180deg,#fff 0%,#fcfdff 64%,#f8f6f4 100%)}
     .hero-inner{position:relative;z-index:4;min-height:100svh;padding:148px 0 205px;display:grid;place-items:center;text-align:center}
@@ -598,7 +602,7 @@
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="nav">
     <a class="brand" href="/" aria-label="Clawdified home"><img class="brand-mark" src="/assets/clawdified-claw-transparent.png" alt=""><img class="brand-wordmark" src="/assets/clawdified-wordmark-industrial-notch.svg" alt=""></a>
-    <nav aria-label="Primary"><a href="#build">Example build</a><a href="#agent-story">The agent</a><a href="#your-workflow">Your workflow</a><a class="nav-cta" href="#start">Start a project</a></nav>
+    <nav aria-label="Primary"><a href="#build">Example build</a><a href="#agent-story">The agent</a><a href="#your-workflow">Your workflow</a><a class="nav-cta" href="#start" data-direct-jump>Start a project</a></nav>
   </header>
 
   <main id="main-content">
@@ -738,11 +742,10 @@
       <div class="footer-directory wrap">
         <div class="footer-about">
           <a class="footer-brand" href="/" aria-label="Clawdified home"><img class="brand-mark" src="/assets/clawdified-claw-transparent.png" alt=""><img class="brand-wordmark" src="/assets/clawdified-wordmark-industrial-notch.svg" alt=""></a>
-          <p>Custom AI agents built around the work your business repeats.</p>
         </div>
         <nav class="footer-links" aria-label="Footer">
           <div><h3>Explore</h3><a href="#build">Example build</a><a href="#agent-story">The agent</a><a href="#your-workflow">Your workflow</a></div>
-          <div><h3>Contact</h3><a href="mailto:theo@clawdified.com">theo@clawdified.com</a><a href="https://www.linkedin.com/company/clawdified/" target="_blank" rel="noopener noreferrer" aria-label="Clawdified on LinkedIn">LinkedIn</a><span>Knoxville, Tennessee</span></div>
+          <div><h3>Contact</h3><a href="mailto:theo@clawdified.com">theo@clawdified.com</a><a href="https://www.linkedin.com/company/clawdified/" target="_blank" rel="noopener noreferrer" aria-label="Clawdified on LinkedIn">LinkedIn</a></div>
         </nav>
       </div>
       <div class="simple-footer-bottom wrap">
@@ -932,6 +935,34 @@
     <section class="cta" id="legacy-start" aria-labelledby="start-title"><div class="cta-grid wrap"><div><div class="smallcap">Start with one recurring job</div><h2 id="start-title">Tell us what keeps landing back on your plate.</h2><p>Bring the process as it works today: the tools, the information, the rules, the exceptions, and the decisions you still want to own. We will determine whether a custom AI agent can give those hours back.</p></div><div class="cta-links"><a href="https://cal.com/intro-clawdified/30min" target="_blank" rel="noopener"><span>Book a workflow call</span><b>Open calendar →</b></a><a href="/"><span>Compare all directions</span><b>V4 hub →</b></a></div></div><footer class="footer wrap">Product Mesh custom-agent direction · built around your work, tools, rules, and approval points.<a href="/">Back to v4 hub</a></footer></section>
     </div>
   </main>
+
+  <script>
+    (function(){
+      const projectCta=document.querySelector('.nav-cta[data-direct-jump]');
+      const projectStart=document.getElementById('start');
+      const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+      if(!projectCta||!projectStart)return;
+
+      function jumpToProjectStart(){
+        const root=document.documentElement;
+        const previousScrollBehavior=root.style.scrollBehavior;
+        root.style.scrollBehavior='auto';
+        projectStart.scrollIntoView({block:'start',behavior:'auto'});
+        history.replaceState(null,'','#start');
+        requestAnimationFrame(()=>{root.style.scrollBehavior=previousScrollBehavior;});
+      }
+
+      projectCta.addEventListener('click',event=>{
+        if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+        event.preventDefault();
+        if(!reducedMotion.matches&&document.startViewTransition){
+          document.startViewTransition(jumpToProjectStart);
+        }else{
+          jumpToProjectStart();
+        }
+      });
+    })();
+  </script>
 
   <script>
     (function(){

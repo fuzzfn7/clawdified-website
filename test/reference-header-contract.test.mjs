@@ -25,7 +25,7 @@ test('header keeps simple navigation and one decisive project CTA', () => {
   assert.match(header, /href="#build">Example build<\/a>/);
   assert.match(header, /href="#agent-story">The agent<\/a>/);
   assert.match(header, /href="#your-workflow">Your workflow<\/a>/);
-  assert.match(header, /<a class="nav-cta" href="#start">Start a project<\/a>/);
+  assert.match(header, /<a class="nav-cta" href="#start" data-direct-jump>Start a project<\/a>/);
   assert.equal((header.match(/class="nav-cta"/g) || []).length, 1);
 });
 
