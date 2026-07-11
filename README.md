@@ -4,10 +4,12 @@ Canonical local source for `clawdified.com` Cloudflare Pages static site and Pag
 
 ## Current homepage status
 
-- `/` hero and build-options section remain the primary conversion anchors; avoid publishing exact dollar pricing in public copy.
-- The middle homepage flow was redesigned with Claude Design on 2026-05-26 as three visual, copy-light sections: problem bottleneck (`#problem`), agent-between-apps solution (`#solution`), and managed workflow map (`#process`). On 2026-05-28, the problem/solution copy was repositioned away from generic inbox/review/follow-up pain and toward custom workflows trapped in someone’s head: messy inputs, judgment calls, scattered tools, and client-ready outputs.
-- Required markers in `index.html`: `CLAUDE_DESIGN_HOME_VISUAL_REDESIGN_20260526`, `CUSTOM_WORKFLOW_HOME_REPOSITION_20260528`, `Claude Design homepage visual redesign 20260526`, and visible text `visual workflow proof` in the `/agents/` teaser.
-- Do not re-add the old homepage tabbed/fake-app demo flow (`#what-it-does`, `#tools`, `#how-it-works`). The actual interactive live agent showroom lives separately at `/agents/`.
+- `/` is the 2026-07-11 Heritage Flow homepage. It opens with one buyer-facing message: `You have work stealing hours from your week. We build the agent that gives them back.` The hero remains uncluttered and occupies a full viewport before the story chapter begins.
+- The homepage is custom/service-led, not SaaS and not a fixed automation menu. Its four-beat manual proposal story shows a contractor losing field time, gathering job information, manually assembling a proposal and customer email, then contrasts roughly 10 hours of preparation with under one hour of review and sending.
+- Header and footer use the transparent claw plus `assets/clawdified-wordmark-industrial-notch.svg`, a filled custom vector lockup with no runtime font or `<text>` dependency. Navigation uses one inset warm shell, plain links, and one `Start a project` CTA. Secondary links collapse responsively; the full wordmark remains visible through standard phone widths.
+- The `Start a project` CTA links to the configured external Cal.com booking page. There is no localStorage-backed homepage form.
+- Keep the framing plain and problem-first. Avoid exact public service pricing, paragraph-heavy repetition, textbook abstractions, tabbed/fake-app homepage flows, and the rejected giant iframe/proof-stage hero. The interactive agent showroom remains separate at `/agents/`.
+- Regression coverage includes the manual story, agent clarity, headline-only hero, production metadata, custom lockup, reference-led header, and connector health gating under `test/*.mjs`.
 
 ## Current live agent showroom status
 
@@ -161,16 +163,23 @@ Optional:
 - `CONNECTOR_BUILDER_WEBHOOK_URL` — optional Hermes/webhook endpoint to notify when the admin dashboard stores a new unsupported connector request.
 - `CONNECTOR_BUILDER_WEBHOOK_TOKEN` — optional bearer token sent only server-to-server to the connector-builder webhook; never shown in dashboard responses.
 
-## Current production verification — 2026-06-01
+## Current release verification — 2026-07-11
 
-Verified with Cloudflare/Wrangler smoke checks:
+Reviewed source and deployment contract:
 
+- Homepage source: the Heritage Flow experience with production SEO metadata, transparent claw, and font-independent Industrial Notch SVG wordmark.
+- Reviewed release identity: `index.html` SHA-256 `c2daad94b6fa533949d945efb2bf33fdb28148d64d177de3f20f0a6816d6f940`; Industrial Notch SVG SHA-256 `2cab4faa4df268ca1b8a25a537b644c1543b343b6811938456b0bfbb5133b4ff`.
+- Footer contact uses `theo@clawdified.com` and links the official company page at `https://www.linkedin.com/company/clawdified/`. Focused footer-link QA passed `27/27` locally and `27/27` against the public domain; Cloudflare email protection decodes to the exact address in the rendered browser.
+- Browser favicon remains the rounded black tile with orange/copper claw at `/assets/clawdified-favicon-heritage-20260711.png` (SHA-256 `fa7900ee5c6b1ca2290ff4eb1f14c04b70bd6228d49d85658fa89ab01c06922f`).
+- Release gates: `105/105` repository tests, `36/36` OAuth health-state cases, all tracked Functions syntax checks, staged security/whitespace scans, and direct legal-route middleware smokes.
+- Pre-release production rollback: deployment `ecb7bb41-8241-46d2-ace9-ee1cf5305ae2`, preview `https://ecb7bb41.clawdifiedweb.pages.dev`, source `db9db3b`.
+- Deploy only a clean archive of the reviewed commit. After deployment, verify the custom domain, immutable preview, homepage identity, legal routes, connector pages, and protected API boundaries; use the Cloudflare control plane for the current deployment ID.
 - Live Lead Growth showroom scroll hotfix: commit `38248d7` (`Fix lead outreach preview scrolling`) is pushed to `origin/main` and deployed to Cloudflare Pages. Browser smoke through `https://clawdified.com/agents/?v=38248d7#showroom-stage` opened the embedded Lead Growth iframe, ran the agent, opened Lead Outreach → Review, scrolled the detail page, and verified the message-preview safety note is visible after scroll.
 
-- Cloudflare Pages project: `clawdifiedweb` (`Git Provider: No`; production deploys are manual Wrangler deploys from a clean committed archive).
+- Cloudflare Pages project: `clawdifiedweb` (`Git Provider: No`; production deploys are manual Wrangler deploys).
 - Live SEO & Competitor Intelligence route: `https://clawdified.com/agents/seo-competitor/` — returns the anonymized sample workspace marker `SEO_COMPETITOR_SAMPLE_WORKSPACE_20260528`, not a visitor website-input scanner.
 - Live admin dashboard page: `https://clawdified.com/admin/connections/` — returns `200` and includes the New Invite connector picker (`connectorPicker`, `Add connector`, and `Nothing is preselected`) instead of the old prechecked Gmail/four-checkbox block.
-- Latest Pages preview URL is visible in `wrangler pages deployment list --project-name=clawdifiedweb`; do not hardcode it here because each documentation-only redeploy creates a new immutable preview URL.
+- The Cloudflare control plane remains authoritative for the latest immutable preview: `wrangler pages deployment list --project-name=clawdifiedweb`.
 - Live `/api/admin/connections` rejects unauthenticated requests with `401`.
 - Live `/api/admin/connector-requests` rejects unauthenticated requests with `401`.
 - Live Slack connector page: `https://clawdified.com/connect/slack/`.
@@ -245,3 +254,5 @@ curl -s http://127.0.0.1:8788/api/social/meta/health
 ## Deployment note
 
 This Cloudflare Pages project has historically been manually deployed with Wrangler rather than automatic Git deploys. Commit/push for provenance, then deploy the committed tree with `wrangler pages deploy` using the actual project name.
+
+The 2026-07-11 homepage and brand release reconciles the verified production overlays into committed source. Deploy only from a clean `git archive` of the reviewed commit—never from the repository root—so untracked backups, prototypes, and Wrangler state cannot enter production. The tracked `functions/_middleware.js` generates `/privacy`, `/terms`, and `/data-deletion`; verify those routes along with the custom domain and immutable preview after every deploy.

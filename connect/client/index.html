@@ -10,11 +10,50 @@
 :root{color-scheme:dark;--bg:#0f0e0a;--panel:#17140e;--ink:#f8edda;--muted:rgba(248,237,218,.68);--faint:rgba(248,237,218,.45);--line:rgba(248,237,218,.13);--gold:#f1b45b;--orange:#d48553;--green:#7ad99d;--red:#ff8d7d;--sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--serif:Georgia,"Playfair Display",serif;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}
 *{box-sizing:border-box}html,body{min-height:100%;margin:0}body{background:radial-gradient(circle at 50% -12%,rgba(241,180,91,.18),transparent 34rem),var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}a{color:inherit}.top{display:flex;justify-content:space-between;align-items:center;padding:22px 26px}.brand{font-weight:900;letter-spacing:.06em;text-decoration:none;font-size:13px}.brand::before{content:"";display:inline-block;width:7px;height:7px;border-radius:999px;background:linear-gradient(135deg,var(--gold),var(--orange));margin-right:8px;vertical-align:1px}.back{color:var(--muted);text-decoration:none;font-size:13px}.back:hover{color:var(--ink)}main{width:min(920px,100%);margin:0 auto;padding:48px 22px 80px}.shell{display:grid;gap:20px}.hero{border:1px solid var(--line);background:linear-gradient(180deg,rgba(33,27,18,.9),rgba(23,20,14,.94));border-radius:28px;padding:clamp(24px,5vw,42px);box-shadow:0 28px 80px rgba(0,0,0,.28)}.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:.2em;font-size:11px;font-weight:900}h1{font-family:var(--serif);font-weight:500;letter-spacing:-.035em;line-height:.98;font-size:clamp(42px,7vw,72px);margin:12px 0 14px}.lead{color:var(--muted);line-height:1.58;font-size:17px;max-width:650px;margin:0}.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}.pill{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:12px}.grid{display:grid;gap:12px}.connector{border:1px solid var(--line);background:rgba(23,20,14,.82);border-radius:22px;padding:20px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center}.connector h2{margin:0 0 5px;font-size:18px;letter-spacing:-.01em}.connector p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}.button{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:0;border-radius:999px;padding:12px 18px;background:linear-gradient(135deg,var(--gold),var(--orange));color:#1a1008;font-weight:850;font-size:14px;box-shadow:0 14px 36px rgba(212,133,83,.22);white-space:nowrap}.button.secondary{background:transparent;color:var(--muted);border:1px solid var(--line);box-shadow:none}.status{font-size:13px;color:var(--faint);min-height:1.4em}.status.bad{color:var(--red)}.status.good{color:var(--green)}.empty{border:1px dashed var(--line);border-radius:22px;padding:26px;text-align:center;color:var(--muted)}footer{padding:0 22px 28px;text-align:center;font-size:12px;color:var(--faint)}footer a{color:var(--muted);text-decoration:none;margin:0 8px}@media(max-width:680px){main{padding-top:24px}.connector{grid-template-columns:1fr}.button{width:100%}.top{padding:18px}}
 </style>
+<style>
+/* CONNECTOR_AGENTHEALTH_UI_20260703 — client invite page */
+:root{--ah-ink:#03030a;--ah-surface:rgba(4,6,18,.72);--ah-elevated:rgba(8,10,24,.78);--ah-line:rgba(255,255,255,.06);--ah-line-strong:rgba(255,255,255,.12);--ah-line-bright:rgba(255,255,255,.22);--ah-text:#f3f3f4;--ah-text-soft:#c9c9cc;--ah-text-mute:#7a7a82;--ah-text-quiet:#4d4d54;--ah-accent:#7aa2ff;--ah-accent-soft:#a4bfff;--ah-accent-trace:rgba(122,162,255,.14);--ah-accent-line:rgba(122,162,255,.42);--ah-ok:#6ee7b7;--ah-critical:#ef6a5e;--bg:var(--ah-ink);--panel:var(--ah-surface);--ink:var(--ah-text);--muted:var(--ah-text-mute);--faint:var(--ah-text-quiet);--line:var(--ah-line);--gold:var(--ah-accent);--orange:var(--ah-accent-soft);--green:var(--ah-ok);--red:var(--ah-critical);--sans:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;--mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,Consolas,monospace}
+html{background:var(--ah-ink);color-scheme:dark}body{background:#03030a;color:var(--ah-text);font-family:var(--sans);font-size:15px;letter-spacing:-.005em}body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(780px 460px at 10% 4%,rgba(79,70,229,.16),transparent 66%),radial-gradient(760px 500px at 88% 8%,rgba(11,42,95,.14),transparent 68%),radial-gradient(620px 420px at 74% 78%,rgba(6,182,212,.10),transparent 70%),radial-gradient(540px 560px at 24% 106%,rgba(88,28,135,.09),transparent 72%);mix-blend-mode:screen}body::after{content:"";position:fixed;inset:-10%;z-index:0;pointer-events:none;opacity:.42;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");background-size:160px 160px;animation:connector-grain 22s linear infinite}body>*{position:relative;z-index:1}@keyframes connector-grain{0%{transform:translate3d(0,0,0)}25%{transform:translate3d(-12px,8px,0)}50%{transform:translate3d(6px,-10px,0)}75%{transform:translate3d(-4px,4px,0)}100%{transform:translate3d(0,0,0)}}@media(prefers-reduced-motion:reduce){body::after{animation:none}*{animation-duration:.001ms!important;transition:none!important}}
+.top{min-height:44px;padding:0 16px;border-bottom:1px solid var(--ah-line);background:rgba(4,6,18,.72);backdrop-filter:blur(18px) saturate(130%);-webkit-backdrop-filter:blur(18px) saturate(130%)}.brand{font-weight:500;font-size:13px;letter-spacing:.02em;text-transform:none}.brand::before{width:6px;height:6px;background:var(--ah-accent);box-shadow:0 0 0 2px var(--ah-accent-trace)}.back,footer,footer a{color:var(--ah-text-mute)}.back:hover,footer a:hover{color:var(--ah-text)}main{width:min(980px,100%);padding:34px 22px 72px}.shell{gap:14px}.hero,.connector,.empty{border:1px solid var(--ah-line);background:rgba(4,6,18,.78);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-radius:10px;box-shadow:none}.hero{padding:clamp(24px,4vw,34px)}.eyebrow{color:var(--ah-text-mute);font-size:11px;font-weight:500;letter-spacing:.06em}.lead,.connector p,.pill,.status{color:var(--ah-text-mute)}h1{font-family:var(--sans);font-size:clamp(28px,4vw,42px);font-weight:500;letter-spacing:-.04em;line-height:1.05}.meta{gap:6px}.pill{border-color:var(--ah-line);background:rgba(255,255,255,.018);border-radius:4px}.connector{grid-template-columns:minmax(0,1fr) auto;padding:16px 18px;position:relative}.connector::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:2px;background:var(--ah-accent);border-radius:0 1px 1px 0}.connector h2{font-size:15px;font-weight:500;color:var(--ah-text)}.connector:hover{background:var(--ah-elevated);border-color:var(--ah-line-strong)}.button{border:1px solid var(--ah-accent);border-radius:6px;background:var(--ah-accent);color:#0a0d1a;box-shadow:none;font-weight:600}.button:hover{transform:none;background:var(--ah-accent-soft);border-color:var(--ah-accent-soft);box-shadow:none}.button.secondary{background:transparent;color:var(--ah-text-mute);border-color:var(--ah-line)}.button.secondary:hover{color:var(--ah-text);background:rgba(255,255,255,.03);border-color:var(--ah-line-bright)}.status.good{color:var(--ah-ok)}.status.bad{color:var(--ah-critical)}footer{padding:20px 22px 28px}@media(max-width:700px){.connector{grid-template-columns:1fr}.button{justify-self:start}}
+</style>
+<style>
+/* CONNECTOR_CLIENT_HANDOFF_CLEANUP_20260703
+   Client email handoff page: no marketing navigation, connections front and
+   center, one obvious action per tool, quiet legal labels at the bottom. */
+body{min-height:100vh;display:flex;flex-direction:column;}
+.top{justify-content:center;}
+.brand-static{cursor:default;user-select:none;text-decoration:none;color:var(--ah-text);}
+.brand-static::before{content:"";display:inline-block;width:6px;height:6px;border-radius:999px;margin-right:8px;vertical-align:1px;background:var(--ah-accent);box-shadow:0 0 0 2px var(--ah-accent-trace);}
+main{flex:1;display:flex;align-items:center;justify-content:center;width:min(760px,100%);padding:48px 20px 42px;}
+.shell{display:flex;flex-direction:column;align-items:stretch;width:100%;gap:14px;text-align:center;}
+.hero{border:0;background:transparent;box-shadow:none;padding:0;margin:0 auto 2px;max-width:620px;backdrop-filter:none;-webkit-backdrop-filter:none;}
+.eyebrow{display:inline-flex;align-items:center;justify-content:center;gap:7px;color:var(--ah-text-mute);font-size:11px;letter-spacing:.09em;text-transform:uppercase;}
+.eyebrow::before{content:"";width:6px;height:6px;border-radius:999px;background:var(--ah-accent);box-shadow:0 0 0 2px var(--ah-accent-trace);}
+h1{margin:12px 0 10px;font-size:clamp(34px,6vw,48px);letter-spacing:-.045em;}
+.lead{margin:0 auto;color:var(--ah-text-mute);font-size:15px;line-height:1.55;max-width:560px;}
+.meta{justify-content:center;margin-top:14px;}
+.pill{font-size:11px;text-transform:uppercase;letter-spacing:.07em;padding:6px 8px;color:var(--ah-text-mute);}
+.grid{order:2;width:min(620px,100%);margin:2px auto 0;gap:10px;}
+.status{order:3;margin:0 auto;min-height:18px;color:var(--ah-text-quiet);font-size:12px;}
+.status:empty{display:none;}
+.connector{grid-template-columns:1fr;padding:18px;gap:14px;text-align:left;border-radius:10px;background:rgba(4,6,18,.82);}
+.connector h2{font-size:18px;margin:0 0 6px;letter-spacing:-.02em;}
+.connector p{font-size:13px;line-height:1.48;margin:0;color:var(--ah-text-mute);}
+.connector .button{width:100%;min-height:48px;font-size:15px;margin-top:2px;}
+.connector[data-service="gmail"]::before{background:#7aa2ff;}
+.connector[data-service="meta"]::before{background:#8b5cf6;}
+.connector[data-service="slack"]::before{background:#6ee7b7;}
+.connector[data-service="hubspot"]::before{background:#f5c454;}
+.connector-state{display:inline-flex;margin-bottom:8px;color:var(--ah-text-quiet);font-size:10px;letter-spacing:.08em;text-transform:uppercase;}
+.empty{width:min(620px,100%);margin:0 auto;text-align:center;}
+footer{font-size:11px;color:var(--ah-text-quiet);padding:0 20px 24px;}
+footer a{margin:0 7px;color:var(--ah-text-mute);}
+@media(max-width:640px){main{padding-top:34px}.connector{padding:16px}.top{justify-content:flex-start}}
+</style>
 </head>
 <body>
 <nav class="top" aria-label="Page navigation">
-  <a class="brand" href="/">CLAWDIFIED</a>
-  <a class="back" href="/">Back</a>
+  <div class="brand brand-static" aria-label="Clawdified secure connector">CLAWDIFIED</div>
 </nav>
 <main>
   <section class="shell" aria-live="polite">
@@ -45,20 +84,22 @@ function setStatus(text, kind = '') {
 }
 
 function connectorCopy(connector) {
-  if (connector.service === 'gmail') return 'Authorize the Gmail inbox your Clawdified agent can use for approved email work.';
-  if (connector.service === 'meta') return 'Authorize the Facebook Page / Instagram assets your Clawdified agent can use.';
-  return 'Authorize this software tool for the approved Clawdified workflow.';
+  if (connector.service === 'gmail') return 'Connect the approved Gmail inbox through Google. No password sharing.';
+  if (connector.service === 'meta') return 'Connect the approved Facebook / Instagram assets through Meta. No password sharing.';
+  if (connector.service === 'slack') return 'Connect the approved Slack workspace for alerts, approvals, and updates.';
+  if (connector.service === 'hubspot') return 'Connect the approved HubSpot portal for CRM workflow sync.';
+  return 'Connect this approved software tool through its official provider screen.';
 }
 
 function renderInvite(data) {
   const invite = data.invite || {};
   const connectors = data.connectors || [];
-  pageTitle.textContent = invite.client_name ? `${invite.client_name}: connect required tools` : 'Connect required tools';
+  pageTitle.textContent = 'Connect your tools';
   pageLead.textContent = invite.workflow
-    ? `Clawdified needs the tools below for: ${invite.workflow}. Connect each one using the official provider screen — no password sharing.`
-    : 'Connect each required software tool using the official provider screen — no password sharing.';
+    ? `Clawdified needs these connections for ${invite.workflow}. Use the buttons below and sign in on the official provider screen.`
+    : 'Use the buttons below to connect the required tools. You will sign in on the official provider screen.';
   inviteMeta.innerHTML = [
-    invite.invite_id ? `<span class="pill">Invite ${escapeHtml(invite.invite_id)}</span>` : '',
+    '<span class="pill">Secure client link</span>',
     invite.connector_services?.length ? `<span class="pill">${invite.connector_services.length} required connector${invite.connector_services.length === 1 ? '' : 's'}</span>` : '',
   ].filter(Boolean).join('');
 
@@ -73,6 +114,7 @@ function renderInvite(data) {
     return `
       <article class="connector" data-service="${escapeHtml(connector.service)}">
         <div>
+          <span class="connector-state">${connected ? 'Connected' : 'Required connection'}</span>
           <h2>${escapeHtml(connector.service_label || connector.label || connector.service)}</h2>
           <p>${escapeHtml(connected ? `Connected${connector.connected_account ? `: ${connector.connected_account}` : ''}` : connectorCopy(connector))}</p>
         </div>
@@ -80,7 +122,7 @@ function renderInvite(data) {
       </article>`;
   }).join('');
   const done = connectors.filter((connector) => connector.connection_status === 'connected').length;
-  setStatus(done ? `${done}/${connectors.length} connector${connectors.length === 1 ? '' : 's'} connected.` : 'Choose a connector to start.', done === connectors.length ? 'good' : '');
+  setStatus(done ? `${done}/${connectors.length} connector${connectors.length === 1 ? '' : 's'} connected.` : '', done === connectors.length ? 'good' : '');
 }
 
 async function loadInvite() {

@@ -29,18 +29,44 @@ footer{padding:24px 22px 28px;text-align:center;font-size:12px;color:var(--faint
 footer a{color:var(--muted);text-decoration:none;margin:0 8px}
 footer a:hover{color:var(--ink)}
 </style>
+<style>
+/* CONNECTOR_AGENTHEALTH_UI_20260703 — OAuth connector page */
+:root{--ah-ink:#03030a;--ah-surface:rgba(4,6,18,.78);--ah-line:rgba(255,255,255,.06);--ah-line-strong:rgba(255,255,255,.12);--ah-line-bright:rgba(255,255,255,.22);--ah-text:#f3f3f4;--ah-text-mute:#7a7a82;--ah-text-quiet:#4d4d54;--ah-accent:#7aa2ff;--ah-accent-soft:#a4bfff;--ah-accent-trace:rgba(122,162,255,.14);--ah-ok:#6ee7b7;--ah-critical:#ef6a5e;--bg:var(--ah-ink);--ink:var(--ah-text);--muted:var(--ah-text-mute);--faint:var(--ah-text-quiet);--line:var(--ah-line);--gold:var(--ah-accent);--orange:var(--ah-accent-soft);--red:var(--ah-critical);--sans:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}html{background:var(--ah-ink)}body{background:#03030a;color:var(--ah-text);font-family:var(--sans);letter-spacing:-.005em}body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(780px 460px at 10% 4%,rgba(79,70,229,.16),transparent 66%),radial-gradient(760px 500px at 88% 8%,rgba(11,42,95,.14),transparent 68%),radial-gradient(620px 420px at 74% 78%,rgba(6,182,212,.10),transparent 70%),radial-gradient(540px 560px at 24% 106%,rgba(88,28,135,.09),transparent 72%);mix-blend-mode:screen}body>*{position:relative;z-index:1}.top{min-height:44px;padding:0 16px;border-bottom:1px solid var(--ah-line);background:rgba(4,6,18,.72);backdrop-filter:blur(18px) saturate(130%);-webkit-backdrop-filter:blur(18px) saturate(130%)}.brand{font-weight:500;font-size:13px;letter-spacing:.02em;text-transform:none}.back,footer,footer a{color:var(--ah-text-mute)}.back:hover,footer a:hover{color:var(--ah-text)}main{padding:34px 22px}.card{max-width:460px;padding:30px;border:1px solid var(--ah-line);border-radius:10px;background:var(--ah-surface);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:none}h1{font-family:var(--sans);font-size:clamp(28px,5vw,36px);font-weight:500;letter-spacing:-.035em;line-height:1.08}.lead{color:var(--ah-text-mute);font-size:15px}.button{border:1px solid var(--ah-accent);border-radius:6px;background:var(--ah-accent);color:#0a0d1a;box-shadow:none;font-weight:600}.button:hover:not(:disabled){transform:none;background:var(--ah-accent-soft);border-color:var(--ah-accent-soft);box-shadow:none}.button:disabled{opacity:.42}.status{color:var(--ah-text-quiet)}.status.bad{color:var(--ah-critical)}footer{padding:20px 22px 28px}
+</style>
+<style>
+/* CONNECTOR_OAUTH_HANDOFF_CLEANUP_20260703
+   One-button client connector page: no marketing navigation, short explanation,
+   obvious provider authorization action, quiet legal labels. */
+.top{justify-content:center;}
+.brand-static{cursor:default;user-select:none;text-decoration:none;color:var(--ah-text);}
+.brand-static::before{content:"";display:inline-block;width:6px;height:6px;border-radius:999px;margin-right:8px;vertical-align:1px;background:var(--ah-accent);box-shadow:0 0 0 2px var(--ah-accent-trace);}
+main{padding:48px 20px;}
+.card{max-width:520px;padding:34px 32px;text-align:center;}
+.card .eyebrow{display:inline-flex;align-items:center;justify-content:center;gap:7px;margin-bottom:13px;color:var(--ah-text-mute);font-size:11px;font-weight:500;letter-spacing:.09em;text-transform:uppercase;}
+.card .eyebrow::before{content:"";width:6px;height:6px;border-radius:999px;background:var(--ah-accent);box-shadow:0 0 0 2px var(--ah-accent-trace);}
+h1{margin-bottom:12px;font-size:clamp(32px,5vw,42px);}
+.lead{max-width:420px;margin:0 auto 24px;font-size:15px;line-height:1.52;}
+.button{width:min(360px,100%);min-height:50px;font-size:15px;}
+.microcopy{max-width:410px;margin:14px auto 0;color:var(--ah-text-quiet);font-size:12px;line-height:1.45;}
+.status{margin-top:12px;}
+.status:empty{display:none;}
+footer{font-size:11px;color:var(--ah-text-quiet);padding:0 20px 24px;}
+footer a{margin:0 7px;color:var(--ah-text-mute);}
+@media(max-width:560px){.top{justify-content:flex-start}.card{padding:28px 20px}}
+</style>
 </head>
 <body>
 <nav class="top" aria-label="Page navigation">
-  <a class="brand" href="/">CLAWDIFIED</a>
-  <a class="back" href="/">Back</a>
+  <div class="brand brand-static" aria-label="Clawdified secure connector">CLAWDIFIED</div>
 </nav>
 
 <main>
   <div class="card">
+    <div class="eyebrow">Secure connector</div>
     <h1>Connect Facebook + Instagram</h1>
-    <p class="lead">Securely authorize the Facebook Page and Instagram account Clawdified will use — no password sharing.</p>
+    <p class="lead">Click below to authorize Facebook and Instagram through Meta. No password sharing.</p>
     <button class="button" id="connectButton" type="button" disabled>Connect Facebook + Instagram</button>
+    <p class="microcopy">You will sign in with Meta and can revoke access anytime.</p>
     <div class="status" id="statusLine" role="status" aria-live="polite">Checking connector…</div>
   </div>
 </main>
@@ -52,8 +78,10 @@ footer a:hover{color:var(--ink)}
 <script>
 const button = document.getElementById('connectButton');
 const statusLine = document.getElementById('statusLine');
+let handoffStarted = false;
 
 function setStatus(ok, text) {
+  if (handoffStarted) return;
   button.disabled = !ok;
   statusLine.textContent = text;
   statusLine.classList.toggle('bad', !ok);
@@ -63,18 +91,19 @@ async function checkHealth() {
   try {
     const res = await fetch('/api/social/meta/health', { headers: { Accept: 'application/json' } });
     const data = await res.json();
-    if (data.ok) {
-      setStatus(true, '');
-    } else {
-      setStatus(false, 'Connector unavailable');
-    }
+    const healthy = res.ok && data?.ok === true;
+    setStatus(healthy, healthy ? '' : 'Connector unavailable');
   } catch (err) {
     setStatus(false, 'Connector unavailable');
   }
 }
 
 button.addEventListener('click', () => {
-  if (button.disabled) return;
+  if (handoffStarted) return;
+  handoffStarted = true;
+  button.disabled = true;
+  statusLine.textContent = 'Opening Meta sign-in…';
+  statusLine.classList.remove('bad');
   const current = new URLSearchParams(window.location.search);
   const params = new URLSearchParams();
   params.set('return_to', current.get('return_to') || '/connect/social/');
