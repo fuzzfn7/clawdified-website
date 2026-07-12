@@ -58,6 +58,9 @@ a{color:inherit}
 .brand-mark{width:26px;height:26px;border-radius:8px;object-fit:contain;background:transparent;transition:background .22s ease,box-shadow .22s ease}
 .brand:hover .brand-mark,.brand:focus-visible .brand-mark{background:#181713;box-shadow:0 7px 20px rgba(55,38,25,.14)}
 .brand-wordmark{display:block;width:auto;height:16px;object-fit:contain}
+.nav-actions{display:flex;align-items:center;gap:4px}
+.client-login{padding:10px 12px;border-radius:10px;color:#6f665c;text-decoration:none;font-size:12px;transition:color .2s ease,background .2s ease}
+.client-login:hover{color:var(--ink);background:rgba(38,33,28,.045)}
 .nav-cta{padding:11px 15px;border-radius:11px;background:#26211c;color:#fff;text-decoration:none;font:750 9px var(--mono);letter-spacing:.08em;text-transform:uppercase;transition:background .2s ease,transform .2s ease}
 .nav-cta:hover{background:#b7662d;transform:translateY(-1px)}
 :focus-visible{outline:3px solid rgba(198,137,87,.35);outline-offset:3px}
@@ -92,7 +95,8 @@ h1{max-width:1100px;margin:22px auto 0;font-size:clamp(72px,10vw,148px);line-hei
 }
 @media(max-width:600px){
   .nav{top:8px;width:calc(100% - 16px);height:58px;padding-inline:10px;border-radius:15px}
-  .nav-cta{padding:10px 12px;font-size:8px}
+  .client-login{min-height:44px;padding:8px 10px;display:inline-flex;align-items:center;font-size:11px}
+  .nav-cta{min-height:44px;padding:10px 12px;display:inline-flex;align-items:center;font-size:8px}
   .service-stage{min-height:calc(100svh - 92px);padding-top:128px;padding-bottom:70px}
   .eyebrow{font-size:8px}
   .status{margin-top:26px;font-size:18px}
@@ -101,6 +105,6 @@ h1{max-width:1100px;margin:22px auto 0;font-size:clamp(72px,10vw,148px);line-hei
 }
 @media(max-width:360px){.brand-wordmark{display:none}}
 @media(prefers-reduced-motion:reduce){
-  .brand,.brand-mark,.nav-cta,.home-link,.service-footer a{transition:none}
+  .brand,.brand-mark,.client-login,.nav-cta,.home-link,.service-footer a{transition:none}
   .flow-node{animation:none}
 }

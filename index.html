@@ -80,6 +80,7 @@
     .brand-wordmark{display:block;width:auto;height:16px;object-fit:contain}
     .nav nav{display:flex;align-items:center;gap:4px;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
     .nav nav a{padding:10px 12px;border-radius:10px;text-decoration:none;color:#60584e;font-size:12px;transition:color .2s ease,background .2s ease}
+    .nav .client-login{color:#60584e}
     .nav nav a:not(.nav-cta):hover{color:#26211c;background:rgba(38,33,28,.045)}
     .nav .nav-cta{margin-left:6px;padding:11px 15px;border-radius:11px;background:#26211c;color:#fff;font:750 9px var(--mono);letter-spacing:.08em;text-transform:uppercase;transition:background .2s ease,transform .2s ease}
     .nav .nav-cta:hover{background:#b7662d;color:#fff;transform:translateY(-1px)}
@@ -412,7 +413,7 @@
     }
     @media(max-width:1100px){
       .wrap{width:min(100% - 32px,720px)}
-      .nav{top:8px;width:calc(100% - 16px);height:58px;padding-inline:10px;border-radius:15px}.nav nav a:not(.nav-cta){display:none}
+      .nav{top:8px;width:calc(100% - 16px);height:58px;padding-inline:10px;border-radius:15px}.nav nav .client-login{display:inline-flex;align-items:center;min-height:44px;padding:8px 10px}.nav .nav-cta{display:inline-flex;align-items:center;min-height:44px}
       .hero{min-height:100svh}.hero-inner{min-height:100svh;padding:127px 0 190px}.hero h1{font-size:clamp(54px,15.5vw,80px)}.mesh-stage{height:190px}
       .work-fit{padding:105px 0}.work-fit-grid{grid-template-columns:1fr;gap:44px}.work-fit h2{font-size:50px}.work-fit-copy p{font-size:18px}.work-fit-steps{grid-template-columns:1fr;margin-top:58px}.work-fit-step{min-height:0;border-left:0;border-top:1px solid rgba(38,33,28,.13)}.work-fit-step:first-child{border-top:0}
       .case-intro{padding:105px 0}.case-intro-grid{grid-template-columns:1fr;gap:50px}.case-intro h2{font-size:49px}.case-metrics{grid-template-columns:1fr}.case-metric{min-height:170px;border-left:0;border-top:1px solid #e5e1dc}.case-metric:first-child{border-top:0}.case-metrics-note{grid-column:1}
@@ -604,7 +605,7 @@
   <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="nav">
     <a class="brand" href="/" aria-label="Clawdified home"><img class="brand-mark" src="/assets/clawdified-claw-transparent.png" alt=""><img class="brand-wordmark" src="/assets/clawdified-wordmark-industrial-notch.svg" alt=""></a>
-    <nav aria-label="Primary"><a class="nav-cta" href="#start" data-direct-jump>Start a project</a></nav>
+    <nav aria-label="Primary"><a class="client-login" href="https://app.clawdified.com">Client login</a><a class="nav-cta" href="#start" data-direct-jump>Start a project</a></nav>
   </header>
 
   <main id="main-content">

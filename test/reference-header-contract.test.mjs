@@ -21,17 +21,19 @@ test('header action sits directly in the bar instead of a nested menu pill', () 
   assert.doesNotMatch(html, /\.nav nav\{[^}]*background:rgba\(255,255,255/);
 });
 
-test('header removes the gray chapter links and keeps one decisive project CTA', () => {
+test('header removes gray chapter links and keeps the project CTA primary beside Client login', () => {
   assert.doesNotMatch(header, />Example build<\/a>/);
   assert.doesNotMatch(header, />The agent<\/a>/);
   assert.doesNotMatch(header, />Your workflow<\/a>/);
+  assert.match(header, /<a class="client-login" href="https:\/\/app\.clawdified\.com">Client login<\/a>/);
   assert.match(header, /<a class="nav-cta" href="#start" data-direct-jump>Start a project<\/a>/);
-  assert.equal((header.match(/<nav[\s\S]*?<a /g) || []).length, 1);
+  assert.equal((header.match(/<a /g) || []).length, 3);
   assert.equal((header.match(/class="nav-cta"/g) || []).length, 1);
 });
 
 test('inset shell remains calm and usable when secondary links collapse', () => {
   assert.match(html, /@media\(max-width:1100px\)\{[\s\S]*?\.nav\{top:8px;width:calc\(100% - 16px\);height:58px;padding-inline:10px;border-radius:15px\}/);
+  assert.match(html, /@media\(max-width:1100px\)\{[\s\S]*?\.nav nav \.client-login\{display:inline-flex/);
   assert.match(html, /@media\(max-width:360px\)\{\.brand-wordmark\{display:none\}\}/);
   assert.doesNotMatch(html, /@media\(max-width:520px\)\{[\s\S]{0,120}?\.brand-wordmark\{display:none\}/);
 });
