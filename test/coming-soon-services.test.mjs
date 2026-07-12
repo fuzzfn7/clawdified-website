@@ -48,6 +48,8 @@ test('shared coming-soon visual keeps the warm grid, inset nav, and responsive l
   assert.match(sharedStyle, /CLAWDIFIED_SERVICE_COMING_SOON_20260711/);
   assert.match(sharedStyle, /background-image:linear-gradient\(rgba\(104,89,69,\.045\) 1px,transparent 1px\)/);
   assert.match(sharedStyle, /\.nav\{\s*position:fixed/);
+  assert.match(sharedStyle, /\.service-stage\{[^}]*overflow:hidden/);
+  assert.doesNotMatch(sharedStyle, /\.service-figure\{width:110vw/);
   assert.match(sharedStyle, /@media\(max-width:600px\)/);
   assert.match(sharedStyle, /@media\(prefers-reduced-motion:reduce\)/);
 });
