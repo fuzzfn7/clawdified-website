@@ -1,0 +1,21 @@
+# Clawdified
+
+> Clawdified builds custom AI agents around the work costing a business time. Every build is shaped around the client's existing systems, rules, exceptions, handoffs, and approval points.
+
+Clawdified is the public brand operated by Clawdified LLC. The company is based in Knoxville, Tennessee, and serves clients remotely across the United States.
+
+There is no fixed menu of agents. Any example shown on the site is an example of the custom-build method, not a packaged offer or a limit on what Clawdified builds.
+
+## Canonical pages
+
+- [Homepage](https://clawdified.com/): Primary brand and custom AI agent overview
+- [About Clawdified](https://clawdified.com/about/): Company identity, location, service area, and custom-build method
+- [Custom AI agents in Knoxville](https://clawdified.com/ai-agent-agency-knoxville-tn): Knoxville location page
+- [Contact Clawdified](https://clawdified.com/contact/): Project, email, client-login, and company-profile routes
+- [Client login](https://app.clawdified.com/): Secure workspace for existing clients
+
+## Contact
+
+- Website: https://clawdified.com/
+- Email: theo@clawdified.com
+- LinkedIn: https://www.linkedin.com/company/clawdified/

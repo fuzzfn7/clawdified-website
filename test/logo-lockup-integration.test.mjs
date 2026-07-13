@@ -8,6 +8,11 @@ const assetUrl = new URL('../assets/clawdified-claw-transparent.png', import.met
 const assetPath = fileURLToPath(assetUrl);
 const wordmarkUrl = new URL('../assets/clawdified-wordmark-industrial-notch.svg', import.meta.url);
 const wordmarkPath = fileURLToPath(wordmarkUrl);
+const rasterWordmarks = [
+  { name: 'clawdified-wordmark-nav-119x16.png', width: 119, height: 16 },
+  { name: 'clawdified-wordmark-nav-238x32.png', width: 238, height: 32 },
+  { name: 'clawdified-wordmark-nav-357x48.png', width: 357, height: 48 },
+];
 
 test('navigation and footer use a dedicated transparent claw while favicon keeps the tile', () => {
   assert.ok(existsSync(assetPath), 'transparent claw asset should exist');
@@ -35,13 +40,26 @@ test('brand lockup is transparent by default and reveals its tile only on intera
   assert.doesNotMatch(html, /\.footer-brand img\{/);
 });
 
-test('header and footer use the final Industrial Notch vector wordmark', () => {
+test('header and footer use pixel-exact responsive wordmarks derived from Industrial Notch', () => {
   assert.ok(existsSync(wordmarkPath), 'Industrial Notch SVG should exist');
-  assert.equal((html.match(/src="\/assets\/clawdified-wordmark-industrial-notch\.svg"/g) || []).length, 2);
-  assert.match(html, /\.brand-wordmark\{display:block;width:auto;height:16px;object-fit:contain\}/);
-  assert.match(html, /class="brand-wordmark" src="\/assets\/clawdified-wordmark-industrial-notch\.svg" alt="">/);
+  assert.equal((html.match(/src="\/assets\/clawdified-wordmark-nav-119x16\.png"/g) || []).length, 2);
+  assert.equal((html.match(/srcset="\/assets\/clawdified-wordmark-nav-238x32\.png 2x, \/assets\/clawdified-wordmark-nav-357x48\.png 3x"/g) || []).length, 2);
+  assert.match(html, /\.brand-wordmark\{display:block;width:119px;height:16px;flex:0 0 auto\}/);
+  assert.match(html, /class="brand-wordmark" src="\/assets\/clawdified-wordmark-nav-119x16\.png" srcset="[^"]+" width="119" height="16" alt="">/);
   assert.doesNotMatch(html, /@font-face\{font-family:"Clawdified Wordmark"/);
   assert.doesNotMatch(html, /<span>Clawdified<\/span>/);
+});
+
+test('responsive wordmark PNGs are exact-size RGBA assets', () => {
+  for (const asset of rasterWordmarks) {
+    const assetPath = fileURLToPath(new URL(`../assets/${asset.name}`, import.meta.url));
+    assert.ok(existsSync(assetPath), `${asset.name} should exist`);
+    const png = readFileSync(assetPath);
+    assert.deepEqual([...png.subarray(1, 4)], [80, 78, 71]);
+    assert.equal(png.readUInt32BE(16), asset.width);
+    assert.equal(png.readUInt32BE(20), asset.height);
+    assert.equal(png[25], 6, `${asset.name} should preserve transparency`);
+  }
 });
 
 test('Industrial Notch is an outlined vector asset with no runtime font dependency', () => {

@@ -1,25 +1,10 @@
-const ROUTES = {
-  '/ai-agent-knoxville-tn': {
-    title: 'AI Agent Services in Knoxville, TN | Clawdified',
-    description: 'Looking for AI agent services in Knoxville? Clawdified builds custom AI agents that automate customer communication, lead follow-up, and daily operations for local businesses.',
-  },
-  '/ai-agent-agency-knoxville-tn': {
-    title: 'AI Agent Agency in Knoxville, TN | Clawdified',
-    description: 'Clawdified is Knoxville\'s AI agent agency. We design, build, and deploy custom AI agents for small businesses — from review management to SEO automation.',
-  },
-  '/small-business-ai-agent-knoxville-tn': {
-    title: 'Small Business AI Agents in Knoxville, TN | Clawdified',
-    description: 'AI agents built specifically for small businesses in Knoxville, TN. Automate customer responses, manage reviews, and optimize operations without hiring more staff.',
-  },
-  '/ai-automation-agency-knoxville-tn': {
-    title: 'AI Automation Agency in Knoxville, TN | Clawdified',
-    description: 'Knoxville\'s AI automation agency. Intelligent automation that handles customer communication, reputation management, and business operations around the clock.',
-  },
-  '/business-automation-knoxville-tn': {
-    title: 'Business Automation Services in Knoxville, TN | Clawdified',
-    description: 'Automate your Knoxville business with custom AI agents. From answering customer inquiries to managing online reviews — Clawdified handles the work you shouldn\'t have to.',
-  },
-};
+const PRIMARY_LOCAL_PATH = '/ai-agent-agency-knoxville-tn';
+const LEGACY_LOCAL_PATHS = new Set([
+  '/ai-agent-knoxville-tn',
+  '/small-business-ai-agent-knoxville-tn',
+  '/ai-automation-agency-knoxville-tn',
+  '/business-automation-knoxville-tn',
+]);
 
 const LEGAL_ROUTES = {
   '/privacy': {
@@ -127,17 +112,92 @@ function renderLegalPage(page) {
 </html>`;
 }
 
+function renderKnoxvillePage() {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom AI Agents in Knoxville, TN | Clawdified</title>
+<meta name="description" content="Clawdified builds custom AI agents around the work costing your business time. Based in Knoxville and serving clients remotely across the United States.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://clawdified.com/ai-agent-agency-knoxville-tn">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/clawdified-favicon-heritage-20260711.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Clawdified">
+<meta property="og:title" content="Custom AI Agents in Knoxville, TN | Clawdified">
+<meta property="og:description" content="Clawdified builds custom AI agents around the work costing your business time. Based in Knoxville and serving clients remotely across the United States.">
+<meta property="og:url" content="https://clawdified.com/ai-agent-agency-knoxville-tn">
+<meta property="og:image" content="https://clawdified.com/clawdified-icon-512.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","@id":"https://clawdified.com/ai-agent-agency-knoxville-tn#service","name":"Custom AI Agents in Knoxville, Tennessee","serviceType":"Custom AI agent design and implementation","description":"Clawdified builds custom AI agents around each client's work, systems, rules, exceptions, and approval points.","provider":{"@id":"https://clawdified.com/#organization"},"areaServed":[{"@type":"City","name":"Knoxville"},{"@type":"Country","name":"United States"}],"url":"https://clawdified.com/ai-agent-agency-knoxville-tn"}</script>
+<style>
+  :root{color-scheme:light;--ink:#26211c;--muted:#756d64;--line:rgba(38,33,28,.13);--paper:#fff;--warm:#f7f3ed;--copper:#b8663f;--sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--serif:Georgia,serif}
+  *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 78% 4%,rgba(212,153,105,.18),transparent 30rem),var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6}a{color:inherit}.wrap{width:min(1080px,calc(100% - 44px));margin:auto}.nav{height:82px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:10px;text-decoration:none}.brand img:first-child{width:28px;height:28px}.brand img:last-child{width:119px;height:16px}.nav-links{display:flex;gap:18px;align-items:center}.nav-links a{text-decoration:none;font-size:14px}.button{padding:11px 16px;border-radius:11px;background:var(--ink);color:#fff}.hero{padding:118px 0 104px}.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper);font-weight:750}.hero h1{max-width:900px;margin:18px 0 24px;font:500 clamp(50px,8vw,92px)/.96 var(--serif);letter-spacing:-.045em}.hero p{max-width:720px;margin:0;color:var(--muted);font-size:clamp(19px,2vw,24px)}.grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.grid article{padding:34px;border-left:1px solid var(--line)}.grid article:first-child{border-left:0}.grid span{font-size:11px;color:var(--copper);font-weight:750}.grid h2{margin:18px 0 10px;font-size:25px;line-height:1.1}.grid p{margin:0;color:var(--muted)}.statement{padding:104px 0}.statement h2{max-width:870px;margin:0;font:500 clamp(42px,6vw,72px)/1 var(--serif);letter-spacing:-.035em}.statement p{max-width:720px;margin:25px 0 0;color:var(--muted);font-size:19px}.cta{padding:58px 0 72px;background:var(--warm)}.cta .wrap{display:flex;align-items:center;justify-content:space-between;gap:25px}.cta h2{margin:0;font-size:32px}.cta p{margin:7px 0 0;color:var(--muted)}.footer{padding:30px 0;color:var(--muted);font-size:13px}.footer .wrap{display:flex;justify-content:space-between;gap:20px}@media(max-width:760px){.nav-links a:first-child{display:none}.hero{padding:82px 0 72px}.grid{grid-template-columns:1fr}.grid article{border-left:0;border-top:1px solid var(--line)}.grid article:first-child{border-top:0}.cta .wrap,.footer .wrap{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+  <header class="nav wrap">
+    <a class="brand" href="/" aria-label="Clawdified home"><img src="/assets/clawdified-claw-transparent.png" alt=""><img src="/assets/clawdified-wordmark-nav-119x16.png" srcset="/assets/clawdified-wordmark-nav-238x32.png 2x, /assets/clawdified-wordmark-nav-357x48.png 3x" width="119" height="16" alt=""></a>
+    <nav class="nav-links" aria-label="Primary"><a href="/about/">About</a><a class="button" href="https://cal.com/intro-clawdified/30min">Start a project</a></nav>
+  </header>
+  <main>
+    <section class="hero wrap">
+      <div class="eyebrow">Clawdified · Knoxville, Tennessee</div>
+      <h1>Custom AI agents in Knoxville, Tennessee</h1>
+      <p>Clawdified builds custom AI agents around the work costing your business time. Every build follows the way your business already works.</p>
+    </section>
+    <section class="grid wrap" aria-label="How Clawdified builds">
+      <article><span>01</span><h2>Start with the work.</h2><p>Every build starts with the work itself: what begins it, where the information lives, which rules matter, and what finished means.</p></article>
+      <article><span>02</span><h2>Build around the business.</h2><p>The agent takes shape around the client's systems, exceptions, handoffs, and approval points rather than a fixed template.</p></article>
+      <article><span>03</span><h2>Keep the right control.</h2><p>The repeatable work moves through the agent while human judgment stays wherever the business needs it.</p></article>
+    </section>
+    <section class="statement wrap">
+      <h2>Based in Knoxville. Built for the way your work gets done.</h2>
+      <p>Knoxville is home, and Clawdified works with businesses locally while serving clients remotely across the United States. There is no fixed menu of agents. The workflow defines the build.</p>
+    </section>
+    <section class="cta"><div class="wrap"><div><h2>Show us the work stealing your time.</h2><p>We will determine whether a custom AI agent can give those hours back.</p></div><a class="button" href="https://cal.com/intro-clawdified/30min">Book a call</a></div></section>
+  </main>
+  <footer class="footer"><div class="wrap"><span>© 2026 Clawdified · Operated by Clawdified LLC</span><span><a href="/contact/">Contact</a> · <a href="https://www.linkedin.com/company/clawdified/">LinkedIn</a></span></div></footer>
+</body>
+</html>`;
+}
+
 export async function onRequest(context) {
   const { request } = context;
   const accept = request.headers.get('Accept') || '';
   const url = new URL(request.url);
+  const path = url.pathname.length > 1 && url.pathname.endsWith('/')
+    ? url.pathname.slice(0, -1)
+    : url.pathname;
 
-  // www -> apex 301 redirect
+  if (LEGACY_LOCAL_PATHS.has(path)) {
+    return Response.redirect(`https://clawdified.com${PRIMARY_LOCAL_PATH}${url.search}`, 301);
+  }
+
+  const legalPage = LEGAL_ROUTES[path];
+  if (legalPage && (url.pathname !== path || url.hostname === 'www.clawdified.com')) {
+    return Response.redirect(`https://clawdified.com${path}${url.search}`, 301);
+  }
+
+  if (path === PRIMARY_LOCAL_PATH && url.pathname !== PRIMARY_LOCAL_PATH) {
+    return Response.redirect(`https://clawdified.com${PRIMARY_LOCAL_PATH}${url.search}`, 301);
+  }
+
+  // www -> apex 301 redirect after route-specific canonicalization.
   if (url.hostname === 'www.clawdified.com') {
     return Response.redirect(`https://clawdified.com${url.pathname}${url.search}`, 301);
   }
 
-  const legalPage = LEGAL_ROUTES[url.pathname];
+  if (path === PRIMARY_LOCAL_PATH) {
+    return new Response(renderKnoxvillePage(), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, max-age=300',
+      },
+    });
+  }
+
   if (legalPage) {
     return new Response(renderLegalPage(legalPage), {
       status: 200,
@@ -150,29 +210,30 @@ export async function onRequest(context) {
 
   // Markdown negotiation for homepage
   if (url.pathname === '/' && accept.includes('text/markdown')) {
-    const markdown = `# Clawdified — AI That Works For You
+    const markdown = `# Clawdified — Custom AI Agents Built Around Your Work
 
-Custom AI agents that automate real business workflows. Based in Knoxville, Tennessee.
+Clawdified designs and builds custom AI agents around each client's work, tools, rules, exceptions, and approvals. Every build is custom.
 
-## Services
+## What Clawdified Builds
 
-- **AI Agent Development** — Custom AI agents tailored to your business processes
-- **Automated Customer Communication** — AI-powered responses across SMS, email, and social media
-- **Review & Reputation Management** — Automated review solicitation and response
-- **SEO Automation** — AI-driven content generation and search optimization
-- **Business Process Automation** — Streamline repetitive operational tasks with AI
+There is no fixed menu of agents or supported workflows. Clawdified starts with the work costing a business time and designs an agent around how that work actually gets done.
 
-## How It Works
+Any workflow shown on this site is an example, not a packaged offer or a limit on what Clawdified builds.
 
-1. **Discovery** — We audit your current workflows and identify automation opportunities
-2. **Build** — We develop custom AI agents tailored to your specific needs
-3. **Deploy** — Your agents go live, handling tasks autonomously
-4. **Optimize** — Continuous monitoring and improvement of agent performance
+## How a Custom Build Works
+
+1. **Understand the work** — Map the workflow, systems, information, rules, exceptions, and approval points
+2. **Design around the business** — Shape the agent around the client's existing tools and operating process
+3. **Build and verify** — Test the agent against the agreed workflow and expected outcomes
+4. **Operate with control** — Keep human review or approval wherever the business requires it
+
+## Location and Service Area
+
+Knoxville, Tennessee is our home. Clawdified works with clients remotely across the United States.
 
 ## Contact
 
 - Website: [clawdified.com](https://clawdified.com)
-- Location: Knoxville, Tennessee
 `;
     return new Response(markdown, {
       headers: {
@@ -180,55 +241,6 @@ Custom AI agents that automate real business workflows. Based in Knoxville, Tenn
         'x-markdown-tokens': String(markdown.split(/\s+/).length),
       },
     });
-  }
-
-  // SEO route handling — head-only changes, zero visual difference
-  const route = ROUTES[url.pathname];
-  if (route) {
-    const response = await context.next();
-    let html = await response.text();
-
-    // Replace title (browser tab + Google results only)
-    html = html.replace(/<title>.*?<\/title>/, `<title>${route.title}</title>`);
-
-    // Replace meta description (Google results only)
-    html = html.replace(
-      /<meta name="description" content="[^"]*"/,
-      `<meta name="description" content="${route.description}"`
-    );
-
-    // Self-canonical (tells Google this is its own page)
-    html = html.replace(
-      /<link rel="canonical" href="[^"]*"/,
-      `<link rel="canonical" href="https://clawdified.com${url.pathname}"`
-    );
-
-    // OG tags (link preview only)
-    html = html.replace(
-      /<meta property="og:title" content="[^"]*"/,
-      `<meta property="og:title" content="${route.title}"`
-    );
-    html = html.replace(
-      /<meta property="og:description" content="[^"]*"/,
-      `<meta property="og:description" content="${route.description}"`
-    );
-    html = html.replace(
-      /<meta property="og:url" content="[^"]*"/,
-      `<meta property="og:url" content="https://clawdified.com${url.pathname}"`
-    );
-
-    // Twitter tags (link preview only)
-    html = html.replace(
-      /<meta name="twitter:title" content="[^"]*"/,
-      `<meta name="twitter:title" content="${route.title}"`
-    );
-    html = html.replace(
-      /<meta name="twitter:description" content="[^"]*"/,
-      `<meta name="twitter:description" content="${route.description}"`
-    );
-
-    const headers = new Headers(response.headers);
-    return new Response(html, { status: 200, headers });
   }
 
   return context.next();

@@ -3,11 +3,43 @@
 
 /
   X-Robots-Tag: index, follow
-  Link: </.well-known/api-catalog>; rel="api-catalog", </.well-known/agent-skills/index.json>; rel="service-doc", </sitemap.xml>; rel="sitemap", </robots.txt>; rel="robots"
+  Link: </.well-known/api-catalog>; rel="api-catalog", </.well-known/agent-skills/index.json>; rel="service-doc", </llms.txt>; rel="alternate"; type="text/plain", </sitemap.xml>; rel="sitemap", </robots.txt>; rel="robots"
 
 /agents/
-  X-Robots-Tag: index, follow
+  X-Robots-Tag: noindex, follow
   Link: </.well-known/api-catalog>; rel="api-catalog", </.well-known/agent-skills/index.json>; rel="service-doc", </sitemap.xml>; rel="sitemap", </robots.txt>; rel="robots"
+
+/agents/lead-growth/
+  X-Robots-Tag: noindex, follow
+
+/agents/seo-competitor/
+  X-Robots-Tag: noindex, follow
+
+/connect/*
+  X-Robots-Tag: noindex, nofollow
+
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+
+/about/
+  X-Robots-Tag: index, follow
+  Content-Type: text/html; charset=utf-8
+
+/contact/
+  X-Robots-Tag: index, follow
+  Content-Type: text/html; charset=utf-8
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=300
+
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=300
+
+/404.html
+  X-Robots-Tag: noindex, follow
+  Content-Type: text/html; charset=utf-8
 
 /privacy
   X-Robots-Tag: index, follow

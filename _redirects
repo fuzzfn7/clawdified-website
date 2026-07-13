@@ -1,1 +1,1 @@
-https://www.clawdified.com/* https://clawdified.com/:splat 301
+# www canonicalization and route-specific redirects are handled in functions/_middleware.js.
