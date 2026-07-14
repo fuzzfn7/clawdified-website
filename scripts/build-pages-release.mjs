@@ -5,14 +5,12 @@ import { fileURLToPath } from 'node:url';
 
 export const PUBLIC_DIRECTORIES = [
   '.well-known',
-  'about',
   'admin',
   'agent-training',
   'agents',
   'assets',
   'company-brain',
   'connect',
-  'contact',
   'functions',
 ];
 

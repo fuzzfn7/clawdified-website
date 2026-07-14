@@ -20,13 +20,12 @@ const businessSkill = read('.well-known/agent-skills/business-info/SKILL.md');
 const skillIndex = read('.well-known/agent-skills/index.json');
 const llms = read('llms.txt');
 const llmsFull = read('llms-full.txt');
-const about = read('about/index.html');
-const contact = read('contact/index.html');
 const notFound = read('404.html');
 const agents = read('agents/index.html');
 const leadExample = read('agents/lead-growth/index.html');
 const seoExample = read('agents/seo-competitor/index.html');
 const redirects = read('_redirects');
+const middlewareSource = read('functions/_middleware.js');
 const utilityShells = [
   'connect/client/index.html',
   'connect/gmail/index.html',
@@ -50,6 +49,7 @@ async function middlewareRequest(path, { accept = 'text/html', hostname = 'clawd
 
 const survivor = '/ai-agent-agency-knoxville-tn';
 const retiredFounderImage = '/assets/wesley-taylor-founder-clawdified.jpg';
+const retiredEntityRoutes = ['/about', '/about/', '/contact', '/contact/'];
 const legacyLocalRoutes = [
   '/ai-agent-knoxville-tn',
   '/small-business-ai-agent-knoxville-tn',
@@ -65,6 +65,31 @@ test('retired founder image is gone before static asset lookup', async () => {
   assert.equal(await response.text(), '');
   assert.equal(response.headers.get('cache-control'), 'no-store, max-age=0');
   assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow, noimageindex');
+});
+
+test('retired About and Contact routes are permanently gone and undiscoverable', async () => {
+  assert.equal(existsSync(new URL('about', rootUrl)), false);
+  assert.equal(existsSync(new URL('contact', rootUrl)), false);
+
+  for (const path of retiredEntityRoutes) {
+    const response = await middlewareRequest(`${path}?source=retired`);
+    assert.equal(response.status, 410, path);
+    assert.equal(await response.text(), '', path);
+    assert.equal(response.headers.get('cache-control'), 'no-store, max-age=0', path);
+    assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow', path);
+  }
+
+  for (const [name, source] of [
+    ['homepage', homepage],
+    ['404 page', notFound],
+    ['Knoxville page source', middlewareSource],
+    ['llms.txt', llms],
+    ['llms-full.txt', llmsFull],
+    ['sitemap', sitemap],
+  ]) {
+    assert.doesNotMatch(source, /href="\/(?:about|contact)\/"|https:\/\/clawdified\.com\/(?:about|contact)\//, name);
+  }
+  assert.doesNotMatch(homepage, />About Clawdified<|>Contact page</);
 });
 
 test('four duplicate Knoxville routes permanently redirect to one established survivor', async () => {
@@ -182,24 +207,8 @@ test('homepage keeps broad entity signals without a visible SEO paragraph or ser
   assert.doesNotMatch(JSON.stringify(schema), forbiddenCatalogTerms);
 });
 
-test('About and Contact pages provide indexable entity facts and clear routes', () => {
+test('404 page keeps the responsive wordmark after retired-page links are removed', () => {
   const responsiveWordmark = /srcset="\/assets\/clawdified-wordmark-nav-238x32\.png 2x, \/assets\/clawdified-wordmark-nav-357x48\.png 3x"/;
-  assert.match(about, /<meta name="robots" content="index, follow">/);
-  assert.match(about, /<link rel="canonical" href="https:\/\/clawdified\.com\/about\/">/);
-  assert.match(about, /<h1>About Clawdified<\/h1>/);
-  assert.match(about, /operated by Clawdified LLC/i);
-  assert.match(about, /based in Knoxville/i);
-  assert.match(about, /serving clients remotely across the United States/i);
-  assert.doesNotMatch(about, forbiddenCatalogTerms);
-  assert.match(about, responsiveWordmark);
-
-  assert.match(contact, /<meta name="robots" content="index, follow">/);
-  assert.match(contact, /<link rel="canonical" href="https:\/\/clawdified\.com\/contact\/">/);
-  assert.match(contact, /<h1>Contact Clawdified<\/h1>/);
-  assert.match(contact, /mailto:theo@clawdified\.com/);
-  assert.match(contact, /https:\/\/app\.clawdified\.com/);
-  assert.doesNotMatch(contact, forbiddenCatalogTerms);
-  assert.match(contact, responsiveWordmark);
   assert.match(notFound, responsiveWordmark);
 });
 
@@ -226,10 +235,10 @@ test('real llms files and business skill state the broad custom-build position',
   assert.match(headers, /\/llms-full\.txt\s+Content-Type: text\/plain; charset=utf-8/);
 });
 
-test('sitemap keeps only the broad Knoxville survivor and current entity pages', () => {
+test('sitemap keeps the broad Knoxville survivor and excludes retired entity pages', () => {
   const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
-  assert.ok(locations.includes('https://clawdified.com/about/'));
-  assert.ok(locations.includes('https://clawdified.com/contact/'));
+  assert.equal(locations.includes('https://clawdified.com/about/'), false);
+  assert.equal(locations.includes('https://clawdified.com/contact/'), false);
   assert.ok(locations.includes(`https://clawdified.com${survivor}`));
   for (const path of legacyLocalRoutes) {
     assert.equal(locations.includes(`https://clawdified.com${path}`), false, path);

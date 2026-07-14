@@ -14,6 +14,8 @@ import {
 } from '../scripts/build-pages-release.mjs';
 
 test('Pages release builder copies only the explicit public runtime allowlist', () => {
+  assert.equal(PUBLIC_DIRECTORIES.includes('about'), false);
+  assert.equal(PUBLIC_DIRECTORIES.includes('contact'), false);
   const fixture = mkdtempSync(path.join(tmpdir(), 'clawdified-release-fixture-'));
   const source = path.join(fixture, 'source');
   const output = path.join(fixture, 'output');

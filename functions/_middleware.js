@@ -1,6 +1,10 @@
 const PRIMARY_LOCAL_PATH = '/ai-agent-agency-knoxville-tn';
-const RETIRED_PUBLIC_PATHS = new Set([
-  '/assets/wesley-taylor-founder-clawdified.jpg',
+const RETIRED_PUBLIC_PATHS = new Map([
+  ['/assets/wesley-taylor-founder-clawdified.jpg', 'noindex, nofollow, noimageindex'],
+  ['/about', 'noindex, nofollow'],
+  ['/about/', 'noindex, nofollow'],
+  ['/contact', 'noindex, nofollow'],
+  ['/contact/', 'noindex, nofollow'],
 ]);
 const LEGACY_LOCAL_PATHS = new Set([
   '/ai-agent-knoxville-tn',
@@ -141,7 +145,7 @@ function renderKnoxvillePage() {
 <body>
   <header class="nav wrap">
     <a class="brand" href="/" aria-label="Clawdified home"><img src="/assets/clawdified-claw-transparent.png" alt=""><img src="/assets/clawdified-wordmark-nav-119x16.png" srcset="/assets/clawdified-wordmark-nav-238x32.png 2x, /assets/clawdified-wordmark-nav-357x48.png 3x" width="119" height="16" alt=""></a>
-    <nav class="nav-links" aria-label="Primary"><a href="/about/">About</a><a class="button" href="https://cal.com/intro-clawdified/30min">Start a project</a></nav>
+    <nav class="nav-links" aria-label="Primary"><a class="button" href="https://cal.com/intro-clawdified/30min">Start a project</a></nav>
   </header>
   <main>
     <section class="hero wrap">
@@ -160,7 +164,7 @@ function renderKnoxvillePage() {
     </section>
     <section class="cta"><div class="wrap"><div><h2>Show us the work stealing your time.</h2><p>We will determine whether a custom AI agent can give those hours back.</p></div><a class="button" href="https://cal.com/intro-clawdified/30min">Book a call</a></div></section>
   </main>
-  <footer class="footer"><div class="wrap"><span>© 2026 Clawdified · Operated by Clawdified LLC</span><span><a href="/contact/">Contact</a> · <a href="https://www.linkedin.com/company/clawdified/">LinkedIn</a></span></div></footer>
+  <footer class="footer"><div class="wrap"><span>© 2026 Clawdified · Operated by Clawdified LLC</span><span><a href="https://www.linkedin.com/company/clawdified/">LinkedIn</a></span></div></footer>
 </body>
 </html>`;
 }
@@ -173,12 +177,13 @@ export async function onRequest(context) {
     ? url.pathname.slice(0, -1)
     : url.pathname;
 
-  if (RETIRED_PUBLIC_PATHS.has(url.pathname)) {
+  const retiredRobotsTag = RETIRED_PUBLIC_PATHS.get(url.pathname);
+  if (retiredRobotsTag) {
     return new Response(null, {
       status: 410,
       headers: {
         'Cache-Control': 'no-store, max-age=0',
-        'X-Robots-Tag': 'noindex, nofollow, noimageindex',
+        'X-Robots-Tag': retiredRobotsTag,
       },
     });
   }

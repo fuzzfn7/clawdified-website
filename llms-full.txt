@@ -30,9 +30,7 @@ The resulting agent is designed and implemented around that specific operating p
 ## Canonical public sources
 
 - Homepage: https://clawdified.com/
-- About: https://clawdified.com/about/
 - Knoxville: https://clawdified.com/ai-agent-agency-knoxville-tn
-- Contact: https://clawdified.com/contact/
 - Client login: https://app.clawdified.com/
 - LinkedIn: https://www.linkedin.com/company/clawdified/
 - Sitemap: https://clawdified.com/sitemap.xml

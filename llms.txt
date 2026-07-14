@@ -9,9 +9,7 @@ There is no fixed menu of agents. Any example shown on the site is an example of
 ## Canonical pages
 
 - [Homepage](https://clawdified.com/): Primary brand and custom AI agent overview
-- [About Clawdified](https://clawdified.com/about/): Company identity, location, service area, and custom-build method
 - [Custom AI agents in Knoxville](https://clawdified.com/ai-agent-agency-knoxville-tn): Knoxville location page
-- [Contact Clawdified](https://clawdified.com/contact/): Project, email, client-login, and company-profile routes
 - [Client login](https://app.clawdified.com/): Secure workspace for existing clients
 
 ## Contact
