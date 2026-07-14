@@ -23,6 +23,8 @@ const llmsFull = read('llms-full.txt');
 const about = read('about/index.html');
 const contact = read('contact/index.html');
 const notFound = read('404.html');
+const founderImagePath = 'assets/wesley-taylor-founder-clawdified.jpg';
+const founderImageUrl = new URL(founderImagePath, rootUrl);
 const agents = read('agents/index.html');
 const leadExample = read('agents/lead-growth/index.html');
 const seoExample = read('agents/seo-competitor/index.html');
@@ -194,6 +196,32 @@ test('About and Contact pages provide indexable entity facts and clear routes', 
   assert.match(notFound, responsiveWordmark);
 });
 
+test('About page identifies Wesley Taylor with one authoritative founder image', () => {
+  assert.ok(existsSync(founderImageUrl), founderImagePath);
+  assert.match(about, /<meta property="og:image" content="https:\/\/clawdified\.com\/assets\/wesley-taylor-founder-clawdified\.jpg">/);
+  assert.match(about, /<meta property="og:image:alt" content="Wesley Taylor, founder of Clawdified">/);
+  assert.match(about, /<section class="founder section" id="wesley-taylor"/);
+  assert.match(about, /<img src="\/assets\/wesley-taylor-founder-clawdified\.jpg" width="1600" height="1600" alt="Wesley Taylor, founder of Clawdified">/);
+
+  const schemaSource = about.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/)?.[1];
+  assert.ok(schemaSource);
+  const schema = JSON.parse(schemaSource);
+  const organization = schema['@graph'].find(node => node['@type'] === 'Organization');
+  const person = schema['@graph'].find(node => node['@type'] === 'Person');
+  const image = schema['@graph'].find(node => node['@type'] === 'ImageObject');
+  assert.equal(organization.founder['@id'], 'https://clawdified.com/about/#wesley-taylor');
+  assert.equal(organization.image['@id'], 'https://clawdified.com/about/#founder-image');
+  assert.equal(person.name, 'Wesley Taylor');
+  assert.equal(person.jobTitle, 'Founder');
+  assert.equal(person.worksFor['@id'], 'https://clawdified.com/#organization');
+  assert.equal(person.image['@id'], 'https://clawdified.com/about/#founder-image');
+  assert.equal(image.contentUrl, 'https://clawdified.com/assets/wesley-taylor-founder-clawdified.jpg');
+  assert.equal(image.caption, 'Wesley Taylor, founder of Clawdified');
+  assert.equal(image.width, 1600);
+  assert.equal(image.height, 1600);
+  assert.equal(image.representativeOfPage, true);
+});
+
 test('real llms files and business skill state the broad custom-build position', () => {
   for (const [name, contents] of [
     ['llms.txt', llms],
@@ -219,13 +247,15 @@ test('real llms files and business skill state the broad custom-build position',
 
 test('sitemap keeps only the broad Knoxville survivor and current entity pages', () => {
   const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
+  assert.match(sitemap, /xmlns:image="http:\/\/www\.google\.com\/schemas\/sitemap-image\/1\.1"/);
   assert.ok(locations.includes('https://clawdified.com/about/'));
   assert.ok(locations.includes('https://clawdified.com/contact/'));
   assert.ok(locations.includes(`https://clawdified.com${survivor}`));
   for (const path of legacyLocalRoutes) {
     assert.equal(locations.includes(`https://clawdified.com${path}`), false, path);
   }
-  assert.match(sitemap, /<loc>https:\/\/clawdified\.com\/<\/loc>\s*<lastmod>2026-07-13<\/lastmod>/);
+  assert.match(sitemap, /<loc>https:\/\/clawdified\.com\/<\/loc>\s*<lastmod>2026-07-14<\/lastmod>/);
+  assert.match(sitemap, /<loc>https:\/\/clawdified\.com\/about\/<\/loc>\s*<lastmod>2026-07-14<\/lastmod>[\s\S]*?<image:loc>https:\/\/clawdified\.com\/assets\/wesley-taylor-founder-clawdified\.jpg<\/image:loc>\s*<image:caption>Wesley Taylor, founder of Clawdified<\/image:caption>/);
 });
 
 test('AI crawler policy allows retrieval/search while keeping training opt-out', () => {
