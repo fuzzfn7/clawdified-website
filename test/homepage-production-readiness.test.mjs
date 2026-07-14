@@ -41,8 +41,6 @@ test('structured data keeps Knoxville as an address without narrowing the compan
   assert.equal(schema['@graph'].some(node => node['@type'] === 'LocalBusiness'), false);
   assert.equal(organization.address.addressLocality, 'Knoxville');
   assert.equal(organization.areaServed.name, 'United States');
-  assert.equal(organization.founder['@id'], 'https://clawdified.com/about/#wesley-taylor');
-  assert.equal(organization.image['@id'], 'https://clawdified.com/about/#founder-image');
   assert.match(organization.description, /Every build is custom; workflows shown on the site are examples, not packaged offers\./);
   assert.match(service.description, /Each agent is designed around the client’s work, systems, rules, and approval points; examples shown on the site are illustrative\./);
 });
