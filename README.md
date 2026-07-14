@@ -173,7 +173,7 @@ Optional:
 Reviewed source and deployment contract:
 
 - Homepage source: the Heritage Flow experience with production SEO metadata, transparent claw, and pixel-exact responsive Industrial Notch wordmarks derived from the approved vector master.
-- Reviewed release identity: `index.html` SHA-256 `182022f4cc673fc39af029e04795be00bb803a31c7d6698e61983579ee22d279`; responsive wordmark SHA-256 values are `ff1f1aa4e2d4a52ac11af4a1e87f20faae3adf2dff49750f95d3d5ff7c0f61a9` (1×), `21335bf3507f7258b20f4004aa4e7b55d0273bd3b530b34964776520249b6424` (2×), and `d18332f2e9b27c3627f926e6ece4c6106907111df442cf68d3998cebed214120` (3×).
+- Reviewed release identity: `index.html` SHA-256 `adf838035293e1058a98244cb17cb2543e3f41287c12b3f32e19673f7b06f87a`; responsive wordmark SHA-256 values are `ff1f1aa4e2d4a52ac11af4a1e87f20faae3adf2dff49750f95d3d5ff7c0f61a9` (1×), `21335bf3507f7258b20f4004aa4e7b55d0273bd3b530b34964776520249b6424` (2×), and `d18332f2e9b27c3627f926e6ece4c6106907111df442cf68d3998cebed214120` (3×).
 - Footer contact uses `theo@clawdified.com` and links the official company page at `https://www.linkedin.com/company/clawdified/`. Focused footer-link QA passed `27/27` locally and `27/27` against the public domain; Cloudflare email protection decodes to the exact address in the rendered browser.
 - Browser favicon remains the rounded black tile with orange/copper claw at `/assets/clawdified-favicon-heritage-20260711.png` (SHA-256 `fa7900ee5c6b1ca2290ff4eb1f14c04b70bd6228d49d85658fa89ab01c06922f`).
 - Release gates: `138/138` repository tests, `58/58` curated-release HTTP contracts, `10/10` rendered desktop/mobile checks, exact staged-release hash checks, and Lighthouse SEO `100` on the homepage, About page, and Knoxville page.

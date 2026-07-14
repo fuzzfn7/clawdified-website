@@ -156,9 +156,12 @@ test('README release identity matches the staged homepage bytes', () => {
   }
 });
 
-test('homepage visibly anchors the broad entity without creating a service catalog', () => {
-  assert.match(homepage, /Clawdified builds custom AI agents around the way each business works\./);
-  assert.match(homepage, /Based in Knoxville and serving clients remotely across the United States/);
+test('homepage keeps broad entity signals without a visible SEO paragraph or service catalog', () => {
+  const body = homepage.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
+  assert.doesNotMatch(body, /Clawdified builds custom AI agents around the way each business works\./);
+  assert.doesNotMatch(body, /Based in Knoxville and serving clients remotely across the United States/);
+  assert.match(homepage, /<meta name="description" content="Clawdified builds custom AI agents around your workflows, tools, rules, and approvals\./);
+  assert.match(homepage, /"addressLocality":"Knoxville"/);
   assert.match(homepage, /Operated by Clawdified LLC/);
   assert.doesNotMatch(homepage, /href="\/company-brain\/"|href="\/agent-training\/"|<h3>Coming soon<\/h3>/);
 
