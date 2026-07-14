@@ -1,4 +1,7 @@
 const PRIMARY_LOCAL_PATH = '/ai-agent-agency-knoxville-tn';
+const RETIRED_PUBLIC_PATHS = new Set([
+  '/assets/wesley-taylor-founder-clawdified.jpg',
+]);
 const LEGACY_LOCAL_PATHS = new Set([
   '/ai-agent-knoxville-tn',
   '/small-business-ai-agent-knoxville-tn',
@@ -169,6 +172,16 @@ export async function onRequest(context) {
   const path = url.pathname.length > 1 && url.pathname.endsWith('/')
     ? url.pathname.slice(0, -1)
     : url.pathname;
+
+  if (RETIRED_PUBLIC_PATHS.has(url.pathname)) {
+    return new Response(null, {
+      status: 410,
+      headers: {
+        'Cache-Control': 'no-store, max-age=0',
+        'X-Robots-Tag': 'noindex, nofollow, noimageindex',
+      },
+    });
+  }
 
   if (LEGACY_LOCAL_PATHS.has(path)) {
     return Response.redirect(`https://clawdified.com${PRIMARY_LOCAL_PATH}${url.search}`, 301);

@@ -49,6 +49,7 @@ async function middlewareRequest(path, { accept = 'text/html', hostname = 'clawd
 }
 
 const survivor = '/ai-agent-agency-knoxville-tn';
+const retiredFounderImage = '/assets/wesley-taylor-founder-clawdified.jpg';
 const legacyLocalRoutes = [
   '/ai-agent-knoxville-tn',
   '/small-business-ai-agent-knoxville-tn',
@@ -57,6 +58,14 @@ const legacyLocalRoutes = [
 ];
 
 const forbiddenCatalogTerms = /lead follow-up|review management|SEO automation|customer communication|customer responses|reputation management/i;
+
+test('retired founder image is gone before static asset lookup', async () => {
+  const response = await middlewareRequest(retiredFounderImage);
+  assert.equal(response.status, 410);
+  assert.equal(await response.text(), '');
+  assert.equal(response.headers.get('cache-control'), 'no-store, max-age=0');
+  assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow, noimageindex');
+});
 
 test('four duplicate Knoxville routes permanently redirect to one established survivor', async () => {
   for (const path of legacyLocalRoutes) {
