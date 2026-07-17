@@ -168,7 +168,7 @@ Optional:
 - `CONNECTOR_BUILDER_WEBHOOK_URL` — optional Hermes/webhook endpoint to notify when the admin dashboard stores a new unsupported connector request.
 - `CONNECTOR_BUILDER_WEBHOOK_TOKEN` — optional bearer token sent only server-to-server to the connector-builder webhook; never shown in dashboard responses.
 
-## Current release verification — 2026-07-13
+## Current release verification — 2026-07-17
 
 Reviewed source and deployment contract:
 
@@ -177,6 +177,8 @@ Reviewed source and deployment contract:
 - Footer contact uses `theo@clawdified.com` and links the official company page at `https://www.linkedin.com/company/clawdified/`. Focused footer-link QA passed `27/27` locally and `27/27` against the public domain; Cloudflare email protection decodes to the exact address in the rendered browser.
 - Browser favicon remains the rounded black tile with orange/copper claw at `/assets/clawdified-favicon-heritage-20260711.png` (SHA-256 `fa7900ee5c6b1ca2290ff4eb1f14c04b70bd6228d49d85658fa89ab01c06922f`).
 - Release gates: `140/140` repository tests, `59/59` curated-release HTTP contracts, `10/10` rendered desktop/mobile checks, exact staged-release hash checks, and Lighthouse SEO `100` on the homepage and Knoxville page.
+- Coming Soon footer restoration: verified source commit `81a0dbd` is deployed as Cloudflare Pages production deployment `11dc0f16-6e2b-4a4e-9930-6cd7c6791ed8` with immutable preview `https://11dc0f16.clawdifiedweb.pages.dev`. A clean archive passed `140/140`, the curated builder retained both Coming Soon routes and excluded repository-only roots, and live desktop/mobile Chrome checks clicked through both links with zero browser errors or horizontal overflow.
+- Known edge-cache caveat: the exact custom-domain `/README.md` URL still serves a stale `noindex` copy even though it is absent from the curated artifact; the immutable preview and a cache-busted custom-domain request both return hard `404`. This does not affect the Coming Soon release, but the exact stale edge object still needs a separate cache purge or tombstone follow-up.
 - Pre-release production baseline: deployment `fa9e4fbf-1bf0-4afa-9263-5beaf52aec92`; immutable preview `https://fa9e4fbf.clawdifiedweb.pages.dev`; base source `2c5287e`. This is the immediate rollback target until the SEO/entity release is live-verified.
 - Known prior rollback: deployment `7e2536e7-0ea5-4324-9dde-4523651a3e76`; preview `https://7e2536e7.clawdifiedweb.pages.dev`; source `2c5287e`.
 - Never deploy the repository root. Build a curated Pages output from a clean archive of the reviewed commit with `node scripts/build-pages-release.mjs OUTPUT_DIRECTORY SOURCE_DIRECTORY`; the explicit allowlist omits README, tests, docs, scripts, Git metadata, Wrangler state, and run ledgers. Run Wrangler from `SOURCE_DIRECTORY` and pass `OUTPUT_DIRECTORY` as the Pages asset directory so Functions are discovered from the clean project root and Wrangler's `.wrangler` state remains outside the deployable assets. After deployment, verify those repository-only paths return hard 404s along with the custom domain, immutable preview, homepage identity, legal routes, connector pages, and protected API boundaries; use the Cloudflare control plane for the current deployment ID.
