@@ -190,14 +190,17 @@ test('README release identity matches the staged homepage bytes', () => {
   }
 });
 
-test('homepage keeps broad entity signals without a visible SEO paragraph or service catalog', () => {
+test('homepage keeps broad entity signals without a visible SEO paragraph or current service catalog', () => {
   const body = homepage.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1] || '';
+  const footer = homepage.match(/<footer class="case-close workflow-footer"[\s\S]*?<\/footer>/i)?.[0] || '';
+  const homepageWithoutFooter = homepage.replace(footer, '');
   assert.doesNotMatch(body, /Clawdified builds custom AI agents around the way each business works\./);
   assert.doesNotMatch(body, /Based in Knoxville and serving clients remotely across the United States/);
   assert.match(homepage, /<meta name="description" content="Clawdified builds custom AI agents around your workflows, tools, rules, and approvals\./);
   assert.match(homepage, /"addressLocality":"Knoxville"/);
   assert.match(homepage, /Operated by Clawdified LLC/);
-  assert.doesNotMatch(homepage, /href="\/company-brain\/"|href="\/agent-training\/"|<h3>Coming soon<\/h3>/);
+  assert.doesNotMatch(homepageWithoutFooter, /href="\/company-brain\/"|href="\/agent-training\/"|<h3>Coming soon<\/h3>/);
+  assert.match(footer, /<div class="future-services"><h3>Coming soon<\/h3><a href="\/company-brain\/">Company Brain<\/a><a href="\/agent-training\/">Agent Training<\/a><\/div>/);
 
   const schemaSource = homepage.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/)?.[1];
   assert.ok(schemaSource);

@@ -20,10 +20,11 @@ test('Company Brain and Agent Training have real coming-soon routes', () => {
   assert.ok(existsSync(sharedStyleUrl), 'coming-soon pages should share the Clawdified visual system');
 });
 
-test('homepage footer does not promote future product names as a service catalog', () => {
-  assert.doesNotMatch(footer, /<div class="future-services"><h3>Coming soon<\/h3>/);
-  assert.doesNotMatch(footer, /<a href="\/company-brain\/">Company Brain<\/a>/);
-  assert.doesNotMatch(footer, /<a href="\/agent-training\/">Agent Training<\/a>/);
+test('homepage footer gives future services a dedicated coming-soon column', () => {
+  assert.match(footer, /<div class="future-services"><h3>Coming soon<\/h3>/);
+  assert.match(footer, /<a href="\/company-brain\/">Company Brain<\/a>/);
+  assert.match(footer, /<a href="\/agent-training\/">Agent Training<\/a>/);
+  assert.match(homepage, /\.footer-links\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
 });
 
 for (const service of [
