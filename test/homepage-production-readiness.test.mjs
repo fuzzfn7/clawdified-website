@@ -15,7 +15,7 @@ test('homepage production identity has canonical and social image metadata', () 
   assert.match(html, /<link rel="canonical" href="https:\/\/clawdified\.com\/">/);
   assert.match(html, /<meta property="og:image" content="https:\/\/clawdified\.com\/clawdified-icon-512\.png">/);
   assert.match(html, /<meta name="twitter:image" content="https:\/\/clawdified\.com\/clawdified-icon-512\.png">/);
-  assert.match(html, /<link rel="manifest" href="\/site\.webmanifest">/);
+  assert.match(html, /<link rel="manifest" href="\/site\.webmanifest\?v=clawdified-social-profile-final">/);
 });
 
 test('homepage search copy positions every engagement as a custom build, not a fixed offer list', () => {

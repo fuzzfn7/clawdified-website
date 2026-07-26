@@ -14,12 +14,12 @@ const rasterWordmarks = [
   { name: 'clawdified-wordmark-nav-357x48.png', width: 357, height: 48 },
 ];
 
-test('navigation and footer use a dedicated transparent claw while favicon keeps the tile', () => {
+test('navigation and footer use a dedicated transparent claw while favicon uses the social profile identity', () => {
   assert.ok(existsSync(assetPath), 'transparent claw asset should exist');
   assert.equal((html.match(/src="\/assets\/clawdified-claw-transparent\.png"/g) || []).length, 2);
   assert.match(html, /class="brand"[^>]*aria-label="Clawdified home"[^>]*>[\s\S]*?<img class="brand-mark" src="\/assets\/clawdified-claw-transparent\.png" alt="">/);
   assert.match(html, /class="footer-brand"[^>]*aria-label="Clawdified home"[^>]*>[\s\S]*?<img class="brand-mark" src="\/assets\/clawdified-claw-transparent\.png" alt="">/);
-  assert.match(html, /rel="icon"[^>]*href="\/assets\/clawdified-favicon-heritage-20260711\.png"/);
+  assert.match(html, /rel="icon"[^>]*href="\/assets\/clawdified-social-profile-favicon-64\.png"/);
 });
 
 test('transparent claw asset is a square RGBA PNG', () => {

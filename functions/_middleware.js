@@ -129,7 +129,7 @@ function renderKnoxvillePage() {
 <meta name="description" content="Clawdified builds custom AI agents around the work costing your business time. Based in Knoxville and serving clients remotely across the United States.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://clawdified.com/ai-agent-agency-knoxville-tn">
-<link rel="icon" type="image/png" sizes="64x64" href="/assets/clawdified-favicon-heritage-20260711.png">
+<link rel="icon" type="image/png" sizes="64x64" href="/assets/clawdified-social-profile-favicon-64.png">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Clawdified">
 <meta property="og:title" content="Custom AI Agents in Knoxville, TN | Clawdified">

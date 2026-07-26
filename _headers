@@ -104,6 +104,30 @@
   Content-Type: image/png
   Cache-Control: public, max-age=31536000, immutable
 
+/assets/clawdified-social-profile-favicon-64.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=31536000, immutable
+
+/clawdified-social-profile-icon.ico
+  Content-Type: image/x-icon
+  Cache-Control: public, max-age=31536000, immutable
+
+/clawdified-social-profile-icon-48.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=31536000, immutable
+
+/clawdified-social-profile-apple-touch-icon.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=31536000, immutable
+
+/clawdified-social-profile-icon-192.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=31536000, immutable
+
+/clawdified-social-profile-icon-512.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=31536000, immutable
+
 /sitemap.xml
   Content-Type: application/xml; charset=utf-8
 
