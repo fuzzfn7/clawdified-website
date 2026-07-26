@@ -12,7 +12,7 @@ const read = relativePath => readFileSync(path.join(root, relativePath));
 const readText = relativePath => read(relativePath).toString('utf8');
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 
-const faviconPath = '/assets/clawdified-social-profile-favicon-64.png';
+const faviconPath = '/assets/clawdified-favicon-heritage-20260711.png';
 const appleTouchPath = '/clawdified-social-profile-apple-touch-icon.png';
 const manifestHref = '/site.webmanifest?v=clawdified-social-profile-final';
 
@@ -32,20 +32,11 @@ test('site icon master is the approved creamy social-profile export', () => {
   assert.equal(sha256(bytes), 'c0893e3b81034759466cabc5553ebc7f688480d3ab9294ba35c918a50a448b4a');
 });
 
-test('favicon, iOS, Android, Samsung, social, and legacy icon files share the approved identity', () => {
-  const icon48 = pngIdentity('clawdified-social-profile-icon-48.png', 48, 48);
-  const favicon64 = pngIdentity('assets/clawdified-social-profile-favicon-64.png', 64, 64);
+test('iOS, Android, Samsung, social, and app fallback files keep the approved creamy identity', () => {
   const apple180 = pngIdentity('clawdified-social-profile-apple-touch-icon.png', 180, 180);
   const icon192 = pngIdentity('clawdified-social-profile-icon-192.png', 192, 192);
   const icon512 = pngIdentity('clawdified-social-profile-icon-512.png', 512, 512);
 
-  assert.ok(favicon64.length > 0);
-  for (const legacy of ['favicon-48.png', 'clawdified-icon-48.png']) {
-    assert.deepEqual(read(legacy), icon48, `${legacy} should match the approved 48px icon`);
-  }
-  for (const legacy of ['favicon.png', 'favicon-192.png', 'clawdified-icon-192.png']) {
-    assert.deepEqual(read(legacy), icon192, `${legacy} should match the approved 192px icon`);
-  }
   for (const legacy of ['apple-touch-icon.png', 'clawdified-apple-touch-icon.png']) {
     assert.deepEqual(read(legacy), apple180, `${legacy} should match the approved iOS icon`);
   }
@@ -53,14 +44,42 @@ test('favicon, iOS, Android, Samsung, social, and legacy icon files share the ap
     assert.deepEqual(read(legacy), icon512, `${legacy} should match the approved 512px icon`);
   }
 
-  const ico = read('clawdified-social-profile-icon.ico');
-  assert.deepEqual([...ico.subarray(0, 4)], [0, 0, 1, 0]);
-  assert.ok(ico.readUInt16LE(4) >= 4, 'ICO should contain multiple browser sizes');
-  assert.deepEqual(read('favicon.ico'), ico);
-  assert.deepEqual(read('clawdified-icon.ico'), ico);
+  assert.ok(icon192.length > 0);
 });
 
-test('public pages use the new cache-distinct favicon and iOS touch icon', () => {
+test('browser favicon family uses the original black tile independently of app icons', () => {
+  const favicon64 = read('assets/clawdified-favicon-heritage-20260711.png');
+  assert.deepEqual([...favicon64.subarray(1, 4)], [80, 78, 71]);
+  assert.equal(favicon64.readUInt32BE(16), 64);
+  assert.equal(favicon64.readUInt32BE(20), 64);
+  assert.equal(favicon64[25], 6, 'rounded black tile should preserve transparency');
+  assert.equal(sha256(favicon64), 'fa7900ee5c6b1ca2290ff4eb1f14c04b70bd6228d49d85658fa89ab01c06922f');
+
+  const icon48 = pngIdentity('favicon-48.png', 48, 48);
+  assert.equal(sha256(icon48), '66946ac4b0cabede66ae89ef8c45350c3be42264d16e29d08a473b66b12d91ff');
+  assert.deepEqual(read('clawdified-icon-48.png'), icon48);
+
+  const icon192 = pngIdentity('favicon-192.png', 192, 192);
+  assert.equal(sha256(icon192), '761bb601f1b4028c3fea1074cbedb9c0363530ac93f3372eb2572b53bfcdaca1');
+  assert.deepEqual(read('favicon.png'), icon192);
+  assert.deepEqual(read('clawdified-icon-192.png'), icon192);
+
+  const ico = read('favicon.ico');
+  assert.deepEqual([...ico.subarray(0, 4)], [0, 0, 1, 0]);
+  assert.ok(ico.readUInt16LE(4) >= 4, 'ICO should contain multiple browser sizes');
+  assert.equal(sha256(ico), 'c7c869192b4eea4aaf864c77aef479af0969ab3f4efbd49af7338320e22d1e14');
+  assert.deepEqual(read('clawdified-icon.ico'), ico);
+
+  for (const retired of [
+    'assets/clawdified-social-profile-favicon-64.png',
+    'clawdified-social-profile-icon-48.png',
+    'clawdified-social-profile-icon.ico',
+  ]) {
+    assert.equal(existsSync(path.join(root, retired)), false, `${retired} should not remain as a white browser icon`);
+  }
+});
+
+test('public pages use the black browser favicon while homepage install metadata stays creamy', () => {
   const documents = [
     'index.html',
     '404.html',
@@ -72,11 +91,11 @@ test('public pages use the new cache-distinct favicon and iOS touch icon', () =>
   for (const relativePath of documents) {
     const source = readText(relativePath);
     assert.match(source, new RegExp(`href="${faviconPath.replaceAll('/', '\\/')}"`), relativePath);
-    assert.doesNotMatch(source, /clawdified-favicon-heritage-20260711\.png|href="\/favicon\.png"/, relativePath);
+    assert.doesNotMatch(source, /clawdified-social-profile-favicon-64\.png|clawdified-social-profile-icon\.ico/, relativePath);
   }
 
   const homepage = readText('index.html');
-  assert.match(homepage, /<link rel="icon" href="\/clawdified-social-profile-icon\.ico" sizes="any">/);
+  assert.match(homepage, /<link rel="icon" href="\/favicon\.ico" sizes="any">/);
   assert.match(homepage, new RegExp(`<link rel="apple-touch-icon" sizes="180x180" href="${appleTouchPath.replaceAll('/', '\\/')}">`));
   assert.ok(homepage.includes(`<link rel="manifest" href="${manifestHref}">`));
 });
@@ -103,8 +122,6 @@ test('web app manifest installs the creamy icon as both regular and maskable art
 
 test('curated Pages release and immutable headers include every new root icon', () => {
   const rootAssets = [
-    'clawdified-social-profile-icon.ico',
-    'clawdified-social-profile-icon-48.png',
     'clawdified-social-profile-apple-touch-icon.png',
     'clawdified-social-profile-icon-192.png',
     'clawdified-social-profile-icon-512.png',
