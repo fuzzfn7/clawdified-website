@@ -20,6 +20,8 @@ test('manual proposal story is compressed into four decisive beats', () => {
   assert.match(manual, /Before he could build anything, he had to pull the whole job together\./);
   assert.match(manual, /Then he sat down and assembled the proposal by hand\./);
   assert.match(manual, /Ten hours at the desk\. Ten hours not in the field\./);
+  assert.doesNotMatch(manual, /class="time-add"|The scramble|The build|The final step/);
+  assert.doesNotMatch(html, /\.time-add/);
   assert.doesNotMatch(manual, /Each proposal started with a search through the field notes|Then he matched every proposal to the right site photos|He checked the template, rates, and approved terms again and again/);
 });
 
