@@ -12,6 +12,7 @@ export const PUBLIC_DIRECTORIES = [
   'company-brain',
   'connect',
   'functions',
+  'support',
 ];
 
 export const PUBLIC_FILES = [
